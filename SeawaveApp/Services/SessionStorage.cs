@@ -27,12 +27,12 @@ public static class SessionStorage
 
         var session = JsonSerializer.Deserialize<UserSession>(File.ReadAllText(Path));
 
-        if (session == null || (DateTime.UtcNow - session.CreatedAt).TotalDays > 7)
+        if (session != null && !((DateTime.UtcNow - session.CreatedAt).TotalDays > 7))
         {
-            File.Delete(Path);
-            return null;
+            return session.Token;
         }
-        return session.Token;
+        File.Delete(Path);
+        return null;
     }
     
     public static void Clear() => File.Delete(Path);
