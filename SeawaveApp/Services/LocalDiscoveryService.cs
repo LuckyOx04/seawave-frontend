@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using SeawaveApp.Models;
 
@@ -9,7 +8,7 @@ namespace SeawaveApp.Services;
 
 public class LocalDiscoveryService
 {
-    private readonly string[] _supportedExtensions = { ".mp3", ".flac", ".wav", ".m4a", ".aac", ".ogg", ".opus"};
+    private readonly string[] _supportedExtensions = [".mp3", ".flac", ".wav", ".m4a", ".aac", ".ogg", ".opus"];
 
     public async Task<List<UnifiedTrack>> DiscoverAsync(string path)
     {
@@ -59,47 +58,131 @@ public class LocalDiscoveryService
 
     private async Task<UnifiedTrack> ExtractMetadata(string path)
     {
-        using var tfile = TagLib.File.Create(path);
-
-        return new UnifiedTrack
+        return await Task.Run(() =>
         {
-            Id = path,
-            Title = tfile.Tag.Title ?? Path.GetFileNameWithoutExtension(path),
-            Artist = tfile.Tag.FirstPerformer ?? "Unknown Artist",
-            Album = tfile.Tag.Album,
-            Duration = tfile.Properties.Duration,
-            LocalPath = path,
-            IsRemote = false
-        };
+            using var tfile = TagLib.File.Create(path);
+            return new UnifiedTrack
+            {
+                Id = path,
+                Title = tfile.Tag.Title ?? Path.GetFileNameWithoutExtension(path),
+                Artist = tfile.Tag.FirstPerformer ?? "Unknown Artist",
+                Album = tfile.Tag.Album,
+                Duration = tfile.Properties.Duration,
+                LocalPath = path,
+                IsRemote = false
+            };
+        });
     }
-
+    
     private List<UnifiedTrack> ParseCueFile(string cuePath)
     {
         var tracks = new List<UnifiedTrack>();
         var lines = File.ReadAllLines(cuePath);
-        string? audioFile = null;
+        
+        string? currentAudioFile = null;
         string? albumArtist = null;
         string? albumTitle = null;
+        
+        UnifiedTrack? currentTrack = null;
+        var directory = Path.GetDirectoryName(cuePath) ?? "";
 
         foreach (var line in lines)
         {
             var trimmed = line.Trim();
-            if (trimmed.StartsWith("FILE"))
+            var parts = trimmed.Split(' ', 2);
+            if (parts.Length < 2)
             {
-                audioFile ??= ExtractQuoted(trimmed);
+                continue;
             }
-            if (trimmed.StartsWith("PERFORMER"))
+            
+            var key = parts[0].ToUpper();
+            var value = parts[1].Trim('"');
+
+            switch (key)
             {
-                albumArtist ??= ExtractQuoted(trimmed);
+                case "FILE":
+                    currentAudioFile = Path.Combine(directory, value[..value.LastIndexOf(' ')].Trim('"'));
+                    break;
+                case "PERFORMER":
+                    if (currentTrack == null)
+                    {
+                        albumArtist = value;
+                    }
+                    else
+                    {
+                        currentTrack = currentTrack with { Artist = value };
+                    }
+                    break;
+                case "TITLE":
+                    if (currentTrack == null)
+                    {
+                        albumTitle = value;
+                    }
+                    else
+                    {
+                        currentTrack = currentTrack with { Title = value };
+                    }
+                    break;
+                case "TRACK":
+                    if (currentTrack != null)
+                    {
+                        tracks.Add(currentTrack);
+                    }
+
+                    currentTrack = new UnifiedTrack
+                    {
+                        Id = $"{cuePath}_{value}",
+                        Artist = albumArtist ?? "Unknown Artist",
+                        Album = albumTitle,
+                        LocalPath = currentAudioFile,
+                        IsRemote = false
+                    };
+                    break;
+                case "INDEX":
+                    if (currentTrack != null && value.StartsWith("01"))
+                    {
+                        var timeString = value.Split(' ')[1];
+                        currentTrack = currentTrack with { StartOffset = ParseCueTime(timeString) };
+                    }
+                    break;
             }
-            if (trimmed.StartsWith("TITLE"))
+        }
+
+        if (currentTrack != null)
+        {
+            tracks.Add(currentTrack);
+        }
+
+        for (int i = 0; i < tracks.Count; i++)
+        {
+            if (i < tracks.Count - 1)
             {
-                albumTitle ??= ExtractQuoted(trimmed);
+                var duration = tracks[i + 1].StartOffset - tracks[i].StartOffset;
+                tracks[i] = tracks[i] with { Duration = duration };
+            }
+            else if (File.Exists(currentAudioFile))
+            {
+                using var tfile = TagLib.File.Create(currentAudioFile);
+                tracks[i] = tracks[i] with { Duration = tfile.Properties.Duration - tracks[i].StartOffset };
             }
         }
         
         return tracks;
     }
-    
-    private string ExtractQuoted(string input) => Regex.Match(input, "\"(.*)\"").Groups[1].Value;
+
+    private TimeSpan ParseCueTime(string time)
+    {
+        var parts = time.Split(':');
+        if (parts.Length != 3)
+        {
+            return TimeSpan.Zero;
+        }
+        
+        var m = int.Parse(parts[0]);
+        var s = int.Parse(parts[1]);
+        var f = int.Parse(parts[2]);
+
+        var totalSeconds = (m * 60) + s + (f / 75.0);
+        return TimeSpan.FromSeconds(totalSeconds);
+    }
 }
