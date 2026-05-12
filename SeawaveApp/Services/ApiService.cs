@@ -28,25 +28,34 @@ public class ApiService
             !string.IsNullOrEmpty(_token) ? new AuthenticationHeaderValue(_token) : null;
     }
 
-    public async Task<bool> LoginAsync(string identifier, string password)
+    public async Task<ApiResult> RegisterAsync(RegisterRequest request)
     {
-        var response = await _httpClient.PostAsJsonAsync("/api/Auth/login", new LoginRequest(identifier, 
-            password));
+        var result = await _httpClient.PostAsJsonAsync("/api/Auth/register", request);
+        var content = await result.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+        var message = content?.GetValueOrDefault("message") ?? "Server error";
+        
+        return new ApiResult(result.IsSuccessStatusCode, message);
+    }
+
+    public async Task<ApiResult> LoginAsync(LoginRequest request)
+    {
+        var response = await _httpClient.PostAsJsonAsync("/api/Auth/login", request);
+        var content = await response.Content.ReadFromJsonAsync<Dictionary<string, string>>();
         if (!response.IsSuccessStatusCode)
         {
-            return false;
+            var message = content?.GetValueOrDefault("message") ?? "Server error";
+            return new ApiResult(false, message);
         }
 
-        var data = await response.Content.ReadFromJsonAsync<LoginResponse>();
-        _token = data?.Token;
+        _token = content?.GetValueOrDefault("token");
         if (_token == null)
         {
-            return false;
+            return new ApiResult(false, "Server error");
         }
         SessionStorage.Save(_token);
         UpdateAuthHeader();
         
-        return true;
+        return new ApiResult(true, null);
     }
 
     public async Task LogoutAsync()
@@ -66,18 +75,10 @@ public class ApiService
     
     public async Task<PlaylistDetailsDto?> GetPlaylistDetailsAsync(int id)
         => await _httpClient.GetFromJsonAsync<PlaylistDetailsDto>($"/api/Music/playlist/{id}");
+    
+    public string GetStreamUrl(string fileName) => $"{_httpClient.BaseAddress}api/Music/stream/{fileName}";
 
-    public async Task<List<PlaylistSummaryDto>> GetUserPlaylistsAsync()
-        => await _httpClient.GetFromJsonAsync<List<PlaylistSummaryDto>>("/api/Playlist") ?? [];
-
-    public async Task<bool> CreatePlaylistAsync(string name)
-    {
-        var result = await _httpClient.PostAsJsonAsync("/api/Playlist/create", 
-            new CreatePlaylistRequest(name));
-        return result.IsSuccessStatusCode;
-    }
-
-    public async Task<bool> UploadTrackAsync(string title, string artist, string filePath)
+    public async Task<ApiResult> UploadTrackAsync(string title, string artist, string filePath)
     {
         using var content = new MultipartFormDataContent();
         content.Add(new StringContent(title), "title");
@@ -89,10 +90,78 @@ public class ApiService
         content.Add(fileContent, "file", Path.GetFileName(filePath));
 
         var result = await _httpClient.PostAsync("/api/Music/upload", content);
-        return result.IsSuccessStatusCode;
+        if (result.IsSuccessStatusCode)
+        {
+            return new ApiResult(true, null);
+        }
+        var contents = await result.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+        var message = contents?.GetValueOrDefault("message") ?? "Server error";
+        
+        return new ApiResult(false, message);
     }
 
-    public string GetStreamUrl(string fileName) => $"{_httpClient.BaseAddress}api/Music/stream/{fileName}";
+    public async Task<ApiResult> ForgotPasswordAsync(ForgottenPasswordRequest request)
+    {
+        var res = await _httpClient.PostAsJsonAsync("/api/Password/forgot", request);
+        var content = await res.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+        var message = content?.GetValueOrDefault("message") ?? "Server error";
+        
+        return new ApiResult(res.IsSuccessStatusCode, message);
+    }
+
+    public async Task<ApiResult> ChangePasswordAsync(ChangePasswordRequest request)
+    {
+        var result = await _httpClient.PatchAsJsonAsync("/api/Password/change", request);
+        if (result.IsSuccessStatusCode)
+        {
+            return new ApiResult(true, null);
+        }
+        var content = await result.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+        var message = content?.GetValueOrDefault("message") ?? "Server error";
+        
+        return new ApiResult(false, message);
+    }
     
-    
+    public async Task<List<PlaylistSummaryDto>> GetUserPlaylistsAsync()
+        => await _httpClient.GetFromJsonAsync<List<PlaylistSummaryDto>>("/api/Playlist") ?? [];
+
+    public async Task<ApiResult> CreatePlaylistAsync(CreatePlaylistRequest request)
+    {
+        var result = await _httpClient.PostAsJsonAsync("/api/Playlist/create", request);
+        var content = await result.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+        if (result.IsSuccessStatusCode)
+        {
+            return new ApiResult(true, null);
+        }
+        var message = content?.GetValueOrDefault("message") ?? "Server error";
+        return new ApiResult(false, message);
+    }
+
+    public async Task<ApiResult> DeletePlaylistAsync(int id)
+    {
+        var result = await _httpClient.DeleteAsync($"/api/Playlist/delete/{id}");
+        if (result.IsSuccessStatusCode)
+        {
+            return new ApiResult(true, null);
+        }
+        var content = await result.Content.ReadFromJsonAsync<Dictionary<string, string>>();
+        var message = content?.GetValueOrDefault("message");
+        
+        return new ApiResult(false, message);
+    }
+
+    public async Task<PlaylistDetailsDto?> AddTrackToPlaylistAsync(int playlistId, int trackId)
+    {
+        var result = await _httpClient.PostAsync(
+            $"/api/playlist/{playlistId}/add-track/{trackId}", null);
+
+        return result.IsSuccessStatusCode ? await result.Content.ReadFromJsonAsync<PlaylistDetailsDto>() : null;
+    }
+
+    public async Task<PlaylistDetailsDto?> RemoveTrackFromPlaylistAsync(int playlistId, int trackId)
+    {
+        var result = await _httpClient.DeleteAsync(
+            $"/api/Playlist/{playlistId}/remove-track/{trackId}");
+        return result.IsSuccessStatusCode ? await result.Content.ReadFromJsonAsync<PlaylistDetailsDto>() : null;
+    }
 }
