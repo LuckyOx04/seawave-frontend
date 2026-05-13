@@ -21,6 +21,7 @@
         </PackageReference>
         <PackageReference Include="CommunityToolkit.Mvvm"/>
         <PackageReference Include="LibVLCSharp" />
+        <PackageReference Include="Microsoft.Data.Sqlite.Core" />
         <PackageReference Include="TagLibSharp" />
     </ItemGroup>
 </Project>
