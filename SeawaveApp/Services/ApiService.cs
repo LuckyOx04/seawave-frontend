@@ -46,24 +46,24 @@ public class ApiService
         return new ApiResult(response.IsSuccessStatusCode, await GetMessage(response));
     }
 
-    public async Task<ApiResult> LoginAsync(LoginRequest request)
+    public async Task<ApiDataResult<LoginResponse>> LoginAsync(LoginRequest request)
     {
         var response = await _httpClient.PostAsJsonAsync("/api/Auth/login", request);
         if (!response.IsSuccessStatusCode)
         {
-            return new ApiResult(false, await GetMessage(response));
+            return new ApiDataResult<LoginResponse>(false, null, await GetMessage(response));
         }
 
         var data = await response.Content.ReadFromJsonAsync<LoginResponse>();
         _token = data?.Token;
         if (_token == null)
         {
-            return new ApiResult(false, "Token missing from response.");
+            return new ApiDataResult<LoginResponse>(false, null,"Token missing from response.");
         }
         SessionStorage.Save(_token);
         UpdateAuthHeader();
         
-        return new ApiResult(true, "Login successful.");
+        return new ApiDataResult<LoginResponse>(true, data, "Login successful.");
     }
 
     public async Task<ApiResult> LogoutAsync()
