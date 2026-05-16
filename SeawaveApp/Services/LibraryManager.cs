@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using SeawaveApp.Models;
@@ -10,10 +11,6 @@ public class LibraryManager(
     PlaybackManager playback,
     LocalDiscoveryService discovery)
 {
-    private readonly ApiService _api = api;
-    private readonly LocalDatabaseService _db = db;
-    private readonly PlaybackManager _playback = playback;
-    private readonly LocalDiscoveryService _discovery = discovery;
 
     public ObservableCollection<Playlist> AllPlaylists { get; } = [];
 
@@ -23,23 +20,113 @@ public class LibraryManager(
     {
         AllPlaylists.Clear();
 
-        //TODO: implement get offline playlists from SQLite
+        var localPlaylists = await db.GetAllPlaylistsAsync();
+        foreach (var localPlaylist in localPlaylists)
+        {
+            AllPlaylists.Add(localPlaylist);
+        }
         
         if (includeOnline)
         {
-            var onlineResponse = await _api.GetUserPlaylistsAsync();
+            var onlineResponse = await api.GetUserPlaylistsAsync();
             if (onlineResponse is { IsSuccess: true, Data: not null })
             {
                 foreach (var playlist in onlineResponse.Data)
                 {
-                    AllPlaylists.Add(new Playlist { Id = playlist.Id.ToString(), Name = playlist.Name, 
-                        IsOnline = true });
+                    AllPlaylists.Add(new Playlist { 
+                        Id = playlist.Id.ToString(), 
+                        Name = playlist.Name, 
+                        IsOnline = true 
+                    });
                 }
             }
         }
     }
 
-    public async Task<ApiResult> AddTrackToPlaylist(UnifiedTrack track, Playlist playlist)
+    public async Task LoadPlaylistTracksAsync(Playlist playlist)
+    {
+        playlist.Tracks.Clear();
+
+        if (playlist.IsOnline)
+        {
+            var response = await api.GetPlaylistDetailsAsync(int.Parse(playlist.Id));
+            if (response is { IsSuccess: true, Data: not null })
+            {
+                foreach (var trackData in response.Data.Tracks)
+                {
+                    playlist.Tracks.Add(new UnifiedTrack
+                    {
+                        Id = trackData.Id.ToString(),
+                        Title = trackData.Title,
+                        Artist = trackData.Artist,
+                        Album = null,
+                        Duration = TimeSpan.FromSeconds(trackData.DurationSeconds),
+                        IsRemote = true,
+                        RemoteUrl = $"https://localhost:7212/api/Music/stream/{trackData.FileName}"
+                    });
+                }
+            }
+        }
+        else
+        {
+            var localTracks = await db.GetPlaylistTracksAsync(int.Parse(playlist.Id));
+            foreach (var track in localTracks)
+            {
+                playlist.Tracks.Add(track);
+            }
+        }
+    }
+
+    public void PlayTrackFromPlaylist(Playlist playlist, UnifiedTrack track)
+    {
+        var index = playlist.Tracks.IndexOf(track);
+        if (index >= 0)
+        {
+            playback.PlayFromPlaylist(playlist.Tracks, index);
+        }
+        else
+        {
+            playback.PlaySingle(track);
+        }
+    }
+
+    public void PlayTrackFromSearch(UnifiedTrack track)
+    {
+        playback.PlaySingle(track);
+    }
+
+    public async Task PlayPlaylistAsync(Playlist playlist)
+    {
+        switch (playlist.Tracks.Count)
+        {
+            case 0:
+                await LoadPlaylistTracksAsync(playlist);
+                break;
+            case > 0:
+                playback.PlayFromPlaylist(playlist.Tracks, 0);
+                break;
+        }
+    }
+    
+    public void AddTrackToQueue(UnifiedTrack track)
+    {
+        playback.AddToQueue(track);
+    }
+
+    public async Task AddPlaylistToQueueAsync(Playlist playlist)
+    {
+        if (playlist.Tracks.Count == 0)
+        {
+            await LoadPlaylistTracksAsync(playlist);
+        }
+
+        foreach (var track in playlist.Tracks)
+        {
+            playback.AddToQueue(track);
+        }
+    }
+    
+    public async Task<ApiResult> AddTrackToPlaylistAsync(UnifiedTrack track, Playlist playlist)
     {
         if (!playlist.CanAddTrack(track))
         {
@@ -48,40 +135,21 @@ public class LibraryManager(
 
         if (playlist.IsOnline)
         {
-            var response = await _api.AddTrackToPlaylistAsync(int.Parse(playlist.Id),
+            var response = await api.AddTrackToPlaylistAsync(int.Parse(playlist.Id),
                 int.Parse(track.Id));
             return new ApiResult(response.IsSuccess, response.Message);
         }
-        else
-        {
-            await _db.AddTrackToPlaylistAsync(int.Parse(playlist.Id), track);
-            return new ApiResult(true, "Added track to playlist.");
-        }
+
+        await db.AddTrackToPlaylistAsync(int.Parse(playlist.Id), track);
+        return new ApiResult(true, "Added track to playlist.");
     }
 
-    public void PlayNow(UnifiedTrack track)
-    {
-        _playback.TracksQueue.Clear();
-        _playback.TracksQueue.Add(track);
-        _playback.PlaySingle(track);
-    }
-
-    public void PlayPlaylistNow(Playlist playlist)
-    {
-            _playback.PlayFromPlaylist(playlist.Tracks, startIndex: 0);
-    }
-
-    public void AddToQueue(UnifiedTrack track)
-    {
-        _playback.AddToQueue(track);
-    }
-
-    public async Task AddLocalFileToTemp(string[] paths)
+    public async Task AddLocalFileToTempAsync(string[] paths)
     {
         TemporaryPlaylist.Tracks.Clear();
         foreach (var path in paths)
         {
-            var tracks = await _discovery.DiscoverAsync(path);
+            var tracks = await discovery.DiscoverAsync(path);
             foreach (var track in tracks)
             {
                 TemporaryPlaylist.Tracks.Add(track);
