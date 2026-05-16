@@ -31,6 +31,7 @@ public class LocalDatabaseService
         var command = connection.CreateCommand();
         command.CommandText =
             """
+            PRAGMA journal_mode=WAL;
             CREATE TABLE IF NOT EXISTS Tracks (
                 Id TEXT PRIMARY KEY,
                 Title TEXT,
@@ -60,10 +61,34 @@ public class LocalDatabaseService
         command.ExecuteNonQuery();
     }
 
+    public async Task<List<Playlist>> GetAllPlaylistsAsync()
+    {
+        var playlists = new List<Playlist>();
+        await using var connection = new SqliteConnection(_connectionString);
+        await connection.OpenAsync();
+        
+        var command = connection.CreateCommand();
+        command.CommandText = "SELECT Id, Name FROM Playlists";
+        
+        await using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            playlists.Add(new Playlist
+            {
+                Id = reader.GetInt32(0).ToString(),
+                Name = reader.GetString(1),
+                IsOnline = false
+            });
+        }
+
+        return playlists;
+    }
+
     public async Task UpsertTracksAsync(IEnumerable<UnifiedTrack> tracks)
     {
         await using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
+        
         await using var transaction = await connection.BeginTransactionAsync();
 
         try
