@@ -208,4 +208,16 @@ public class ApiService
         return new ApiDataResult<PlaylistDetailsDto>(true, await response.Content
             .ReadFromJsonAsync<PlaylistDetailsDto>(), null);
     }
+
+    public async Task<ApiDataResult<UserProfileResponse>> GetUserProfileInfoAsync()
+    {
+        var response = await _httpClient.GetAsync("/api/Auth/profile");
+        if (!response.IsSuccessStatusCode)
+        {
+            return new ApiDataResult<UserProfileResponse>(false, null, await GetMessage(response));
+        }
+        var data = await response.Content.ReadFromJsonAsync<UserProfileResponse>();
+
+        return new ApiDataResult<UserProfileResponse>(true, data, null);
+    }
 }
