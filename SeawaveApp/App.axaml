@@ -12,4 +12,87 @@
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>
+    
+    <Styles>
+        <Styles.Resources>
+            <Color x:Key="ColorAbyssalDark">#0b0f17</Color> 
+            <Color x:Key="ColorSurfaceSlate">#141d2b</Color> 
+            <Color x:Key="ColorSurfaceHover">#1e2d42</Color> 
+            <Color x:Key="ColorElectricBlue">#007bff</Color> 
+            <Color x:Key="ColorElectricHover">#0056b3</Color> 
+            <Color x:Key="ColorTextWhite">#f8fafc</Color>
+            <Color x:Key="ColorTextMuted">#64748b</Color>
+            
+            <SolidColorBrush x:Key="BrushAbyssalDark" Color="{StaticResource ColorAbyssalDark}"/>
+            <SolidColorBrush x:Key="BrushSurfaceSlate" Color="{StaticResource ColorSurfaceSlate}"/>
+            <SolidColorBrush x:Key="BrushSurfaceHover" Color="{StaticResource ColorSurfaceHover}"/>
+            <SolidColorBrush x:Key="BrushElectricBlue" Color="{StaticResource ColorElectricBlue}"/>
+            <SolidColorBrush x:Key="BrushElectricHover" Color="{StaticResource ColorElectricHover}"/>
+            <SolidColorBrush x:Key="BrushTextWhite" Color="{StaticResource ColorTextWhite}"/>
+            <SolidColorBrush x:Key="BrushTextMuted" Color="{StaticResource ColorTextMuted}"/>
+        </Styles.Resources>
+        
+        <Style Selector="Button.Modern">
+            <Setter Property="Background" Value="{StaticResource BrushElectricBlue}"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushTextWhite}"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="6"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.Modern:pointerover /template/ Border">
+            <Setter Property="Background" Value="{StaticResource BrushElectricHover}"/>
+        </Style>
+        <Style Selector="Button.Modern:pointerover">
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.Modern:disabled">
+            <Setter Property="Opacity" Value="0.4"/>
+        </Style>
+        
+        <Style Selector="ToggleButton.SidebarToggle">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource BrushTextMuted}"/>
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="ToggleButton.SidebarToggle:pointerover /template/ Border">
+            <Setter Property="Background" Value="{StaticResource BrushSurfaceHover}"/>
+        </Style>
+        <Style Selector="ToggleButton.SidebarToggle:pointerover">
+            <Setter Property="Foreground" Value="{StaticResource BrushTextWhite}"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        
+        <Style Selector="ToggleButton.LeftToggle">
+            <Setter Property="Content" Value="&lt;"/>
+        </Style>
+        <Style Selector="ToggleButton.LeftToggle:checked">
+            <Setter Property="Content" Value="&gt;"/>
+        </Style>
+        
+        <Style Selector="ToggleButton.RightToggle">
+            <Setter Property="Content" Value="&gt;"/>
+        </Style>
+        <Style Selector="ToggleButton.RightToggle:checked">
+            <Setter Property="Content" Value="&lt;"/>
+        </Style>
+    </Styles>
 </Application>
