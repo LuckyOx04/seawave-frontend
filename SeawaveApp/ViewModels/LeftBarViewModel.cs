@@ -31,7 +31,11 @@ public partial class LeftBarViewModel : ViewModelBase
         ApplyFilter();
     }
 
-    partial void OnPlaylistSearchQueryChanged(string value) => ApplyFilter();
+    partial void OnPlaylistSearchQueryChanged(string value)
+    {
+        _ = value;
+        ApplyFilter();
+    }
 
     partial void OnShowOnlineOnlyChanged(bool value)
     {
