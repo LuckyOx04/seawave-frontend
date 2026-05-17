@@ -211,6 +211,46 @@ public class PlaybackManager : IDisposable
         };
         RepeatChanged?.Invoke(this, CurrentRepeatMode);
     }
+
+    public void RemoveTrack(UnifiedTrack track)
+    {
+        var index = TracksQueue.IndexOf(track);
+        if (index < 0)
+        {
+            return;
+        }
+        
+        TracksQueue.RemoveAt(index);
+
+        var orderPosition = _playbackOrder.IndexOf(index);
+        if (orderPosition >= 0)
+        {
+            _playbackOrder.RemoveAt(orderPosition);
+            if (_orderIndex >= orderPosition)
+            {
+                _orderIndex--;
+            }
+            else if (_orderIndex == orderPosition && _orderIndex >= _playbackOrder.Count)
+            {
+                _orderIndex = _playbackOrder.Count - 1;
+            }
+        }
+
+        for (var i = 0; i < _playbackOrder.Count; i++)
+        {
+            if (_playbackOrder[i] > index)
+            {
+                _playbackOrder[i]--;
+            }
+        }
+    }
+
+    public void ClearQueue()
+    {
+        TracksQueue.Clear();
+        _playbackOrder.Clear();
+        _orderIndex = -1;
+    }
     
     public void Dispose()
     {
