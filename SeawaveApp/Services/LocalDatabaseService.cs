@@ -9,7 +9,6 @@ namespace SeawaveApp.Services;
 
 public class LocalDatabaseService
 {
-    private readonly string _dbPath;
     private readonly string _connectionString;
 
     public LocalDatabaseService()
@@ -17,8 +16,8 @@ public class LocalDatabaseService
         var folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "seawave");
         Directory.CreateDirectory(folder);
-        _dbPath = Path.Combine(folder, "seawave.db");
-        _connectionString = $"Data Source={_dbPath}";
+        var dbPath = Path.Combine(folder, "seawave.db");
+        _connectionString = $"Data Source={dbPath}";
         
         InitializeDatabase();
     }

@@ -79,21 +79,10 @@ public partial class TopBarViewModel(
     [RelayCommand]
     private async Task AddFileAsync()
     {
-        var paths = await fileDialogService.OpenFilesAsync();
+        var paths = await fileDialogService.SelectPathsAsync();
         if (paths is { Length: > 0 })
         {
             await libraryManager.AddLocalFileToTempAsync(paths);
-            mainShell.NavigateToPlaylist(libraryManager.TemporaryPlaylist);
-        }
-    }
-
-    [RelayCommand]
-    private async Task AddFolderAsync()
-    {
-        var path = await fileDialogService.OpenFolderAsync();
-        if (!string.IsNullOrWhiteSpace(path))
-        {
-            await libraryManager.AddLocalFileToTempAsync([path]);
             mainShell.NavigateToPlaylist(libraryManager.TemporaryPlaylist);
         }
     }

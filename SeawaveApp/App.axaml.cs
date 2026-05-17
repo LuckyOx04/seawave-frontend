@@ -47,9 +47,11 @@ public partial class App : Application
         services.AddSingleton<ApiService>();
         services.AddSingleton<AuthStateManager>();
         services.AddSingleton<ConnectivityService>();
-        services.AddSingleton<IFileDialogService>();
-        services.AddSingleton<LibraryManager>();
+        services.AddSingleton<IFileDialogService, AvaloniaFileDialogService>();
         services.AddSingleton<PlaybackManager>();
+        services.AddSingleton<LocalDatabaseService>();
+        services.AddSingleton<LocalDiscoveryService>();
+        services.AddSingleton<LibraryManager>();
 
         services.AddTransient<MainViewModel>();
 

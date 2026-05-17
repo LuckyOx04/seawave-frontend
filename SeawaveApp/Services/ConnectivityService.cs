@@ -34,7 +34,7 @@ public class ConnectivityService
     public ConnectivityService()
     {
         _timer = new Timer(5000);
-        _timer.Elapsed += async (s, e) => await CheckConnectionAsync();
+        _timer.Elapsed += async (_, _) => await CheckConnectionAsync();
         _timer.Start();
 
         Task.Run(CheckConnectionAsync);

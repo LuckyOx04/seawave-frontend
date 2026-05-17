@@ -4,6 +4,5 @@ namespace SeawaveApp.Services;
 
 public interface IFileDialogService
 {
-    Task<string[]> OpenFilesAsync();
-    Task<string?> OpenFolderAsync();
+    Task<string[]> SelectPathsAsync();
 }
