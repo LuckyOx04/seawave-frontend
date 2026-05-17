@@ -21,7 +21,7 @@ public partial class LeftBarViewModel : ViewModelBase
 
     public ObservableCollection<Playlist> FilteredPlaylists { get; } = [];
 
-    public LeftBarViewModel(LibraryManager libraryManager, MainViewModel mainShell)
+    public LeftBarViewModel(MainViewModel mainShell, LibraryManager libraryManager)
     {
         _libraryManager = libraryManager;
         _mainShell = mainShell;

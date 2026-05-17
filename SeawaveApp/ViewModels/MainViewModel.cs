@@ -19,15 +19,19 @@ public partial class MainViewModel : ViewModelBase
 
     public ObservableCollection<UnifiedTrack> SearchResults { get; } = [];
     public LeftBarViewModel LeftBar { get; }
+    public RightBarViewModel RightBar { get; }
+    public CenterAreaViewModel CenterArea { get; }
 
     public MainViewModel(ConnectivityService connectivityService, AuthStateManager authStateManager,
-        LibraryManager libraryManager)
+        LibraryManager libraryManager, PlaybackManager playbackManager)
     {
         _connectivityService = connectivityService;
         _authStateManager = authStateManager;
         _libraryManager = libraryManager;
 
-        LeftBar = new LeftBarViewModel(_libraryManager, this);
+        LeftBar = new LeftBarViewModel(this, _libraryManager);
+        RightBar = new RightBarViewModel(playbackManager);
+        CenterArea = new CenterAreaViewModel(this, playbackManager);
 
         IsOnline = _connectivityService.IsServiceReachable;
         IsLoggedIn = _authStateManager.IsLoggedIn;
