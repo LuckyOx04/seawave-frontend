@@ -1,0 +1,132 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SeawaveApp.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SeawaveApp.Views.BottomBarView"
+             x:DataType="vm:BottomBarViewModel">
+
+    <Grid ColumnDefinitions="280, *, 280" 
+          Padding="16,0" 
+          VerticalAlignment="Center" 
+          Height="90">
+        <Grid Grid.Column="0" 
+              ColumnDefinitions="Auto, *" 
+              VerticalAlignment="Center">
+            <Border Grid.Column="0" 
+                    Width="52" 
+                    Height="52" 
+                    Background="{StaticResource BrushAbyssalDark}" 
+                    CornerRadius="6" 
+                    Margin="0,0,12,0">
+                <TextBlock Text="🎵" 
+                           FontSize="20" 
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Center"/>
+            </Border>
+            <StackPanel Grid.Column="1" 
+                        VerticalAlignment="Center" 
+                        Spacing="2">
+                <TextBlock Text="{Binding CurrentTrackTitle, FallbackValue='No Wave Selected'}" 
+                           Foreground="{StaticResource BrushTextWhite}" 
+                           FontWeight="SemiBold" 
+                           FontSize="14" 
+                           TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="{Binding CurrentTrackArtist, FallbackValue='Unknown Navigator'}" 
+                           Foreground="{StaticResource BrushTextMuted}" 
+                           FontSize="12" 
+                           TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+        </Grid>
+
+        <StackPanel Grid.Column="1" 
+                    VerticalAlignment="Center" 
+                    Spacing="6">
+            <StackPanel Orientation="Horizontal" 
+                        HorizontalAlignment="Center" 
+                        Spacing="20">
+                <ToggleButton Width="32" 
+                              Height="32" 
+                              Background="Transparent" 
+                              Content="🔀" 
+                              IsChecked="{Binding IsShuffleActive}" 
+                              ToolTip.Tip="Shuffle incoming tracks layout"/>
+                <Button Width="32" 
+                        Height="32" 
+                        Background="Transparent" 
+                        Content="⏮" 
+                        Command="{Binding SkipPreviousCommand}" 
+                        ToolTip.Tip="Rewind to prior stream track"/>
+                
+                <Button Width="40" 
+                        Height="40" 
+                        CornerRadius="20" 
+                        Background="{StaticResource BrushElectricBlue}"
+                        Command="{Binding TogglePlaybackCommand}" 
+                        ToolTip.Tip="Toggle Play/Pause engine">
+                    <TextBlock Text="{Binding PlayPauseIcon, FallbackValue='▶'}" 
+                               Foreground="White" 
+                               HorizontalAlignment="Center" 
+                               VerticalAlignment="Center" 
+                               FontWeight="Bold"/>
+                </Button>
+                
+                <Button Width="32" 
+                        Height="32" 
+                        Background="Transparent" 
+                        Content="⏭" 
+                        Command="{Binding SkipNextCommand}" 
+                        ToolTip.Tip="Advance to upcoming track"/>
+                <ToggleButton Width="32" 
+                              Height="32" 
+                              Background="Transparent" 
+                              Content="🔁" 
+                              IsChecked="{Binding IsRepeatActive}" 
+                              ToolTip.Tip="Loop current active track selection"/>
+            </StackPanel>
+
+            <Grid ColumnDefinitions="Auto, *, Auto" 
+                  Margin="12,0">
+                <TextBlock Grid.Column="0" 
+                           Text="{Binding CurrentTimePositionString, 
+                           FallbackValue='0:00'}" 
+                           FontSize="11" 
+                           Foreground="{StaticResource BrushTextMuted}" 
+                           VerticalAlignment="Center"/>
+                
+                <Slider Grid.Column="1" 
+                        Margin="10,0" 
+                        Minimum="0" 
+                        Maximum="{Binding TotalTrackDurationSeconds}" 
+                        Value="{Binding CurrentTrackPositionSeconds, Mode=TwoWay}"
+                        Foreground="{StaticResource BrushElectricBlue}"
+                        ToolTip.Tip="Drag to scrub through audio track timeline"/>
+                
+                <TextBlock Grid.Column="2" 
+                           Text="{Binding TotalTrackDurationString, FallbackValue='0:00'}" 
+                           FontSize="11" 
+                           Foreground="{StaticResource BrushTextMuted}"
+                           VerticalAlignment="Center"/>
+            </Grid>
+        </StackPanel>
+
+        <StackPanel Grid.Column="2" 
+                    Orientation="Horizontal" 
+                    HorizontalAlignment="Right" 
+                    Spacing="12" 
+                    VerticalAlignment="Center">
+            <Button Background="Transparent" 
+                    Padding="4" 
+                    Command="{Binding ToggleMuteCommand}" 
+                    ToolTip.Tip="Mute/Unmute audio stream">
+                <TextBlock Text="🔊" Foreground="{StaticResource BrushTextMuted}"/>
+            </Button>
+            
+            <Slider Width="100" Minimum="0" Maximum="100" 
+                    Value="{Binding VolumeLevelPercentage, Mode=TwoWay}"
+                    Foreground="{StaticResource BrushElectricBlue}"
+                    ToolTip.Tip="Adjust master volume output amplitude"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
