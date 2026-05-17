@@ -22,11 +22,33 @@ public class PlaybackManager : IDisposable
     public RepeatMode CurrentRepeatMode { get; set; } = RepeatMode.None;
     public bool IsShuffle { get; set; }
 
+    public UnifiedTrack? CurrentTrack => (_orderIndex >= 0 && _orderIndex < _playbackOrder.Count)
+        ? TracksQueue[_playbackOrder[_orderIndex]]
+        : null;
+
+    public bool IsPlaying => _mediaPlayer.IsPlaying;
+    public TimeSpan Position => TimeSpan.FromMilliseconds(_mediaPlayer.Time);
+    public TimeSpan Duration => TimeSpan.FromMilliseconds(_mediaPlayer.Length);
+
+    public event EventHandler<UnifiedTrack?>? TrackChanged;
+    public event EventHandler<bool>? PlaybackStateChanged;
+    public event EventHandler<TimeSpan>? PositionChanged;
+    public event EventHandler<TimeSpan>? DurationChanged;
+    public event EventHandler<bool>? ShuffleChanged;
+    public event EventHandler<RepeatMode>? RepeatChanged;
+
     public PlaybackManager()
     {
         _libVlc = new LibVLC();
         _mediaPlayer = new MediaPlayer(_libVlc);
-        _mediaPlayer.EndReached += (s, e) => HandleTrackEnd();
+        _mediaPlayer.EndReached += (_, _) => HandleTrackEnd();
+        _mediaPlayer.TimeChanged += (_, e) => PositionChanged?
+            .Invoke(this, TimeSpan.FromMilliseconds(e.Time));
+        _mediaPlayer.LengthChanged += (_, e) => DurationChanged?
+            .Invoke(this, TimeSpan.FromMilliseconds(e.Length));
+        _mediaPlayer.Playing += (_, _) => PlaybackStateChanged?.Invoke(this, true);
+        _mediaPlayer.Paused += (_, _) => PlaybackStateChanged?.Invoke(this, false);
+        _mediaPlayer.Stopped += (_, _) => PlaybackStateChanged?.Invoke(this, false);
     }
 
     public void PlayFromPlaylist(IEnumerable<UnifiedTrack> tracks, int startIndex)
@@ -61,7 +83,7 @@ public class PlaybackManager : IDisposable
         {
             var current = _playbackOrder[startIndex];
             _playbackOrder.RemoveAt(startIndex);
-            _playbackOrder = _playbackOrder.OrderBy(x => _rng.Next()).ToList();
+            _playbackOrder = _playbackOrder.OrderBy(_ => _rng.Next()).ToList();
             _playbackOrder.Insert(0, current);
             _orderIndex = 0;
         }
@@ -99,6 +121,7 @@ public class PlaybackManager : IDisposable
         var media = GetMediaForTrack(track);
 
         _mediaPlayer.Play(media);
+        TrackChanged?.Invoke(this, CurrentTrack);
     }
 
     private Media GetMediaForTrack(UnifiedTrack track)
@@ -167,6 +190,28 @@ public class PlaybackManager : IDisposable
     public void Seek(TimeSpan position) =>
         _mediaPlayer.Position = (float)(position.TotalMilliseconds / _mediaPlayer.Length);
 
+    public void ToggleShuffle()
+    {
+        IsShuffle = !IsShuffle;
+        ShuffleChanged?.Invoke(this, IsShuffle);
+
+        if (_orderIndex >= 0 && _orderIndex < _playbackOrder.Count)
+        {
+            RebuildOrder(_orderIndex);
+        }
+    }
+
+    public void CycleRepeat()
+    {
+        CurrentRepeatMode = CurrentRepeatMode switch
+        {
+            RepeatMode.None => RepeatMode.All,
+            RepeatMode.All => RepeatMode.Track,
+            _ => RepeatMode.None
+        };
+        RepeatChanged?.Invoke(this, CurrentRepeatMode);
+    }
+    
     public void Dispose()
     {
         _mediaPlayer.Dispose();
