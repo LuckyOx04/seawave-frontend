@@ -1,9 +1,11 @@
+using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
+using Microsoft.Extensions.DependencyInjection;
+using SeawaveApp.Services;
 using SeawaveApp.ViewModels;
 using SeawaveApp.Views;
 
@@ -11,6 +13,8 @@ namespace SeawaveApp;
 
 public partial class App : Application
 {
+    public IServiceProvider? Services { get; private set; }
+    
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
@@ -18,25 +22,41 @@ public partial class App : Application
 
     public override void OnFrameworkInitializationCompleted()
     {
+        var serviceCollection = new ServiceCollection();
+        ConfigureServices(serviceCollection);
+        
+        Services = serviceCollection.BuildServiceProvider();
+        
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
             // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
             DisableAvaloniaDataAnnotationValidation();
-            desktop.MainWindow = new MainWindow
-            {
-                //DataContext = new MainViewModel()
-            };
+            desktop.MainWindow = Services.GetRequiredService<MainWindow>();
         }
         else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
         {
-            singleViewPlatform.MainView = new MainView
-            {
-                //DataContext = new MainViewModel()
-            };
+            singleViewPlatform.MainView = Services.GetRequiredService<MainWindow>();
         }
 
         base.OnFrameworkInitializationCompleted();
+    }
+
+    private void ConfigureServices(IServiceCollection services)
+    {
+        services.AddSingleton<ApiService>();
+        services.AddSingleton<AuthStateManager>();
+        services.AddSingleton<ConnectivityService>();
+        services.AddSingleton<IFileDialogService>();
+        services.AddSingleton<LibraryManager>();
+        services.AddSingleton<PlaybackManager>();
+
+        services.AddTransient<MainViewModel>();
+
+        services.AddTransient<MainWindow>(provider => new MainWindow
+        {
+            DataContext = provider.GetRequiredService<MainViewModel>()
+        });
     }
 
     private void DisableAvaloniaDataAnnotationValidation()

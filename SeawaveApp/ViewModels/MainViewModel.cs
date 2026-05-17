@@ -21,9 +21,12 @@ public partial class MainViewModel : ViewModelBase
     public LeftBarViewModel LeftBar { get; }
     public RightBarViewModel RightBar { get; }
     public CenterAreaViewModel CenterArea { get; }
+    public TopBarViewModel TopBar { get; }
+    public BottomBarViewModel BottomBar { get; }
 
     public MainViewModel(ConnectivityService connectivityService, AuthStateManager authStateManager,
-        LibraryManager libraryManager, PlaybackManager playbackManager)
+        LibraryManager libraryManager, PlaybackManager playbackManager, ApiService api, 
+        IFileDialogService fileDialogService)
     {
         _connectivityService = connectivityService;
         _authStateManager = authStateManager;
@@ -32,6 +35,8 @@ public partial class MainViewModel : ViewModelBase
         LeftBar = new LeftBarViewModel(this, _libraryManager);
         RightBar = new RightBarViewModel(playbackManager);
         CenterArea = new CenterAreaViewModel(this, playbackManager);
+        TopBar = new TopBarViewModel(api, _libraryManager, this, fileDialogService);
+        BottomBar = new BottomBarViewModel(playbackManager);
 
         IsOnline = _connectivityService.IsServiceReachable;
         IsLoggedIn = _authStateManager.IsLoggedIn;
