@@ -41,7 +41,8 @@
         <Setter Property="Width" Value="24" />
         <Setter Property="Template">
             <ControlTemplate>
-                <Border Background="{TemplateBinding Background}" CornerRadius="4">
+                <Border Background="{TemplateBinding Background}" 
+                        CornerRadius="4">
                     <ContentPresenter Content="{TemplateBinding Content}"
                                       HorizontalAlignment="Center"
                                       VerticalAlignment="Center" />

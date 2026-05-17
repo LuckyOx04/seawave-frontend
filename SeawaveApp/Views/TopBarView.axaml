@@ -1,8 +1,86 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SeawaveApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="SeawaveApp.Views.TopBarView">
-    Welcome to Avalonia!
+             x:Class="SeawaveApp.Views.TopBarView"
+             x:DataType="vm:TopBarViewModel">
+
+    <Grid ColumnDefinitions="Auto, *, Auto, Auto"
+          VerticalAlignment="Center">
+        <StackPanel Grid.Column="0"
+                    Orientation="Horizontal"
+                    Spacing="8">
+            <Button Width="32"
+                    Height="32"
+                    CornerRadius="16"
+                    Background="{StaticResource BrushSurfaceHover}"
+                    Content="←"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Command="{Binding NavigateBackCommand}"
+                    ToolTip.Tip="Go Back" />
+            <Button Width="32"
+                    Height="32"
+                    CornerRadius="16"
+                    Background="{StaticResource BrushSurfaceHover}"
+                    Content="→"
+                    HorizontalContentAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    Command="{Binding NavigateForwardCommand}"
+                    ToolTip.Tip="Go forward" />
+        </StackPanel>
+
+        <TextBox Grid.Column="1"
+                 Width="320"
+                 Height="36"
+                 HorizontalAlignment="Left"
+                 Margin="24,0,0,0"
+                 Watermark="Search tracks, waves, and playlists..."
+                 Text="{Binding SearchText, Mode=TwoWay}"
+                 CornerRadius="18"
+                 BorderThickness="1"
+                 BorderBrush="{StaticResource BrushSurfaceHover}"
+                 Background="{StaticResource BrushAbyssalDark}"
+                 Foreground="{StaticResource BrushTextWhite}"
+                 VerticalContentAlignment="Center"
+                 ToolTip.Tip="Type here to instantly search your library" />
+
+        <Button Grid.Column="2"
+                Classes="Modern"
+                Margin="0,0,16,0"
+                Command="{Binding ImportMusicCommand}"
+                ToolTip.Tip="Import local audio files or folders into your deep-sea database">
+            <StackPanel Orientation="Horizontal"
+                        Spacing="8">
+                <PathIcon Data="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"
+                          Width="16" Height="16"
+                          Foreground="White" />
+                <TextBlock Text="Add Tracks"
+                           VerticalAlignment="Center"
+                           FontWeight="SemiBold" />
+            </StackPanel>
+        </Button>
+
+        <Button Grid.Column="3"
+                Width="38"
+                Height="38"
+                CornerRadius="19"
+                Background="{StaticResource BrushSurfaceHover}"
+                Padding="0"
+                Command="{Binding ViewProfileCommand}"
+                ToolTip.Tip="View your profile dashboard and account settings">
+            <Border CornerRadius="19"
+                    ClipToBounds="True">
+                <Panel Background="{StaticResource BrushElectricBlue}">
+                    <TextBlock Text="U"
+                               Foreground="{StaticResource BrushTextWhite}"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontWeight="Bold" />
+                </Panel>
+            </Border>
+        </Button>
+    </Grid>
 </UserControl>
