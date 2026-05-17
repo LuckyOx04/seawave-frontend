@@ -3,19 +3,25 @@
              xmlns:local="using:SeawaveApp"
              x:Class="SeawaveApp.App"
              RequestedThemeVariant="Default">
-             <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
-             
+
     <Application.Resources>
-        <ResourceInclude Source="Resources/SeaStyleResources.axaml"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceInclude Source="Resources/SeaStyleResources.axaml"></ResourceInclude>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+        
+        
     </Application.Resources>
 
     <Application.Styles>
         <FluentTheme />
-    
-        <StyleInclude Source="Styles/SeaStyles.axaml"/>
+
+        <StyleInclude Source="Styles/SeaStyles.axaml" />
     </Application.Styles>
 </Application>
