@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
@@ -15,7 +16,8 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty] private string _username = "Guest";
     [ObservableProperty] private CenterContentMode _currentCenterMode = CenterContentMode.None;
     [ObservableProperty] private Playlist? _activeCenterPlaylist;
-    
+
+    public ObservableCollection<UnifiedTrack> SearchResults { get; } = [];
     public LeftBarViewModel LeftBar { get; }
 
     public MainViewModel(ConnectivityService connectivityService, AuthStateManager authStateManager,

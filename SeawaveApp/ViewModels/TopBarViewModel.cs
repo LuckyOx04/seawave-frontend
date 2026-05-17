@@ -1,6 +1,100 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using SeawaveApp.Models;
+using SeawaveApp.Services;
+
 namespace SeawaveApp.ViewModels;
 
-public class TopBarViewModel
+public partial class TopBarViewModel(
+    ApiService api,
+    LibraryManager libraryManager,
+    MainViewModel mainShell,
+    IFileDialogService fileDialogService)
+    : ViewModelBase
 {
-    
+    private CancellationTokenSource? _searchCts;
+
+    [ObservableProperty] private string _searchQuery = string.Empty;
+
+    partial void OnSearchQueryChanged(string value)
+    {
+        _searchCts?.Cancel();
+        _searchCts = new CancellationTokenSource();
+        var token = _searchCts.Token;
+
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(500, token);
+                if (!token.IsCancellationRequested && !string.IsNullOrWhiteSpace(value))
+                {
+                    await PerformSearchAsync(value);
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                
+            }
+        }, token);
+    }
+
+    [RelayCommand]
+    private async Task ExecuteSearchAsync()
+    {
+        await _searchCts?.CancelAsync()!;
+        if (!string.IsNullOrWhiteSpace(SearchQuery))
+        {
+            await PerformSearchAsync(SearchQuery);
+        }
+    }
+
+    private async Task PerformSearchAsync(string query)
+    {
+        mainShell.CurrentCenterMode = CenterContentMode.SearchResults;
+        mainShell.SearchResults.Clear();
+
+        var response = await api.SearchTracksAsync(query);
+        if (response is { IsSuccess: true, Data: not null })
+        {
+            foreach (var trackData in response.Data)
+            {
+                mainShell.SearchResults.Add(new UnifiedTrack
+                {
+                    Id = trackData.Id.ToString(),
+                    Title = trackData.Title,
+                    Artist = trackData.Artist,
+                    Album = null,
+                    Duration = TimeSpan.FromSeconds(trackData.DurationSeconds),
+                    IsRemote = true,
+                    RemoteUrl = $"https://localhost:7212/api/Music/stream/{trackData.FileName}"
+                });
+            }
+        }
+    }
+
+    [RelayCommand]
+    private async Task AddFileAsync()
+    {
+        var paths = await fileDialogService.OpenFilesAsync();
+        if (paths is { Length: > 0 })
+        {
+            await libraryManager.AddLocalFileToTempAsync(paths);
+            mainShell.NavigateToPlaylist(libraryManager.TemporaryPlaylist);
+        }
+    }
+
+    [RelayCommand]
+    private async Task AddFolderAsync()
+    {
+        var path = await fileDialogService.OpenFolderAsync();
+        if (!string.IsNullOrWhiteSpace(path))
+        {
+            await libraryManager.AddLocalFileToTempAsync([path]);
+            mainShell.NavigateToPlaylist(libraryManager.TemporaryPlaylist);
+        }
+    }
 }
