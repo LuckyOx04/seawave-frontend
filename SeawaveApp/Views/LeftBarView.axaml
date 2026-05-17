@@ -6,7 +6,7 @@
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SeawaveApp.Views.LeftBarView"
              x:DataType="vm:LeftBarViewModel">
-    
+
     <Grid RowDefinitions="Auto, Auto, *"
           Padding="12">
         <StackPanel Grid.Row="0"
@@ -18,78 +18,78 @@
                          Height="40"
                          Background="Transparent"
                          ToolTip.Tip="Navigate back to your home discovery shelf">
-                <StackPanel Orientation="Horizontal" 
-                            Spacing="12" 
+                <StackPanel Orientation="Horizontal"
+                            Spacing="12"
                             Padding="8,0">
-                    <TextBlock Text="🏠" 
-                               VerticalAlignment="Center"/>
-                    <TextBlock Text="Ocean Floor" 
-                               Foreground="{StaticResource BrushTextWhite}" 
-                               FontWeight="Medium"/>
+                    <TextBlock Text="🏠"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="Ocean Floor"
+                               Foreground="{StaticResource BrushTextWhite}"
+                               FontWeight="Medium" />
                 </StackPanel>
             </RadioButton>
-            
-            <RadioButton Classes="MenuButton" 
+
+            <RadioButton Classes="MenuButton"
                          Command="{Binding ShowLibraryCommand}"
-                         Height="40" 
-                         Background="Transparent" 
+                         Height="40"
+                         Background="Transparent"
                          ToolTip.Tip="Explore your locally stored deep audio archive">
-                <StackPanel Orientation="Horizontal" 
-                            Spacing="12" 
+                <StackPanel Orientation="Horizontal"
+                            Spacing="12"
                             Padding="8,0">
-                    <TextBlock Text="🎵" 
-                               VerticalAlignment="Center"/>
-                    <TextBlock Text="Your Currents" 
-                               Foreground="{StaticResource BrushTextWhite}" 
-                               FontWeight="Medium"/>
+                    <TextBlock Text="🎵"
+                               VerticalAlignment="Center" />
+                    <TextBlock Text="Your Currents"
+                               Foreground="{StaticResource BrushTextWhite}"
+                               FontWeight="Medium" />
                 </StackPanel>
             </RadioButton>
         </StackPanel>
-        
-        <Grid Grid.Row="1" 
-              ColumnDefinitions="*, Auto" 
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*, Auto"
               Margin="8,0,8,8">
-            <TextBlock Grid.Column="0" 
-                       Text="PLAYLISTS" 
-                       FontSize="11" 
-                       FontWeight="Bold" 
-                       Foreground="{StaticResource BrushTextMuted}" 
-                       VerticalAlignment="Center" 
-                       LetterSpacing="1"/>
-            <Button Grid.Column="1" 
-                    Background="Transparent" 
-                    Padding="4" 
+            <TextBlock Grid.Column="0"
+                       Text="PLAYLISTS"
+                       FontSize="11"
+                       FontWeight="Bold"
+                       Foreground="{StaticResource BrushTextMuted}"
+                       VerticalAlignment="Center"
+                       LetterSpacing="1" />
+            <Button Grid.Column="1"
+                    Background="Transparent"
+                    Padding="4"
                     CornerRadius="4"
-                    Command="{Binding CreatePlaylistCommand}" 
+                    Command="{Binding CreatePlaylistCommand}"
                     ToolTip.Tip="Forge a new custom audio playlist container">
-                <TextBlock Text="＋" 
-                           Foreground="{StaticResource BrushTextMuted}" 
-                           FontSize="14" 
-                           FontWeight="Bold"/>
+                <TextBlock Text="＋"
+                           Foreground="{StaticResource BrushTextMuted}"
+                           FontSize="14"
+                           FontWeight="Bold" />
             </Button>
         </Grid>
-        
-        <ScrollViewer Grid.Row="2" 
-                      HorizontalScrollBarVisibility="Disabled" 
+
+        <ScrollViewer Grid.Row="2"
+                      HorizontalScrollBarVisibility="Disabled"
                       VerticalScrollBarVisibility="Auto">
             <ItemsControl ItemsSource="{Binding CustomPlaylists}">
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
-                        <Button Background="Transparent" 
-                                HorizontalAlignment="Stretch" 
+                        <Button Background="Transparent"
+                                HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Left"
-                                Padding="8" 
-                                CornerRadius="4" 
+                                Padding="8"
+                                CornerRadius="4"
                                 Command="{Binding $parent[UserControl].((vm:LeftBarViewModel)DataContext).OpenPlaylistCommand}"
-                                CommandParameter="{Binding}" 
+                                CommandParameter="{Binding}"
                                 ToolTip.Tip="Stream this collection">
-                            <TextBlock Text="{Binding Name}" 
-                                       TextTrimming="CharacterEllipsis" 
-                                       Foreground="{StaticResource BrushTextMuted}"/>
+                            <TextBlock Text="{Binding Name}"
+                                       TextTrimming="CharacterEllipsis"
+                                       Foreground="{StaticResource BrushTextMuted}" />
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </ScrollViewer>
-    </Grid>    
+    </Grid>
 </UserControl>

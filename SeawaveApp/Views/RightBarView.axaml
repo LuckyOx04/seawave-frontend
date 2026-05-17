@@ -1,0 +1,54 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SeawaveApp.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="SeawaveApp.Views.RightBarView"
+             x:DataType="vm:RightBarViewModel">
+
+    <Grid RowDefinitions="Auto, *"
+          Padding="16">
+        <TextBlock Grid.Row="0"
+                   Text="Play Queue"
+                   FontSize="16"
+                   FontWeight="Bold"
+                   Foreground="{StaticResource BrushTextWhite}"
+                   Margin="0,0,0,16" />
+
+        <ListBox Grid.Row="1"
+                 ItemsSource="{Binding UpcomingQueue}"
+                 Background="Transparent"
+                 BorderThickness="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Background="{StaticResource BrushAbyssalDark}"
+                            Margin="0,0,0,8"
+                            Padding="10"
+                            CornerRadius="6"
+                            ToolTip.Tip="Double click or press play to skip directly to this audio wave item">
+                        <Grid ColumnDefinitions="*, Auto">
+                            <StackPanel Grid.Column="0"
+                                        Spacing="2">
+                                <TextBlock Text="{Binding Title}"
+                                           Foreground="{StaticResource BrushTextWhite}"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{Binding Artist}"
+                                           Foreground="{StaticResource BrushTextMuted}"
+                                           FontSize="11"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <TextBlock Grid.Column="1"
+                                       Text="{Binding DurationString}"
+                                       Foreground="{StaticResource BrushTextMuted}"
+                                       FontSize="11"
+                                       VerticalAlignment="Center" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </Grid>
+</UserControl>
