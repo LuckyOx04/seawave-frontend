@@ -1,0 +1,139 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="1920"
+             d:DesignHeight="1080"
+             x:Class="SeawaveApp.Views.UploadTrackView"
+             Padding="40">
+
+    <Grid Background="{StaticResource BrushAbyssalDark}">
+        <Border Background="{StaticResource BrushSurfaceSlate}"
+                Width="560"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Padding="32"
+                CornerRadius="12">
+            <StackPanel Spacing="22">
+                <StackPanel Spacing="4">
+                    <TextBlock Text="Cloud Storage Media Uploader"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Foreground="White" />
+                    <TextBlock Text="Upload assets directly into your primary remote library database node"
+                               FontSize="12"
+                               Foreground="{StaticResource BrushTextMuted}" />
+                </StackPanel>
+
+                <Separator Background="{StaticResource BrushSurfaceHover}"
+                           Height="1" />
+
+                <StackPanel Spacing="6">
+                    <TextBlock Text="Source Audio File Pipeline Selection"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="{StaticResource BrushTextMuted}" />
+                    <Grid ColumnDefinitions="*, 12, Auto">
+                        <TextBox Grid.Column="0"
+                                 Watermark="No local binary file staged for ingest..."
+                                 IsReadOnly="True"
+                                 Height="40"
+                                 CornerRadius="6"
+                                 Background="{StaticResource BrushAbyssalDark}"
+                                 Foreground="White"
+                                 VerticalContentAlignment="Center" />
+                        <Button Grid.Column="2"
+                                Content="Browse Local Storage"
+                                Background="{StaticResource BrushSurfaceHover}"
+                                Foreground="White"
+                                Height="40"
+                                Padding="16,0"
+                                VerticalContentAlignment="Center"
+                                CornerRadius="6" />
+                    </Grid>
+                </StackPanel>
+
+                <Grid ColumnDefinitions="*, 16, *">
+                    <StackPanel Grid.Column="0"
+                                Spacing="6">
+                        <TextBlock Text="Track Master Title"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource BrushTextMuted}" />
+                        <TextBox Watermark="e.g. Neon Horizon"
+                                 Height="40"
+                                 CornerRadius="6"
+                                 Background="{StaticResource BrushAbyssalDark}"
+                                 Foreground="White"
+                                 VerticalContentAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2"
+                                Spacing="6">
+                        <TextBlock Text="Lead / Contributing Artist"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource BrushTextMuted}" />
+                        <TextBox Watermark="e.g. Synthesized Wave"
+                                 Height="40"
+                                 CornerRadius="6"
+                                 Background="{StaticResource BrushAbyssalDark}"
+                                 Foreground="White"
+                                 VerticalContentAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+
+                <Grid ColumnDefinitions="*, 16, *">
+                    <StackPanel Grid.Column="0"
+                                Spacing="6">
+                        <TextBlock Text="Album Affiliation"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource BrushTextMuted}" />
+                        <TextBox Watermark="Leave blank if Single Release..."
+                                 Height="40"
+                                 CornerRadius="6"
+                                 Background="{StaticResource BrushAbyssalDark}"
+                                 Foreground="White"
+                                 VerticalContentAlignment="Center" />
+                    </StackPanel>
+                    <StackPanel Grid.Column="2"
+                                Spacing="6">
+                        <TextBlock Text="Genre Classification"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource BrushTextMuted}" />
+                        <TextBox Watermark="e.g. Retrowave, Electronic"
+                                 Height="40"
+                                 CornerRadius="6"
+                                 Background="{StaticResource BrushAbyssalDark}"
+                                 Foreground="White"
+                                 VerticalContentAlignment="Center" />
+                    </StackPanel>
+                </Grid>
+
+                <Separator Background="{StaticResource BrushSurfaceHover}"
+                           Height="1"
+                           Margin="0,4,0,0" />
+
+                <Grid ColumnDefinitions="*, 16, Auto">
+                    <Button Grid.Column="0"
+                            Content="Discard Track Ingest"
+                            Background="Transparent"
+                            Foreground="{StaticResource BrushTextMuted}"
+                            Height="42"
+                            VerticalContentAlignment="Center" />
+                    <Button Grid.Column="2"
+                            Content="🚀 Launch Remote Deployment Pipeline"
+                            Background="{StaticResource BrushElectricBlue}"
+                            Foreground="White"
+                            Height="42"
+                            Padding="24,0"
+                            VerticalContentAlignment="Center"
+                            FontWeight="Bold"
+                            CornerRadius="6" />
+                </Grid>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
