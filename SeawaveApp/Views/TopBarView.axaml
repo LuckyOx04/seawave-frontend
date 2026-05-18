@@ -3,14 +3,19 @@
              xmlns:vm="using:SeawaveApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
              x:Class="SeawaveApp.Views.TopBarView"
              x:DataType="vm:TopBarViewModel"
              Padding="16,12">
 
     <Grid ColumnDefinitions="*, Auto">
-        <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="12">
-            <TextBox Width="350" Height="36"
+        <StackPanel Grid.Column="0"
+                    Orientation="Horizontal"
+                    Spacing="12">
+            <TextBox Width="350"
+                     Height="36"
                      Watermark="Search tracks..."
                      Text="{Binding SearchQuery, Mode=TwoWay}"
                      CornerRadius="18" BorderThickness="1"
@@ -18,24 +23,28 @@
                      Background="{StaticResource BrushAbyssalDark}"
                      Foreground="{StaticResource BrushTextWhite}"
                      VerticalContentAlignment="Center"
-                     ToolTip.Tip="Type to search. Auto-searches after 500ms delay."/>
-            
-            <Button Content="Search" 
+                     ToolTip.Tip="Type to search. Auto-searches after 500ms delay." />
+
+            <Button Content="Search"
                     Command="{Binding ExecuteSearchCommand}"
                     Classes="Modern"
                     Height="36"
                     VerticalContentAlignment="Center"
-                    ToolTip.Tip="Force immediate database query execution"/>
+                    ToolTip.Tip="Force immediate database query execution" />
         </StackPanel>
 
-        <Button Grid.Column="1" 
+        <Button Grid.Column="1"
                 Command="{Binding AddFileCommand}"
                 Classes="Modern"
                 Height="36"
                 ToolTip.Tip="Import audio tracks to temporary workspace">
-            <StackPanel Orientation="Horizontal" Spacing="8">
-                <TextBlock Text="＋" VerticalAlignment="Center" FontWeight="Bold"/>
-                <TextBlock Text="Add Local Tracks" VerticalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal"
+                        Spacing="8">
+                <TextBlock Text="＋"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold" />
+                <TextBlock Text="Add Local Tracks"
+                           VerticalAlignment="Center" />
             </StackPanel>
         </Button>
     </Grid>

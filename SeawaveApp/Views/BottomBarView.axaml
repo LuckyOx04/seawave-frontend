@@ -3,23 +3,42 @@
              xmlns:vm="using:SeawaveApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="1080" d:DesignHeight="450"
+             mc:Ignorable="d"
+             d:DesignWidth="1080"
+             d:DesignHeight="450"
              x:Class="SeawaveApp.Views.BottomBarView"
              x:DataType="vm:BottomBarViewModel">
 
-    <Border Background="{StaticResource BrushSurfaceSlate}" Height="90" Padding="16,0">
-        <Grid ColumnDefinitions="250, *, 250" VerticalAlignment="Center">
+    <Border Background="{StaticResource BrushSurfaceSlate}"
+            Height="90"
+            Padding="16,0">
+        <Grid ColumnDefinitions="250, *, 250"
+              VerticalAlignment="Center">
 
-            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
-                <TextBlock Text="{Binding CurrentTrack.Title, FallbackValue='No Track Selection Active'}"
-                           Foreground="{StaticResource BrushTextWhite}" FontWeight="SemiBold" FontSize="14"
-                           TextTrimming="CharacterEllipsis" />
-                <TextBlock Text="{Binding CurrentTrack.Artist, FallbackValue='Empty Metadata Pipeline'}"
-                           Foreground="{StaticResource BrushTextMuted}" FontSize="12" TextTrimming="CharacterEllipsis" />
+            <StackPanel Grid.Column="0"
+                        VerticalAlignment="Center"
+                        Spacing="2">
+                <TextBlock
+                    Text="{Binding CurrentTrack.Title, 
+                FallbackValue='No Track Selection Active'}"
+                    Foreground="{StaticResource BrushTextWhite}"
+                    FontWeight="SemiBold"
+                    FontSize="14"
+                    TextTrimming="CharacterEllipsis" />
+                <TextBlock
+                    Text="{Binding CurrentTrack.Artist, 
+                FallbackValue='Empty Metadata Pipeline'}"
+                    Foreground="{StaticResource BrushTextMuted}"
+                    FontSize="12"
+                    TextTrimming="CharacterEllipsis" />
             </StackPanel>
 
-            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="6">
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="16">
+            <StackPanel Grid.Column="1"
+                        VerticalAlignment="Center"
+                        Spacing="6">
+                <StackPanel Orientation="Horizontal"
+                            HorizontalAlignment="Center"
+                            Spacing="16">
                     <ToggleButton Content="🔀"
                                   IsChecked="{Binding IsShuffleOn, Mode=OneWay}"
                                   Command="{Binding ToggleShuffleCommand}"
@@ -32,15 +51,18 @@
 
                     <Button Command="{Binding TogglePlayPauseCommand}"
                             Background="{StaticResource BrushElectricBlue}"
-                            Width="36" Height="36" CornerRadius="18">
-                        <Panel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="⏸" 
+                            Width="36"
+                            Height="36"
+                            CornerRadius="18">
+                        <Panel HorizontalAlignment="Center"
+                               VerticalAlignment="Center">
+                            <TextBlock Text="⏸"
                                        IsVisible="{Binding IsPlaying}"
                                        Foreground="White" />
                             <TextBlock Text="▶"
                                        IsVisible="{Binding !IsPlaying}"
                                        Foreground="White"
-                                       Margin="2,0,0,0"/>
+                                       Margin="2,0,0,0" />
                         </Panel>
                     </Button>
 
@@ -59,17 +81,24 @@
                 </StackPanel>
 
                 <Grid ColumnDefinitions="Auto, *, Auto">
-                    <TextBlock Grid.Column="0" Text="{Binding CurrentPosition, StringFormat=\{0:mm\\:ss\}}"
-                               FontSize="11" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding CurrentPosition, StringFormat=\{0:mm\\:ss\}}"
+                               FontSize="11"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               VerticalAlignment="Center" />
 
-                    <Slider Grid.Column="1" Margin="8,0"
+                    <Slider Grid.Column="1"
+                            Margin="8,0"
                             Minimum="0"
                             Maximum="{Binding TrackDurationSeconds, Mode=OneWay}"
                             Value="{Binding CurrentPositionSeconds, Mode=TwoWay}"
                             Foreground="{StaticResource BrushElectricBlue}" />
 
-                    <TextBlock Grid.Column="2" Text="{Binding TrackDuration, StringFormat=\{0:mm\\:ss\}}" FontSize="11"
-                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" />
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding TrackDuration, StringFormat=\{0:mm\\:ss\}}"
+                               FontSize="11"
+                               Foreground="{StaticResource BrushTextMuted}"
+                               VerticalAlignment="Center" />
                 </Grid>
             </StackPanel>
 

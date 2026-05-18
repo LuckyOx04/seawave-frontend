@@ -3,33 +3,47 @@
              xmlns:vm="using:SeawaveApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
              x:Class="SeawaveApp.Views.CenterAreaView"
              x:DataType="vm:CenterAreaViewModel">
 
     <ScrollViewer Padding="24">
         <StackPanel Spacing="20">
-            <TextBlock Text="{Binding HeaderTitle}" FontSize="22" FontWeight="Bold"
+            <TextBlock Text="{Binding HeaderTitle}"
+                       FontSize="22"
+                       FontWeight="Bold"
                        Foreground="{StaticResource BrushTextWhite}" />
 
-            <ListBox ItemsSource="{Binding DisplayTracks}" Background="Transparent" BorderThickness="0">
+            <ListBox ItemsSource="{Binding DisplayTracks}"
+                     Background="Transparent"
+                     BorderThickness="0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Border Background="{StaticResource BrushSurfaceSlate}" Margin="0,0,0,6" CornerRadius="6"
+                        <Border Background="{StaticResource BrushSurfaceSlate}"
+                                Margin="0,0,0,6"
+                                CornerRadius="6"
                                 Padding="12">
                             <Grid ColumnDefinitions="Auto, *, Auto">
-                                <Button Grid.Column="0" Content="▶"
-                                        Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).PlayTrackCommand, FallbackValue={x:Null}}"
+                                <Button Grid.Column="0"
+                                        Content="▶"
+                                        Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).PlayTrackCommand, 
+                                        FallbackValue={x:Null}}"
                                         CommandParameter="{Binding}"
                                         Classes="Modern"
                                         Padding="8,4"
                                         Margin="0,0,12,0"
                                         ToolTip.Tip="Stream this selection instantly" />
 
-                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="2">
-                                    <TextBlock Text="{Binding Title}" Foreground="{StaticResource BrushTextWhite}"
+                                <StackPanel Grid.Column="1"
+                                            VerticalAlignment="Center"
+                                            Spacing="2">
+                                    <TextBlock Text="{Binding Title}"
+                                               Foreground="{StaticResource BrushTextWhite}"
                                                FontWeight="Medium" />
-                                    <TextBlock Text="{Binding Artist}" Foreground="{StaticResource BrushTextMuted}"
+                                    <TextBlock Text="{Binding Artist}"
+                                               Foreground="{StaticResource BrushTextMuted}"
                                                FontSize="12" />
                                 </StackPanel>
 
@@ -46,7 +60,7 @@
                                         <TextBlock Text="Local"
                                                    IsVisible="{Binding !IsRemote}"
                                                    FontSize="10"
-                                                   Foreground="{StaticResource BrushTextMuted}"/>
+                                                   Foreground="{StaticResource BrushTextMuted}" />
                                     </Panel>
                                 </Border>
                             </Grid>

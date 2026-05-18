@@ -3,42 +3,65 @@
              xmlns:vm="using:SeawaveApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d"
+             d:DesignWidth="800"
+             d:DesignHeight="450"
              x:Class="SeawaveApp.Views.RightBarView"
              x:DataType="vm:RightBarViewModel"
              Padding="16">
 
     <Grid RowDefinitions="Auto, *">
-        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0,0,0,16">
-            <TextBlock Grid.Column="0" Text="Play Queue" FontSize="16" FontWeight="Bold" 
-                       Foreground="{StaticResource BrushTextWhite}" VerticalAlignment="Center"/>
-            <Button Grid.Column="1" Content="Clear All" 
+        <Grid Grid.Row="0"
+              ColumnDefinitions="*, Auto"
+              Margin="0,0,0,16">
+            <TextBlock Grid.Column="0"
+                       Text="Play Queue"
+                       FontSize="16"
+                       FontWeight="Bold"
+                       Foreground="{StaticResource BrushTextWhite}"
+                       VerticalAlignment="Center" />
+            <Button Grid.Column="1"
+                    Content="Clear All"
                     Command="{Binding ClearAllQueueCommand}"
                     Background="Transparent"
                     Foreground="{StaticResource BrushTextMuted}"
                     FontSize="12"
-                    ToolTip.Tip="Flush entire current audio execution queue pipeline"/>
+                    ToolTip.Tip="Flush entire current audio execution queue pipeline" />
         </Grid>
 
-        <ListBox Grid.Row="1" ItemsSource="{Binding QueueTracks}" Background="Transparent" BorderThickness="0">
+        <ListBox Grid.Row="1"
+                 ItemsSource="{Binding QueueTracks}"
+                 Background="Transparent"
+                 BorderThickness="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <Border Background="{StaticResource BrushAbyssalDark}" Margin="0,0,0,6" Padding="8" CornerRadius="4">
+                    <Border Background="{StaticResource BrushAbyssalDark}"
+                            Margin="0,0,0,6"
+                            Padding="8"
+                            CornerRadius="4">
                         <Grid ColumnDefinitions="*, Auto">
-                            <StackPanel Grid.Column="0" Spacing="2">
-                                <TextBlock Text="{Binding Title}" Foreground="{StaticResource BrushTextWhite}" 
-                                           FontWeight="SemiBold" FontSize="13" TextTrimming="CharacterEllipsis"/>
-                                <TextBlock Text="{Binding Artist}" Foreground="{StaticResource BrushTextMuted}" 
-                                           FontSize="11" TextTrimming="CharacterEllipsis"/>
+                            <StackPanel Grid.Column="0"
+                                        Spacing="2">
+                                <TextBlock Text="{Binding Title}"
+                                           Foreground="{StaticResource BrushTextWhite}"
+                                           FontWeight="SemiBold"
+                                           FontSize="13"
+                                           TextTrimming="CharacterEllipsis" />
+                                <TextBlock Text="{Binding Artist}"
+                                           Foreground="{StaticResource BrushTextMuted}"
+                                           FontSize="11"
+                                           TextTrimming="CharacterEllipsis" />
                             </StackPanel>
-                            
-                            <Button Grid.Column="1" Content="✕" 
-                                    Command="{Binding $parent[UserControl].((vm:RightBarViewModel)DataContext).RemoveTrackFromQueueCommand, FallbackValue={x:Null}}"
+
+                            <Button Grid.Column="1"
+                                    Content="✕"
+                                    Command="{Binding $parent[UserControl].((vm:RightBarViewModel)DataContext).RemoveTrackFromQueueCommand,
+                                    FallbackValue={x:Null}}"
                                     CommandParameter="{Binding}"
-                                    Background="Transparent" 
+                                    Background="Transparent"
                                     Foreground="{StaticResource BrushTextMuted}"
                                     VerticalAlignment="Center"
-                                    ToolTip.Tip="Remove item from queue loop"/>
+                                    ToolTip.Tip="Remove item from queue loop" />
                         </Grid>
                     </Border>
                 </DataTemplate>
