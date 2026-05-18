@@ -1,0 +1,213 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             d:DesignWidth="1920"
+             d:DesignHeight="1080"
+             x:Class="SeawaveApp.Views.ProfileView"
+             Padding="40">
+
+    <Grid Background="{StaticResource BrushAbyssalDark}"
+          RowDefinitions="Auto,*">
+
+        <DockPanel Grid.Row="0"
+                   Margin="0,0,0,32">
+
+            <Button Content="← Return to Audio Console"
+                    Background="{StaticResource BrushSurfaceSlate}"
+                    Foreground="White"
+                    Padding="14,8"
+                    CornerRadius="6"
+                    FontWeight="SemiBold" />
+            <TextBlock Text="USER WORKSPACE PROFILE"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Right"
+                       Foreground="{StaticResource BrushTextMuted}"
+                       FontSize="12"
+                       FontWeight="Bold"
+                       LetterSpacing="1" />
+        </DockPanel>
+
+        <Grid Grid.Row="1"
+              ColumnDefinitions="300, 40, *">
+
+            <Border Grid.Column="0"
+                    Background="{StaticResource BrushSurfaceSlate}"
+                    Padding="24"
+                    CornerRadius="12"
+                    VerticalAlignment="Top">
+
+                <StackPanel Spacing="20"
+                            HorizontalAlignment="Center">
+
+                    <Border Width="96"
+                            Height="96"
+                            CornerRadius="48"
+                            Background="{StaticResource BrushAbyssalDark}"
+                            HorizontalAlignment="Center">
+
+                        <TextBlock Text="👤"
+                                   FontSize="44"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center" />
+                    </Border>
+
+                    <StackPanel Spacing="4"
+                                HorizontalAlignment="Center">
+                        <TextBlock Text="Current User"
+                                   FontSize="20"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   HorizontalAlignment="Center" />
+                        <TextBlock Text="Cloud Storage Sync Active"
+                                   FontSize="11"
+                                   Foreground="{StaticResource BrushElectricBlue}"
+                                   FontWeight="SemiBold"
+                                   HorizontalAlignment="Center" />
+                    </StackPanel>
+
+                    <Separator Background="{StaticResource BrushSurfaceHover}"
+                               Height="1" />
+
+                    <StackPanel Spacing="10">
+
+                        <Button Content="🚀 Upload Track to Cloud"
+                                Background="{StaticResource BrushElectricBlue}"
+                                Foreground="White"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Padding="0,12"
+                                CornerRadius="6"
+                                FontWeight="SemiBold" />
+
+                        <Button Content="🔒 Change Security Password"
+                                Background="{StaticResource BrushSurfaceHover}"
+                                Foreground="White"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Padding="0,10"
+                                CornerRadius="6" />
+
+                        <Button Content="🛑 Terminate Session (Logout)"
+                                Background="#33FF3333"
+                                Foreground="#FFFF6666"
+                                HorizontalAlignment="Stretch"
+                                HorizontalContentAlignment="Center"
+                                Padding="0,10"
+                                CornerRadius="6" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <Border Grid.Column="2"
+                    Background="{StaticResource BrushSurfaceSlate}"
+                    Padding="32"
+                    CornerRadius="12">
+
+                <StackPanel Spacing="24">
+                    <TextBlock Text="Account Synchronization Overview"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White" />
+
+                    <Grid ColumnDefinitions="*, 16, *, 16, *">
+                        <Border Grid.Column="0"
+                                Background="{StaticResource BrushAbyssalDark}"
+                                Padding="20"
+                                CornerRadius="8">
+
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="Cloud Library Tracks"
+                                           FontSize="11"
+                                           Foreground="{StaticResource BrushTextMuted}"
+                                           FontWeight="Bold" />
+                                <TextBlock Text="142"
+                                           FontSize="28"
+                                           FontWeight="Bold"
+                                           Foreground="White" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2"
+                                Background="{StaticResource BrushAbyssalDark}"
+                                Padding="20"
+                                CornerRadius="8">
+
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="Custom Playlists"
+                                           FontSize="11"
+                                           Foreground="{StaticResource BrushTextMuted}"
+                                           FontWeight="Bold" />
+                                <TextBlock Text="12"
+                                           FontSize="28"
+                                           FontWeight="Bold"
+                                           Foreground="White" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="4"
+                                Background="{StaticResource BrushAbyssalDark}"
+                                Padding="20"
+                                CornerRadius="8">
+
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="Bandwidth Consumed"
+                                           FontSize="11"
+                                           Foreground="{StaticResource BrushTextMuted}"
+                                           FontWeight="Bold" />
+                                <TextBlock Text="1.4 GB"
+                                           FontSize="28"
+                                           FontWeight="Bold"
+                                           Foreground="{StaticResource BrushElectricBlue}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <StackPanel Spacing="12"
+                                Margin="0,16,0,0">
+
+                        <TextBlock Text="Integration Properties"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="White" />
+
+                        <Grid RowDefinitions="Auto, 1, Auto"
+                              ColumnDefinitions="Auto, *">
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="0"
+                                       Text="Account Type"
+                                       Foreground="{StaticResource BrushTextMuted}"
+                                       Padding="0,10" />
+
+                            <TextBlock Grid.Row="0"
+                                       Grid.Column="1"
+                                       Text="Standard Synchronized Node"
+                                       Foreground="White"
+                                       HorizontalAlignment="Right"
+                                       Padding="0,10" />
+
+                            <Separator Grid.Row="1"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Background="{StaticResource BrushSurfaceHover}" />
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="0"
+                                       Text="Node Registry Identity"
+                                       Foreground="{StaticResource BrushTextMuted}"
+                                       Padding="0,10" />
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="1"
+                                       Text="SW-99824X-LINUX"
+                                       Foreground="White"
+                                       HorizontalAlignment="Right"
+                                       Padding="0,10"
+                                       FontFamily="Monospace" />
+                        </Grid>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</UserControl>
