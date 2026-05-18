@@ -3,130 +3,77 @@
              xmlns:vm="using:SeawaveApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="1080" d:DesignHeight="450"
              x:Class="SeawaveApp.Views.BottomBarView"
              x:DataType="vm:BottomBarViewModel">
 
-    <Grid ColumnDefinitions="280, *, 280" 
-          Padding="16,0" 
-          VerticalAlignment="Center" 
-          Height="90">
-        <Grid Grid.Column="0" 
-              ColumnDefinitions="Auto, *" 
-              VerticalAlignment="Center">
-            <Border Grid.Column="0" 
-                    Width="52" 
-                    Height="52" 
-                    Background="{StaticResource BrushAbyssalDark}" 
-                    CornerRadius="6" 
-                    Margin="0,0,12,0">
-                <TextBlock Text="🎵" 
-                           FontSize="20" 
-                           HorizontalAlignment="Center" 
-                           VerticalAlignment="Center"/>
-            </Border>
-            <StackPanel Grid.Column="1" 
-                        VerticalAlignment="Center" 
-                        Spacing="2">
-                <TextBlock Text="{Binding CurrentTrackTitle, FallbackValue='No Wave Selected'}" 
-                           Foreground="{StaticResource BrushTextWhite}" 
-                           FontWeight="SemiBold" 
-                           FontSize="14" 
-                           TextTrimming="CharacterEllipsis"/>
-                <TextBlock Text="{Binding CurrentTrackArtist, FallbackValue='Unknown Navigator'}" 
-                           Foreground="{StaticResource BrushTextMuted}" 
-                           FontSize="12" 
-                           TextTrimming="CharacterEllipsis"/>
+    <Border Background="{StaticResource BrushSurfaceSlate}" Height="90" Padding="16,0">
+        <Grid ColumnDefinitions="250, *, 250" VerticalAlignment="Center">
+
+            <StackPanel Grid.Column="0" VerticalAlignment="Center" Spacing="2">
+                <TextBlock Text="{Binding CurrentTrack.Title, FallbackValue='No Track Selection Active'}"
+                           Foreground="{StaticResource BrushTextWhite}" FontWeight="SemiBold" FontSize="14"
+                           TextTrimming="CharacterEllipsis" />
+                <TextBlock Text="{Binding CurrentTrack.Artist, FallbackValue='Empty Metadata Pipeline'}"
+                           Foreground="{StaticResource BrushTextMuted}" FontSize="12" TextTrimming="CharacterEllipsis" />
             </StackPanel>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="6">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="16">
+                    <ToggleButton Content="🔀"
+                                  IsChecked="{Binding IsShuffleOn, Mode=OneWay}"
+                                  Command="{Binding ToggleShuffleCommand}"
+                                  Background="Transparent"
+                                  ToolTip.Tip="Toggle collection shuffle sequencing" />
+
+                    <Button Content="⏮"
+                            Command="{Binding SkipPreviousCommand}"
+                            Background="Transparent" />
+
+                    <Button Command="{Binding TogglePlayPauseCommand}"
+                            Background="{StaticResource BrushElectricBlue}"
+                            Width="36" Height="36" CornerRadius="18">
+                        <Panel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="⏸" 
+                                       IsVisible="{Binding IsPlaying}"
+                                       Foreground="White" />
+                            <TextBlock Text="▶"
+                                       IsVisible="{Binding !IsPlaying}"
+                                       Foreground="White"
+                                       Margin="2,0,0,0"/>
+                        </Panel>
+                    </Button>
+
+                    <Button Content="⏭"
+                            Command="{Binding SkipNextCommand}"
+                            Background="Transparent" />
+
+                    <Button Content="{Binding RepeatModeLabel}"
+                            Command="{Binding CycleRepeatCommand}"
+                            Background="{StaticResource BrushAbyssalDark}"
+                            Foreground="{StaticResource BrushTextWhite}"
+                            FontSize="11"
+                            Padding="8,4"
+                            CornerRadius="4"
+                            ToolTip.Tip="Cycle audio looping parameters mode state" />
+                </StackPanel>
+
+                <Grid ColumnDefinitions="Auto, *, Auto">
+                    <TextBlock Grid.Column="0" Text="{Binding CurrentPosition, StringFormat=\{0:mm\\:ss\}}"
+                               FontSize="11" Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" />
+
+                    <Slider Grid.Column="1" Margin="8,0"
+                            Minimum="0"
+                            Maximum="{Binding TrackDurationSeconds, Mode=OneWay}"
+                            Value="{Binding CurrentPositionSeconds, Mode=TwoWay}"
+                            Foreground="{StaticResource BrushElectricBlue}" />
+
+                    <TextBlock Grid.Column="2" Text="{Binding TrackDuration, StringFormat=\{0:mm\\:ss\}}" FontSize="11"
+                               Foreground="{StaticResource BrushTextMuted}" VerticalAlignment="Center" />
+                </Grid>
+            </StackPanel>
+
+            <Panel Grid.Column="2" />
         </Grid>
-
-        <StackPanel Grid.Column="1" 
-                    VerticalAlignment="Center" 
-                    Spacing="6">
-            <StackPanel Orientation="Horizontal" 
-                        HorizontalAlignment="Center" 
-                        Spacing="20">
-                <ToggleButton Width="32" 
-                              Height="32" 
-                              Background="Transparent" 
-                              Content="🔀" 
-                              IsChecked="{Binding IsShuffleActive}" 
-                              ToolTip.Tip="Shuffle incoming tracks layout"/>
-                <Button Width="32" 
-                        Height="32" 
-                        Background="Transparent" 
-                        Content="⏮" 
-                        Command="{Binding SkipPreviousCommand}" 
-                        ToolTip.Tip="Rewind to prior stream track"/>
-                
-                <Button Width="40" 
-                        Height="40" 
-                        CornerRadius="20" 
-                        Background="{StaticResource BrushElectricBlue}"
-                        Command="{Binding TogglePlaybackCommand}" 
-                        ToolTip.Tip="Toggle Play/Pause engine">
-                    <TextBlock Text="{Binding PlayPauseIcon, FallbackValue='▶'}" 
-                               Foreground="White" 
-                               HorizontalAlignment="Center" 
-                               VerticalAlignment="Center" 
-                               FontWeight="Bold"/>
-                </Button>
-                
-                <Button Width="32" 
-                        Height="32" 
-                        Background="Transparent" 
-                        Content="⏭" 
-                        Command="{Binding SkipNextCommand}" 
-                        ToolTip.Tip="Advance to upcoming track"/>
-                <ToggleButton Width="32" 
-                              Height="32" 
-                              Background="Transparent" 
-                              Content="🔁" 
-                              IsChecked="{Binding IsRepeatActive}" 
-                              ToolTip.Tip="Loop current active track selection"/>
-            </StackPanel>
-
-            <Grid ColumnDefinitions="Auto, *, Auto" 
-                  Margin="12,0">
-                <TextBlock Grid.Column="0" 
-                           Text="{Binding CurrentTimePositionString, 
-                           FallbackValue='0:00'}" 
-                           FontSize="11" 
-                           Foreground="{StaticResource BrushTextMuted}" 
-                           VerticalAlignment="Center"/>
-                
-                <Slider Grid.Column="1" 
-                        Margin="10,0" 
-                        Minimum="0" 
-                        Maximum="{Binding TotalTrackDurationSeconds}" 
-                        Value="{Binding CurrentTrackPositionSeconds, Mode=TwoWay}"
-                        Foreground="{StaticResource BrushElectricBlue}"
-                        ToolTip.Tip="Drag to scrub through audio track timeline"/>
-                
-                <TextBlock Grid.Column="2" 
-                           Text="{Binding TotalTrackDurationString, FallbackValue='0:00'}" 
-                           FontSize="11" 
-                           Foreground="{StaticResource BrushTextMuted}"
-                           VerticalAlignment="Center"/>
-            </Grid>
-        </StackPanel>
-
-        <StackPanel Grid.Column="2" 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="Right" 
-                    Spacing="12" 
-                    VerticalAlignment="Center">
-            <Button Background="Transparent" 
-                    Padding="4" 
-                    Command="{Binding ToggleMuteCommand}" 
-                    ToolTip.Tip="Mute/Unmute audio stream">
-                <TextBlock Text="🔊" Foreground="{StaticResource BrushTextMuted}"/>
-            </Button>
-            
-            <Slider Width="100" Minimum="0" Maximum="100" 
-                    Value="{Binding VolumeLevelPercentage, Mode=TwoWay}"
-                    Foreground="{StaticResource BrushElectricBlue}"
-                    ToolTip.Tip="Adjust master volume output amplitude"/>
-        </StackPanel>
-    </Grid>
+    </Border>
 </UserControl>

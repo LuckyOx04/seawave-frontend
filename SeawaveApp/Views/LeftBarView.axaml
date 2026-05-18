@@ -5,91 +5,44 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="SeawaveApp.Views.LeftBarView"
-             x:DataType="vm:LeftBarViewModel">
+             x:DataType="vm:LeftBarViewModel"
+             Padding="12">
 
-    <Grid RowDefinitions="Auto, Auto, *"
-          Padding="12">
-        <StackPanel Grid.Row="0"
-                    Spacing="4"
-                    Margin="0,0,0,16">
-            <RadioButton Classes="MenuButton"
-                         IsChecked="True"
-                         Command="{Binding ShowHomeCommand}"
-                         Height="40"
-                         Background="Transparent"
-                         ToolTip.Tip="Navigate back to your home discovery shelf">
-                <StackPanel Orientation="Horizontal"
-                            Spacing="12"
-                            Padding="8,0">
-                    <TextBlock Text="🏠"
-                               VerticalAlignment="Center" />
-                    <TextBlock Text="Ocean Floor"
-                               Foreground="{StaticResource BrushTextWhite}"
-                               FontWeight="Medium" />
-                </StackPanel>
-            </RadioButton>
-
-            <RadioButton Classes="MenuButton"
-                         Command="{Binding ShowLibraryCommand}"
-                         Height="40"
-                         Background="Transparent"
-                         ToolTip.Tip="Explore your locally stored deep audio archive">
-                <StackPanel Orientation="Horizontal"
-                            Spacing="12"
-                            Padding="8,0">
-                    <TextBlock Text="🎵"
-                               VerticalAlignment="Center" />
-                    <TextBlock Text="Your Currents"
-                               Foreground="{StaticResource BrushTextWhite}"
-                               FontWeight="Medium" />
-                </StackPanel>
-            </RadioButton>
+    <Grid RowDefinitions="Auto, Auto, *">
+        <StackPanel Grid.Row="0" Spacing="8" Margin="0,0,0,16">
+            <TextBox Watermark="Filter playlists..."
+                     Text="{Binding PlaylistSearchQuery, Mode=TwoWay}"
+                     Background="{StaticResource BrushAbyssalDark}"
+                     Foreground="{StaticResource BrushTextWhite}"
+                     CornerRadius="4"
+                     ToolTip.Tip="Type here to dynamically filter your current collections list"/>
+            
+            <CheckBox Content="Online Only" 
+                      IsChecked="{Binding ShowOnlineOnly, Mode=TwoWay}"
+                      Foreground="{StaticResource BrushTextMuted}"
+                      ToolTip.Tip="Isolate cloud-hosted streaming configurations"/>
+            <CheckBox Content="Offline Only" 
+                      IsChecked="{Binding ShowOfflineOnly, Mode=TwoWay}"
+                      Foreground="{StaticResource BrushTextMuted}"
+                      ToolTip.Tip="Isolate native local storage items"/>
         </StackPanel>
 
-        <Grid Grid.Row="1"
-              ColumnDefinitions="*, Auto"
-              Margin="8,0,8,8">
-            <TextBlock Grid.Column="0"
-                       Text="PLAYLISTS"
-                       FontSize="11"
-                       FontWeight="Bold"
-                       Foreground="{StaticResource BrushTextMuted}"
-                       VerticalAlignment="Center"
-                       LetterSpacing="1" />
-            <Button Grid.Column="1"
-                    Background="Transparent"
-                    Padding="4"
-                    CornerRadius="4"
-                    Command="{Binding CreatePlaylistCommand}"
-                    ToolTip.Tip="Forge a new custom audio playlist container">
-                <TextBlock Text="＋"
-                           Foreground="{StaticResource BrushTextMuted}"
-                           FontSize="14"
-                           FontWeight="Bold" />
-            </Button>
-        </Grid>
+        <TextBlock Grid.Row="1" Text="PLAYLISTS" FontSize="11" FontWeight="Bold" 
+                   Foreground="{StaticResource BrushTextMuted}" Margin="4,0,0,8" LetterSpacing="1"/>
 
-        <ScrollViewer Grid.Row="2"
-                      HorizontalScrollBarVisibility="Disabled"
-                      VerticalScrollBarVisibility="Auto">
-            <ItemsControl ItemsSource="{Binding CustomPlaylists}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Button Background="Transparent"
-                                HorizontalAlignment="Stretch"
-                                HorizontalContentAlignment="Left"
-                                Padding="8"
-                                CornerRadius="4"
-                                Command="{Binding $parent[UserControl].((vm:LeftBarViewModel)DataContext).OpenPlaylistCommand}"
-                                CommandParameter="{Binding}"
-                                ToolTip.Tip="Stream this collection">
-                            <TextBlock Text="{Binding Name}"
-                                       TextTrimming="CharacterEllipsis"
-                                       Foreground="{StaticResource BrushTextMuted}" />
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <ListBox Grid.Row="2" 
+                 ItemsSource="{Binding FilteredPlaylists}"
+                 SelectedItem="{Binding SelectedPlaylist, Mode=TwoWay}"
+                 Background="Transparent" 
+                 BorderThickness="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Name}" 
+                               Foreground="{StaticResource BrushTextWhite}"
+                               Padding="4,6"
+                               TextTrimming="CharacterEllipsis"/>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </Grid>
 </UserControl>
