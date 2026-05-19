@@ -16,6 +16,7 @@ public partial class MainViewModel : ViewModelBase
     [ObservableProperty] private string _username = "Guest";
     [ObservableProperty] private CenterContentMode _currentCenterMode = CenterContentMode.None;
     [ObservableProperty] private Playlist? _activeCenterPlaylist;
+    [ObservableProperty] private ViewModelBase? _currentOverlayViewModel;
 
     public ObservableCollection<UnifiedTrack> SearchResults { get; } = [];
     public LeftBarViewModel LeftBar { get; }
@@ -67,5 +68,10 @@ public partial class MainViewModel : ViewModelBase
         CurrentCenterMode = playlist == _libraryManager.TemporaryPlaylist
             ? CenterContentMode.TemporaryTracks
             : CenterContentMode.PlaylistTracks;
+    }
+
+    public void SetOverlay(ViewModelBase? overlayViewModel)
+    {
+        CurrentOverlayViewModel = overlayViewModel;
     }
 }
