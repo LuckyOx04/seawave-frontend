@@ -18,7 +18,7 @@ public class AvaloniaFileDialogService : IFileDialogService
         return null;
     }
     
-    public async Task<string[]> SelectPathsAsync()
+    public async Task<string[]> SelectPathsAsync(bool isSingleFile)
     {
         var provider = GetStorageProvider();
         if (provider == null)
@@ -26,16 +26,23 @@ public class AvaloniaFileDialogService : IFileDialogService
             return [];
         }
 
-        var audioFilter = new FilePickerFileType("Supported Audio Formats")
+        var singleFileTitle = "Select music track";
+        var multipleFilesTitle = "Select Music tracks or folders";
+        
+        var multipleFilesAudioFilter = new FilePickerFileType("Supported Audio Formats")
         {
             Patterns = ["*.mp3", "*.flac", "*.wav", "*.m4a", "*.aac", "*.ogg", "*.opus", "*.cue"]
+        };
+        var singleFileAudioFilter = new FilePickerFileType("Supported Audio Formats")
+        {
+            Patterns = ["*.mp3"]
         };
 
         var options = new FilePickerOpenOptions
         {
-            Title = "Select Music tracks or folders",
-            AllowMultiple = true,
-            FileTypeFilter = [audioFilter]
+            Title = isSingleFile ? singleFileTitle : multipleFilesTitle,
+            AllowMultiple = !isSingleFile,
+            FileTypeFilter = isSingleFile ? [singleFileAudioFilter] : [multipleFilesAudioFilter]
         };
 
         var files = await provider.OpenFilePickerAsync(options);

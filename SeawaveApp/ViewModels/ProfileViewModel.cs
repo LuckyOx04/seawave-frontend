@@ -49,25 +49,25 @@ public partial class ProfileViewModel : ViewModelBase
     [RelayCommand]
     private void NavigateToUploadTrack()
     {
-        _mainShell.SetOverlay(new UploadTrackViewModel(_mainShell));
+        _mainShell.ActiveOverlay = new UploadTrackViewModel(_mainShell, _authStateManager, _api);
     }
 
     [RelayCommand]
     private void NavigateToChangePassword()
     {
-        _mainShell.SetOverlay(new ChangePasswordViewModel(_mainShell));
+        _mainShell.ActiveOverlay = new ChangePasswordViewModel(_mainShell, _authStateManager, _api);
     }
 
     [RelayCommand]
     private async Task ExecuteLogoutAsync()
     {
         await _authStateManager.Logout();
-        _mainShell.SetOverlay(new LoginViewModel(_mainShell, _authStateManager));
+        _mainShell.ActiveOverlay = null;
     }
 
     [RelayCommand]
     private void ReturnToMainWindow()
     {
-        _mainShell.SetOverlay(null);
+        _mainShell.ActiveOverlay = null;
     }
 }

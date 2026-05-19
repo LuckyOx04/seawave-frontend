@@ -79,7 +79,7 @@ public partial class TopBarViewModel(
     [RelayCommand]
     private async Task AddFileAsync()
     {
-        var paths = await fileDialogService.SelectPathsAsync();
+        var paths = await fileDialogService.SelectPathsAsync(false);
         if (paths is { Length: > 0 })
         {
             await libraryManager.AddLocalFileToTempAsync(paths);

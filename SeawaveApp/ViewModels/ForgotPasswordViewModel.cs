@@ -6,7 +6,8 @@ using SeawaveApp.Services;
 
 namespace SeawaveApp.ViewModels;
 
-public partial class ForgotPasswordViewModel(MainViewModel mainShell) : ViewModelBase
+public partial class ForgotPasswordViewModel(MainViewModel mainShell, 
+    AuthStateManager authStateManager) : ViewModelBase
 {
     private readonly ApiService _api = new();
     
@@ -36,7 +37,6 @@ public partial class ForgotPasswordViewModel(MainViewModel mainShell) : ViewMode
     [RelayCommand]
     private void NavigateToLogin()
     {
-        var authManager = new AuthStateManager(_api);
-        mainShell.SetOverlay(new LoginViewModel(mainShell, authManager));
+        mainShell.ActiveOverlay = new LoginViewModel(mainShell, authStateManager);
     }
 }

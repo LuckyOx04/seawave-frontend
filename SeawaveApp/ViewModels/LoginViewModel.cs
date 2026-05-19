@@ -33,19 +33,19 @@ public partial class LoginViewModel(MainViewModel mainShell, AuthStateManager au
         }
         else
         {
-            mainShell.SetOverlay(null);
+            mainShell.ActiveOverlay = null;
         }
     }
 
     [RelayCommand]
     private void NavigateToRegister()
     {
-        mainShell.SetOverlay(new RegisterViewModel(mainShell, authStateManager));
+        mainShell.ActiveOverlay = new RegisterViewModel(mainShell, authStateManager);
     }
 
     [RelayCommand]
     private void NavigateToForgotPassword()
     {
-        mainShell.SetOverlay(new ForgotPasswordViewModel(mainShell));
+        mainShell.ActiveOverlay = new ForgotPasswordViewModel(mainShell, authStateManager);
     }
 }

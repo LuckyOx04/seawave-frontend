@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
@@ -10,13 +11,19 @@ public partial class MainViewModel : ViewModelBase
     private readonly ConnectivityService _connectivityService;
     private readonly AuthStateManager _authStateManager;
     private readonly LibraryManager _libraryManager;
+    private readonly ApiService _api;
 
     [ObservableProperty] private bool _isOnline;
     [ObservableProperty] private bool _isLoggedIn;
     [ObservableProperty] private string _username = "Guest";
     [ObservableProperty] private CenterContentMode _currentCenterMode = CenterContentMode.None;
     [ObservableProperty] private Playlist? _activeCenterPlaylist;
-    [ObservableProperty] private ViewModelBase? _currentOverlayViewModel;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsOverlayActive))] 
+    private ViewModelBase? _activeOverlay;
+
+    public bool IsOverlayActive => ActiveOverlay != null;
 
     public ObservableCollection<UnifiedTrack> SearchResults { get; } = [];
     public LeftBarViewModel LeftBar { get; }
@@ -32,11 +39,12 @@ public partial class MainViewModel : ViewModelBase
         _connectivityService = connectivityService;
         _authStateManager = authStateManager;
         _libraryManager = libraryManager;
+        _api = api;
 
         LeftBar = new LeftBarViewModel(this, _libraryManager);
         RightBar = new RightBarViewModel(playbackManager);
         CenterArea = new CenterAreaViewModel(this, playbackManager);
-        TopBar = new TopBarViewModel(api, _libraryManager, this, fileDialogService);
+        TopBar = new TopBarViewModel(_api, _libraryManager, this, fileDialogService);
         BottomBar = new BottomBarViewModel(playbackManager);
 
         IsOnline = _connectivityService.IsServiceReachable;
@@ -70,8 +78,16 @@ public partial class MainViewModel : ViewModelBase
             : CenterContentMode.PlaylistTracks;
     }
 
-    public void SetOverlay(ViewModelBase? overlayViewModel)
+    [RelayCommand]
+    private void OpenLoginOrProfile()
     {
-        CurrentOverlayViewModel = overlayViewModel;
+        if (!IsLoggedIn)
+        {
+            ActiveOverlay = new LoginViewModel(this, _authStateManager);
+        }
+        else
+        {
+            ActiveOverlay = new ProfileViewModel(this, _authStateManager, _api);
+        }
     }
 }

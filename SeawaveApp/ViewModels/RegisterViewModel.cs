@@ -55,8 +55,6 @@ public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager
         {
             IsSuccessState = true;
             StatusMessage = result.Message!;
-            await Task.Delay(1500);
-            NavigateToLogin();
         }
         else
         {
@@ -67,6 +65,6 @@ public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager
     [RelayCommand]
     private void NavigateToLogin()
     {
-        mainShell.SetOverlay(new LoginViewModel(mainShell, authStateManager));
+        mainShell.ActiveOverlay = new LoginViewModel(mainShell, authStateManager);
     }
 }

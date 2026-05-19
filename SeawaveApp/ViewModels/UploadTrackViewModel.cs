@@ -6,10 +6,10 @@ using SeawaveApp.Services;
 
 namespace SeawaveApp.ViewModels;
 
-public partial class UploadTrackViewModel(MainViewModel mainShell) : ViewModelBase
+public partial class UploadTrackViewModel(MainViewModel mainShell, AuthStateManager authStateManager,
+    ApiService api) : ViewModelBase
 {
-    private readonly ApiService _api;
-    private readonly IFileDialogService _fileDialogService = new AvaloniaFileDialogService();
+    private readonly AvaloniaFileDialogService _fileDialogService = new();
     
     [ObservableProperty] private string _title = string.Empty;
     [ObservableProperty] private string _artist = string.Empty;
@@ -20,7 +20,7 @@ public partial class UploadTrackViewModel(MainViewModel mainShell) : ViewModelBa
     [RelayCommand]
     private async Task ExecuteBrowseAsync()
     {
-        var paths = await _fileDialogService.SelectPathsAsync();
+        var paths = await _fileDialogService.SelectPathsAsync(true);
         if (paths is { Length: > 0 })
         {
             FilePath = paths[0];            
@@ -41,15 +41,15 @@ public partial class UploadTrackViewModel(MainViewModel mainShell) : ViewModelBa
         StatusMessage = "Initiating file upload...";
 
         var request = new UploadTrackRequest(Title, Artist, FilePath);
-        var response = await _api.UploadTrackAsync(request);
+        var response = await api.UploadTrackAsync(request);
 
         StatusMessage = response.Message!;
+        IsBusy = false;
     }
 
     [RelayCommand]
     private void Cancel()
     {
-        var authManager = new AuthStateManager(_api);
-        mainShell.SetOverlay(new ProfileViewModel(mainShell, authManager, _api));
+        mainShell.ActiveOverlay = new ProfileViewModel(mainShell, authStateManager, api);
     }
 }

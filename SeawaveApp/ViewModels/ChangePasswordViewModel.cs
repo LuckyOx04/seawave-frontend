@@ -6,10 +6,9 @@ using SeawaveApp.Services;
 
 namespace SeawaveApp.ViewModels;
 
-public partial class ChangePasswordViewModel(MainViewModel mainShell) : ViewModelBase
+public partial class ChangePasswordViewModel(MainViewModel mainShell, AuthStateManager authStateManager,
+    ApiService api) : ViewModelBase
 {
-    private readonly ApiService _api = new();
-    
     [ObservableProperty] private string _currentPassword = string.Empty;
     [ObservableProperty] private string _newPassword = string.Empty;
     [ObservableProperty] private string _confirmPassword = string.Empty;
@@ -35,10 +34,13 @@ public partial class ChangePasswordViewModel(MainViewModel mainShell) : ViewMode
         StatusMessage = string.Empty;
 
         var request = new ChangePasswordRequest(CurrentPassword, NewPassword, ConfirmPassword);
-        var response = await _api.ChangePasswordAsync(request);
+        var response = await api.ChangePasswordAsync(request);
+        
+        IsBusy = false;
 
         if (response.IsSuccess)
         {
+            StatusMessage = "Successfully changed password.";
             await Task.Delay(1000);
             Cancel();
         }
@@ -51,7 +53,6 @@ public partial class ChangePasswordViewModel(MainViewModel mainShell) : ViewMode
     [RelayCommand]
     private void Cancel()
     {
-        var authManager = new AuthStateManager(_api);
-        mainShell.SetOverlay(new ProfileViewModel(mainShell, authManager, _api));
+        mainShell.ActiveOverlay = new ProfileViewModel(mainShell, authStateManager, api);
     }
 }

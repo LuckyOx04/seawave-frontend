@@ -4,5 +4,5 @@ namespace SeawaveApp.Services;
 
 public interface IFileDialogService
 {
-    Task<string[]> SelectPathsAsync();
+    Task<string[]> SelectPathsAsync(bool isSingleFile);
 }

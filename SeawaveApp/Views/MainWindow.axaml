@@ -1,6 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:SeawaveApp.ViewModels"
+        xmlns:views="using:SeawaveApp.Views"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
@@ -11,21 +12,66 @@
         Title="Seawave Player" Height="750" Width="1100"
         Background="{StaticResource BrushAbyssalDark}"
         x:DataType="vm:MainViewModel">
+    
+    <Window.DataTemplates>
+        <DataTemplate DataType="vm:LoginViewModel">
+            <views:LoginView/>
+        </DataTemplate>
+        <DataTemplate DataType="vm:RegisterViewModel">
+            <views:RegisterView/>
+        </DataTemplate>
+        <DataTemplate DataType="vm:ForgotPasswordViewModel">
+            <views:ForgotPasswordView/>
+        </DataTemplate>
+        <DataTemplate DataType="vm:ProfileViewModel">
+            <views:ProfileView/>
+        </DataTemplate>
+        <DataTemplate DataType="vm:ChangePasswordViewModel">
+            <views:ChangePasswordView/>
+        </DataTemplate>
+        <DataTemplate DataType="vm:UploadTrackViewModel">
+            <views:UploadTrackView/>
+        </DataTemplate>
+    </Window.DataTemplates>
 
-    <Grid>
+    <Panel>
         <Grid x:Name="PlayerWorkspaceLayout"
-              IsVisible="{Binding IsLoggedIn}"
               RowDefinitions="60,*,90">
+            
             <Border Grid.Row="0"
                     Background="{StaticResource BrushSurfaceSlate}"
                     Margin="8,8,8,4"
                     CornerRadius="8">
-                <ContentControl Content="{Binding TopBar}" />
+                <Grid ColumnDefinitions="Auto, *">
+                    <Button Grid.Column="0"
+                            Command="{Binding OpenLoginOrProfileCommand}"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            Margin="12,0">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="8">
+                            <TextBlock Text="👤"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="Log In"
+                                       IsVisible="{Binding !IsLoggedIn}"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Username}"
+                                       IsVisible="{Binding IsLoggedIn}"
+                                       FontWeight="SemiBold"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    
+                    <ContentControl Grid.Column="1"
+                                    Content="{Binding TopBar}" />
+                </Grid>
             </Border>
 
             <Grid Grid.Row="1"
                   Margin="8,4,8,4"
                   ColumnDefinitions="Auto,*,Auto">
+                
                 <StackPanel Grid.Column="0"
                             Orientation="Horizontal"
                             Margin="0,0,4,0">
@@ -78,15 +124,11 @@
         </Grid>
 
         <Grid x:Name="FullScreenOverlayContainer"
-              IsVisible="{Binding !IsLoggedIn}">
+              IsVisible="{Binding IsOverlayActive}">
             <Border Background="{StaticResource BrushAbyssalDark}"
                     Padding="40">
-                <TextBlock Text="[Authentication/Full-Screen View Window Slot Placeholder]"
-                           Foreground="{StaticResource BrushTextMuted}"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           FontSize="18" />
+                <ContentControl Content="{Binding ActiveOverlay}" />
             </Border>
         </Grid>
-    </Grid>
+    </Panel>
 </Window>
