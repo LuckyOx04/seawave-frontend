@@ -184,9 +184,7 @@
                                            Foreground="{StaticResource BrushTextMuted}"
                                            FontWeight="Bold" />
                                 <TextBlock
-                                    Text="{Binding CreatedAt, 
-                                            StringFormat='{}{0:dd MMM yyyy}', 
-                                            ConverterCulture='en-US'}"
+                                    Text="{Binding CreatedAt}"
                                     FontSize="28"
                                     FontWeight="Bold"
                                     Foreground="White" />

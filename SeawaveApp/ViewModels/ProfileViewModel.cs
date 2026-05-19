@@ -1,4 +1,4 @@
-using System;
+using System.Globalization;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -14,7 +14,7 @@ public partial class ProfileViewModel : ViewModelBase
 
     [ObservableProperty] private string _usernameText = "Loading...";
     [ObservableProperty] private string _emailText = "Loading...";
-    [ObservableProperty] private DateTime _createdAt;
+    [ObservableProperty] private string _createdAt = "Loading...";
     [ObservableProperty] private int _createdPlaylistsCount;
     [ObservableProperty] private int _pendingTracksCount;
     [ObservableProperty] private int _approvedTracksCount;
@@ -35,7 +35,7 @@ public partial class ProfileViewModel : ViewModelBase
         {
             UsernameText = response.Data.Username;
             EmailText = response.Data.Email;
-            CreatedAt = response.Data.CreatedAt;
+            CreatedAt = response.Data.CreatedAt.ToString("dd MMM yyyy", new CultureInfo("en-US"));
             PendingTracksCount = response.Data.PendingTracksCount;
             ApprovedTracksCount = response.Data.ApprovedTracksCount;
         }
