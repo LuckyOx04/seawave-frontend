@@ -8,7 +8,7 @@ namespace SeawaveApp.ViewModels;
 
 public partial class ChangePasswordViewModel(MainViewModel mainShell) : ViewModelBase
 {
-    private readonly ApiService _api;
+    private readonly ApiService _api = new();
     
     [ObservableProperty] private string _currentPassword = string.Empty;
     [ObservableProperty] private string _newPassword = string.Empty;
