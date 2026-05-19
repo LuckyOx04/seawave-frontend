@@ -21,6 +21,22 @@ public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager
     [RelayCommand]
     private async Task ExecuteRegisterAsync()
     {
+        if (string.IsNullOrWhiteSpace(Username) || !ValidatorService.IsValidUsername(Username))
+        {
+            StatusMessage = "Username cannot be empty or contain @ symbol.";
+            return;
+        }
+        if (!ValidatorService.IsValidEmail(Email))
+        {
+            StatusMessage = "Invalid email format.";
+            return;
+        }
+        if (!ValidatorService.IsValidPassword(Password))
+        {
+            StatusMessage = "Password must have at least 8 characters," +
+                                      "an upper case letter, a lower case letter and a digit.";
+            return;
+        }
         if (Password != ConfirmPassword)
         {
             StatusMessage = "Passwords do not match.";
