@@ -1,12 +1,15 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SeawaveApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              d:DesignWidth="1920"
              d:DesignHeight="1080"
              x:Class="SeawaveApp.Views.ProfileView"
-             Padding="40">
+             x:DataType="vm:ProfileViewModel"
+             Padding="40"
+             Background="{StaticResource BrushAbyssalDark}">
 
     <Grid Background="{StaticResource BrushAbyssalDark}"
           RowDefinitions="Auto,*">
@@ -14,13 +17,14 @@
         <DockPanel Grid.Row="0"
                    Margin="0,0,0,32">
 
-            <Button Content="← Return to Audio Console"
+            <Button Content="← Return to Music Player"
+                    Command="{Binding ReturnToMainWindowCommand}"
                     Background="{StaticResource BrushSurfaceSlate}"
                     Foreground="White"
                     Padding="14,8"
                     CornerRadius="6"
                     FontWeight="SemiBold" />
-            <TextBlock Text="USER WORKSPACE PROFILE"
+            <TextBlock Text="USER PROFILE"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
                        Foreground="{StaticResource BrushTextMuted}"
@@ -55,12 +59,12 @@
 
                     <StackPanel Spacing="4"
                                 HorizontalAlignment="Center">
-                        <TextBlock Text="Current User"
+                        <TextBlock Text="{Binding UsernameText}"
                                    FontSize="20"
                                    FontWeight="Bold"
                                    Foreground="White"
                                    HorizontalAlignment="Center" />
-                        <TextBlock Text="Cloud Storage Sync Active"
+                        <TextBlock Text="{Binding EmailText}"
                                    FontSize="11"
                                    Foreground="{StaticResource BrushElectricBlue}"
                                    FontWeight="SemiBold"
@@ -72,7 +76,8 @@
 
                     <StackPanel Spacing="10">
 
-                        <Button Content="🚀 Upload Track to Cloud"
+                        <Button Content="↑ Upload Track"
+                                Command="{Binding NavigateToUploadTrackCommand}"
                                 Background="{StaticResource BrushElectricBlue}"
                                 Foreground="White"
                                 HorizontalAlignment="Stretch"
@@ -81,15 +86,18 @@
                                 CornerRadius="6"
                                 FontWeight="SemiBold" />
 
-                        <Button Content="🔒 Change Security Password"
+                        <Button Content="Change Password"
+                                Command="{Binding NavigateToChangePasswordCommand}"
                                 Background="{StaticResource BrushSurfaceHover}"
                                 Foreground="White"
+                                Width="202"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center"
                                 Padding="0,10"
                                 CornerRadius="6" />
 
-                        <Button Content="🛑 Terminate Session (Logout)"
+                        <Button Content="Logout"
+                                Command="{Binding ExecuteLogoutCommand}"
                                 Background="#33FF3333"
                                 Foreground="#FFFF6666"
                                 HorizontalAlignment="Stretch"
@@ -106,106 +114,85 @@
                     CornerRadius="12">
 
                 <StackPanel Spacing="24">
-                    <TextBlock Text="Account Synchronization Overview"
+                    <TextBlock Text="Account Overview"
                                FontSize="18"
                                FontWeight="Bold"
                                Foreground="White" />
 
-                    <Grid ColumnDefinitions="*, 16, *, 16, *">
-                        <Border Grid.Column="0"
+                    <Grid ColumnDefinitions="*, 16, *, 16, *"
+                          RowDefinitions="*, 16, *">
+                        <Border Grid.Row="0"
+                                Grid.Column="0"
                                 Background="{StaticResource BrushAbyssalDark}"
                                 Padding="20"
                                 CornerRadius="8">
 
                             <StackPanel Spacing="6">
-                                <TextBlock Text="Cloud Library Tracks"
+                                <TextBlock Text="Created Online Playlists"
                                            FontSize="11"
                                            Foreground="{StaticResource BrushTextMuted}"
                                            FontWeight="Bold" />
-                                <TextBlock Text="142"
+                                <TextBlock Text="{Binding CreatedPlaylistsCount}"
                                            FontSize="28"
                                            FontWeight="Bold"
                                            Foreground="White" />
                             </StackPanel>
                         </Border>
-                        <Border Grid.Column="2"
+                        <Border Grid.Row="0"
+                                Grid.Column="2"
                                 Background="{StaticResource BrushAbyssalDark}"
                                 Padding="20"
                                 CornerRadius="8">
 
                             <StackPanel Spacing="6">
-                                <TextBlock Text="Custom Playlists"
+                                <TextBlock Text="Uploaded Tracks Pending"
                                            FontSize="11"
                                            Foreground="{StaticResource BrushTextMuted}"
                                            FontWeight="Bold" />
-                                <TextBlock Text="12"
+                                <TextBlock Text="{Binding PendingTracksCount}"
                                            FontSize="28"
                                            FontWeight="Bold"
                                            Foreground="White" />
                             </StackPanel>
                         </Border>
-                        <Border Grid.Column="4"
+                        <Border Grid.Row="0"
+                                Grid.Column="4"
                                 Background="{StaticResource BrushAbyssalDark}"
                                 Padding="20"
                                 CornerRadius="8">
 
                             <StackPanel Spacing="6">
-                                <TextBlock Text="Bandwidth Consumed"
+                                <TextBlock Text="Uploaded Tracks Approved"
                                            FontSize="11"
                                            Foreground="{StaticResource BrushTextMuted}"
                                            FontWeight="Bold" />
-                                <TextBlock Text="1.4 GB"
+                                <TextBlock Text="{Binding ApprovedTracksCount}"
                                            FontSize="28"
                                            FontWeight="Bold"
-                                           Foreground="{StaticResource BrushElectricBlue}" />
+                                           Foreground="White" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Row="2"
+                                Grid.Column="0"
+                                Background="{StaticResource BrushAbyssalDark}"
+                                Padding="20"
+                                CornerRadius="8">
+
+                            <StackPanel Spacing="6">
+                                <TextBlock Text="Date Registered"
+                                           FontSize="11"
+                                           Foreground="{StaticResource BrushTextMuted}"
+                                           FontWeight="Bold" />
+                                <TextBlock
+                                    Text="{Binding CreatedAt, 
+                                            StringFormat='{}{0:dd MMM yyyy}', 
+                                            ConverterCulture='en-US'}"
+                                    FontSize="28"
+                                    FontWeight="Bold"
+                                    Foreground="White" />
                             </StackPanel>
                         </Border>
                     </Grid>
-
-                    <StackPanel Spacing="12"
-                                Margin="0,16,0,0">
-
-                        <TextBlock Text="Integration Properties"
-                                   FontSize="14"
-                                   FontWeight="SemiBold"
-                                   Foreground="White" />
-
-                        <Grid RowDefinitions="Auto, 1, Auto"
-                              ColumnDefinitions="Auto, *">
-
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="0"
-                                       Text="Account Type"
-                                       Foreground="{StaticResource BrushTextMuted}"
-                                       Padding="0,10" />
-
-                            <TextBlock Grid.Row="0"
-                                       Grid.Column="1"
-                                       Text="Standard Synchronized Node"
-                                       Foreground="White"
-                                       HorizontalAlignment="Right"
-                                       Padding="0,10" />
-
-                            <Separator Grid.Row="1"
-                                       Grid.Column="0"
-                                       Grid.ColumnSpan="2"
-                                       Background="{StaticResource BrushSurfaceHover}" />
-
-                            <TextBlock Grid.Row="2"
-                                       Grid.Column="0"
-                                       Text="Node Registry Identity"
-                                       Foreground="{StaticResource BrushTextMuted}"
-                                       Padding="0,10" />
-
-                            <TextBlock Grid.Row="2"
-                                       Grid.Column="1"
-                                       Text="SW-99824X-LINUX"
-                                       Foreground="White"
-                                       HorizontalAlignment="Right"
-                                       Padding="0,10"
-                                       FontFamily="Monospace" />
-                        </Grid>
-                    </StackPanel>
                 </StackPanel>
             </Border>
         </Grid>
