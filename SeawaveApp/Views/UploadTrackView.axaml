@@ -1,12 +1,15 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SeawaveApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignWidth="1920"
-             d:DesignHeight="1080"
+             d:DesignWidth="800"
+             d:DesignHeight="600"
              x:Class="SeawaveApp.Views.UploadTrackView"
-             Padding="40">
+             x:DataType="vm:UploadTrackViewModel"
+             Padding="40"
+             Background="{StaticResource BrushAbyssalDark}">
 
     <Grid Background="{StaticResource BrushAbyssalDark}">
         <Border Background="{StaticResource BrushSurfaceSlate}"
@@ -17,11 +20,11 @@
                 CornerRadius="12">
             <StackPanel Spacing="22">
                 <StackPanel Spacing="4">
-                    <TextBlock Text="Cloud Storage Media Uploader"
+                    <TextBlock Text="Upload Track"
                                FontSize="20"
                                FontWeight="Bold"
                                Foreground="White" />
-                    <TextBlock Text="Upload assets directly into your primary remote library database node"
+                    <TextBlock Text="Specify an audio file along with title and artist properties to upload."
                                FontSize="12"
                                Foreground="{StaticResource BrushTextMuted}" />
                 </StackPanel>
@@ -30,13 +33,15 @@
                            Height="1" />
 
                 <StackPanel Spacing="6">
-                    <TextBlock Text="Source Audio File Pipeline Selection"
+                    <TextBlock Text="Audio File Selection"
                                FontSize="11"
                                FontWeight="SemiBold"
                                Foreground="{StaticResource BrushTextMuted}" />
                     <Grid ColumnDefinitions="*, 12, Auto">
                         <TextBox Grid.Column="0"
-                                 Watermark="No local binary file staged for ingest..."
+                                 Text="{Binding FilePath}"
+                                 IsEnabled="False"
+                                 Watermark="No local file selected for upload..."
                                  IsReadOnly="True"
                                  Height="40"
                                  CornerRadius="6"
@@ -44,6 +49,7 @@
                                  Foreground="White"
                                  VerticalContentAlignment="Center" />
                         <Button Grid.Column="2"
+                                Command="{Binding ExecuteBrowseCommand}"
                                 Content="Browse Local Storage"
                                 Background="{StaticResource BrushSurfaceHover}"
                                 Foreground="White"
@@ -57,11 +63,12 @@
                 <Grid ColumnDefinitions="*, 16, *">
                     <StackPanel Grid.Column="0"
                                 Spacing="6">
-                        <TextBlock Text="Track Master Title"
+                        <TextBlock Text="Track Title"
                                    FontSize="11"
                                    FontWeight="SemiBold"
                                    Foreground="{StaticResource BrushTextMuted}" />
-                        <TextBox Watermark="e.g. Neon Horizon"
+                        <TextBox Watermark="Enter track title..."
+                                 Text="{Binding Title, Mode=TwoWay}"
                                  Height="40"
                                  CornerRadius="6"
                                  Background="{StaticResource BrushAbyssalDark}"
@@ -70,11 +77,12 @@
                     </StackPanel>
                     <StackPanel Grid.Column="2"
                                 Spacing="6">
-                        <TextBlock Text="Lead / Contributing Artist"
+                        <TextBlock Text="Track Artist"
                                    FontSize="11"
                                    FontWeight="SemiBold"
                                    Foreground="{StaticResource BrushTextMuted}" />
-                        <TextBox Watermark="e.g. Synthesized Wave"
+                        <TextBox Watermark="Enter track artist..."
+                                 Text="{Binding Artist, Mode=TwoWay}"
                                  Height="40"
                                  CornerRadius="6"
                                  Background="{StaticResource BrushAbyssalDark}"
@@ -83,48 +91,31 @@
                     </StackPanel>
                 </Grid>
 
-                <Grid ColumnDefinitions="*, 16, *">
-                    <StackPanel Grid.Column="0"
-                                Spacing="6">
-                        <TextBlock Text="Album Affiliation"
-                                   FontSize="11"
-                                   FontWeight="SemiBold"
-                                   Foreground="{StaticResource BrushTextMuted}" />
-                        <TextBox Watermark="Leave blank if Single Release..."
-                                 Height="40"
-                                 CornerRadius="6"
-                                 Background="{StaticResource BrushAbyssalDark}"
-                                 Foreground="White"
-                                 VerticalContentAlignment="Center" />
-                    </StackPanel>
-                    <StackPanel Grid.Column="2"
-                                Spacing="6">
-                        <TextBlock Text="Genre Classification"
-                                   FontSize="11"
-                                   FontWeight="SemiBold"
-                                   Foreground="{StaticResource BrushTextMuted}" />
-                        <TextBox Watermark="e.g. Retrowave, Electronic"
-                                 Height="40"
-                                 CornerRadius="6"
-                                 Background="{StaticResource BrushAbyssalDark}"
-                                 Foreground="White"
-                                 VerticalContentAlignment="Center" />
-                    </StackPanel>
-                </Grid>
+                <TextBlock Text="{Binding StatusMessage}"
+                           Foreground="White"
+                           FontSize="12"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"
+                           IsVisible="{Binding StatusMessage, 
+                           Converter={x:Static StringConverters.IsNullOrEmpty}}" />
 
                 <Separator Background="{StaticResource BrushSurfaceHover}"
                            Height="1"
                            Margin="0,4,0,0" />
 
-                <Grid ColumnDefinitions="*, 16, Auto">
+                <Grid ColumnDefinitions="*, *">
                     <Button Grid.Column="0"
-                            Content="Discard Track Ingest"
+                            Command="{Binding CancelCommand}"
+                            Content="Cancel"
+                            HorizontalAlignment="Center"
                             Background="Transparent"
                             Foreground="{StaticResource BrushTextMuted}"
                             Height="42"
                             VerticalContentAlignment="Center" />
-                    <Button Grid.Column="2"
-                            Content="🚀 Launch Remote Deployment Pipeline"
+                    <Button Grid.Column="1"
+                            Command="{Binding ExecuteUploadCommand}"
+                            Content="Upload"
+                            HorizontalAlignment="Center"
                             Background="{StaticResource BrushElectricBlue}"
                             Foreground="White"
                             Height="42"
