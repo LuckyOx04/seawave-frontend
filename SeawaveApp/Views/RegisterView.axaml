@@ -1,11 +1,13 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SeawaveApp.ViewModels"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="450"
-             x:Class="SeawaveApp.Views.RegisterView">
+             x:Class="SeawaveApp.Views.RegisterView"
+             x:DataType="vm:RegisterViewModel">
 
     <Grid Background="{StaticResource BrushAbyssalDark}">
         <Border Background="{StaticResource BrushSurfaceSlate}"
@@ -31,7 +33,8 @@
                                FontSize="11"
                                FontWeight="SemiBold"
                                Foreground="{StaticResource BrushTextMuted}" />
-                    <TextBox Watermark="Choose a public display handle..."
+                    <TextBox Watermark="Enter username..."
+                             Text="{Binding Username, Mode=TwoWay}"
                              Height="40"
                              CornerRadius="6"
                              Background="{StaticResource BrushAbyssalDark}"
@@ -47,6 +50,7 @@
                                FontWeight="SemiBold"
                                Foreground="{StaticResource BrushTextMuted}" />
                     <TextBox Watermark="name@example.com"
+                             Text="{Binding Email, Mode=TwoWay}"
                              Height="40"
                              CornerRadius="6"
                              Background="{StaticResource BrushAbyssalDark}"
@@ -63,7 +67,8 @@
                                    FontSize="11"
                                    FontWeight="SemiBold"
                                    Foreground="{StaticResource BrushTextMuted}" />
-                        <TextBox Watermark="Create..."
+                        <TextBox Watermark="Enter password..."
+                                 Text="{Binding Password, Mode=TwoWay}"
                                  PasswordChar="●"
                                  Height="40"
                                  CornerRadius="6"
@@ -79,7 +84,8 @@
                                    FontSize="11"
                                    FontWeight="SemiBold"
                                    Foreground="{StaticResource BrushTextMuted}" />
-                        <TextBox Watermark="Repeat..."
+                        <TextBox Watermark="Repeat password..."
+                                 Text="{Binding ConfirmPassword}"
                                  PasswordChar="●"
                                  Height="40"
                                  CornerRadius="6"
@@ -90,8 +96,19 @@
                                  VerticalContentAlignment="Center" />
                     </StackPanel>
                 </Grid>
+                
+                <TextBlock Text="{Binding StatusMessage}"
+                           Foreground="{Binding IsSuccessState, 
+                           Converter={StaticResource BooleanToBrushConverter}}"
+                           FontSize="12"
+                           HorizontalAlignment="Center"
+                           TextWrapping="Wrap"
+                           IsVisible="{Binding StatusMessage, 
+                           Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
 
                 <Button Content="Register Account"
+                        Command="{Binding ExecuteRegisterCommand}"
+                        IsEnabled="{Binding !IsBusy}"
                         Background="{StaticResource BrushElectricBlue}"
                         Foreground="White"
                         Height="42"
@@ -103,6 +120,7 @@
                         Margin="0,10,0,0" />
 
                 <Button Content="← Already have an account? Log In"
+                        Command="{Binding NavigateToLoginCommand}"
                         Background="Transparent"
                         Foreground="{StaticResource BrushTextMuted}"
                         FontSize="12"
