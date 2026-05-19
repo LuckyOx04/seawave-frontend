@@ -119,16 +119,16 @@ public class ApiService
 
     public string GetStreamUrl(string fileName) => $"{_httpClient.BaseAddress}api/Music/stream/{fileName}";
 
-    public async Task<ApiResult> UploadTrackAsync(string title, string artist, string filePath)
+    public async Task<ApiResult> UploadTrackAsync(UploadTrackRequest request)
     {
         using var content = new MultipartFormDataContent();
-        content.Add(new StringContent(title), "title");
-        content.Add(new StringContent(artist), "artist");
+        content.Add(new StringContent(request.Title), "title");
+        content.Add(new StringContent(request.Artist), "artist");
         
-        var fileStream = File.OpenRead(filePath);
+        var fileStream = File.OpenRead(request.FilePath);
         var fileContent = new StreamContent(fileStream);
         fileContent.Headers.ContentType = new MediaTypeHeaderValue("audio/mpeg");
-        content.Add(fileContent, "file", Path.GetFileName(filePath));
+        content.Add(fileContent, "file", Path.GetFileName(request.FilePath));
 
         var response = await _httpClient.PostAsync("/api/Music/upload", content);
 
