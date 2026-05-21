@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
@@ -15,7 +16,7 @@ public class PlaybackManager : IDisposable
     
     private List<int> _playbackOrder = [];
     private int _orderIndex = -1;
-    private Random _rng = new();
+    private readonly Random _rng = new();
 
     public ObservableCollection<UnifiedTrack> TracksQueue { get; } = [];
     
@@ -39,8 +40,12 @@ public class PlaybackManager : IDisposable
 
     public PlaybackManager()
     {
+        Core.Initialize();
+        
         _libVlc = new LibVLC();
         _mediaPlayer = new MediaPlayer(_libVlc);
+        
+
         _mediaPlayer.EndReached += (_, _) => HandleTrackEnd();
         _mediaPlayer.TimeChanged += (_, e) => PositionChanged?
             .Invoke(this, TimeSpan.FromMilliseconds(e.Time));
