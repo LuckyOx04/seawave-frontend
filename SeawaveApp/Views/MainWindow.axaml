@@ -43,25 +43,6 @@
                     Margin="8,8,8,4"
                     CornerRadius="8">
                 <Grid ColumnDefinitions="Auto, *">
-                    <Button Grid.Column="0"
-                            Command="{Binding OpenLoginOrProfileCommand}"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            Margin="12,0">
-                        <StackPanel Orientation="Horizontal"
-                                    Spacing="8">
-                            <TextBlock Text="👤"
-                                       VerticalAlignment="Center"/>
-                            <TextBlock Text="Log In"
-                                       IsVisible="{Binding !IsLoggedIn}"
-                                       FontWeight="SemiBold"
-                                       VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding Username}"
-                                       IsVisible="{Binding IsLoggedIn}"
-                                       FontWeight="SemiBold"
-                                       VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
                     
                     <ContentControl Grid.Column="1"
                                     Content="{Binding TopBar}" />
