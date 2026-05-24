@@ -29,8 +29,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 
     private void OnShellPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(MainViewModel.CurrentCenterMode) ||
-            e.PropertyName == nameof(MainViewModel.ActiveCenterPlaylist))
+        if (e.PropertyName is nameof(MainViewModel.CurrentCenterMode) or nameof(MainViewModel.ActiveCenterPlaylist))
         {
             SyncDisplayTracks();
         }
@@ -51,7 +50,7 @@ public partial class CenterAreaViewModel : ViewModelBase
         switch (_mainShell.CurrentCenterMode)
         {
             case CenterContentMode.SearchResults:
-                HeaderTitle = "SearchResults";
+                HeaderTitle = "Search Results";
                 foreach (var track in _mainShell.SearchResults)
                 {
                     DisplayTracks.Add(track);

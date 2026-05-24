@@ -22,14 +22,14 @@
                 <TextBlock Text="👤"
                            VerticalAlignment="Center" />
                 <TextBlock Text="Log In"
-                           IsVisible="{Binding $parent[UserControl].((vm:MainViewModel)DataContext).IsLoggedIn,
-                           FallbackValue={x:Null}, Converter={x:Static BoolConverters.Not}}"
+                           IsVisible="{Binding !$parent[Window].((vm:MainViewModel)DataContext).IsLoggedIn,
+                           FallbackValue={x:Null}}"
                            FontWeight="SemiBold"
                            VerticalAlignment="Center" />
                 <TextBlock
-                    Text="{Binding $parent[UserControl].((vm:MainViewModel)DataContext).Username,
+                    Text="{Binding $parent[Window].((vm:MainViewModel)DataContext).Username,
                     FallbackValue={x:Null}}"
-                    IsVisible="{Binding $parent[UserControl].((vm:MainViewModel)DataContext).IsLoggedIn,
+                    IsVisible="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsLoggedIn,
                     FallbackValue={x:Null}}"
                     FontWeight="SemiBold"
                     VerticalAlignment="Center" 
