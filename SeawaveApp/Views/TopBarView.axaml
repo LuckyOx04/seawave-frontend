@@ -4,38 +4,43 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignWidth="800"
+             d:DesignWidth="1920"
              d:DesignHeight="100"
              x:Class="SeawaveApp.Views.TopBarView"
              x:DataType="vm:TopBarViewModel"
              Padding="16,12">
 
     <Grid ColumnDefinitions="Auto,*, Auto">
-        
+
         <Button Grid.Column="0"
-                Command="{Binding ((vm:MainViewModel)DataContext).OpenLoginOrProfileCommand,
-                RelativeSource={RelativeSource AncestorType=Window}}"
                 Background="Transparent"
                 BorderThickness="0"
-                Margin="12,0">
+                Margin="12,0"
+                Command="{Binding OpenLoginOrProfileCommand}">
             <StackPanel Orientation="Horizontal"
                         Spacing="8">
                 <TextBlock Text="👤"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center" />
                 <TextBlock Text="Log In"
-                           IsVisible="{Binding !IsLoggedIn}"
+                           IsVisible="{Binding $parent[UserControl].((vm:MainViewModel)DataContext).IsLoggedIn,
+                           FallbackValue={x:Null}, Converter={x:Static BoolConverters.Not}}"
                            FontWeight="SemiBold"
-                           VerticalAlignment="Center"/>
-                <TextBlock Text="{Binding Username}"
-                           IsVisible="{Binding IsLoggedIn}"
-                           FontWeight="SemiBold"
-                           VerticalAlignment="Center"/>
+                           VerticalAlignment="Center" />
+                <TextBlock
+                    Text="{Binding $parent[UserControl].((vm:MainViewModel)DataContext).Username,
+                    FallbackValue={x:Null}}"
+                    IsVisible="{Binding $parent[UserControl].((vm:MainViewModel)DataContext).IsLoggedIn,
+                    FallbackValue={x:Null}}"
+                    FontWeight="SemiBold"
+                    VerticalAlignment="Center" 
+                    Background="Red"/>
             </StackPanel>
         </Button>
-        
+
         <StackPanel Grid.Column="1"
                     Orientation="Horizontal"
-                    Spacing="12">
+                    Spacing="12"
+                    HorizontalAlignment="Center">
             <TextBox Width="350"
                      Height="36"
                      Watermark="Search tracks..."
@@ -45,21 +50,21 @@
                      Background="{StaticResource BrushAbyssalDark}"
                      Foreground="{StaticResource BrushTextWhite}"
                      VerticalContentAlignment="Center"
-                     ToolTip.Tip="Type to search. Auto-searches after 500ms delay." />
+                     ToolTip.Tip="Type to search." />
 
             <Button Content="Search"
                     Command="{Binding ExecuteSearchCommand}"
                     Classes="Modern"
                     Height="36"
                     VerticalContentAlignment="Center"
-                    ToolTip.Tip="Force immediate database query execution" />
+                    ToolTip.Tip="Search for results." />
         </StackPanel>
 
         <Button Grid.Column="2"
                 Command="{Binding AddFileCommand}"
                 Classes="Modern"
                 Height="36"
-                ToolTip.Tip="Import audio tracks to temporary workspace">
+                ToolTip.Tip="Add local audio tracks or folders.">
             <StackPanel Orientation="Horizontal"
                         Spacing="8">
                 <TextBlock Text="＋"
