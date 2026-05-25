@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
@@ -25,11 +26,17 @@ public partial class CenterAreaViewModel : ViewModelBase
         _mainShell.PropertyChanged += OnShellPropertyChanged;
 
         _mainShell.SearchResults.CollectionChanged += OnSearchResultsChanged;
+
+        WeakReferenceMessenger.Default.Register<PlaylistChangedMessage>(this, (r, m) =>
+        {
+            SyncDisplayTracks();
+        });
     }
 
     private void OnShellPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName is nameof(MainViewModel.CurrentCenterMode) or nameof(MainViewModel.ActiveCenterPlaylist))
+        if (e.PropertyName is nameof(MainViewModel.CurrentCenterMode) or nameof(MainViewModel.ActiveCenterPlaylist)
+            or nameof(MainViewModel.ActiveCenterPlaylist.Tracks))
         {
             SyncDisplayTracks();
         }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
@@ -76,6 +77,7 @@ public partial class MainViewModel : ViewModelBase
         CurrentCenterMode = playlist == _libraryManager.TemporaryPlaylist
             ? CenterContentMode.TemporaryTracks
             : CenterContentMode.PlaylistTracks;
+        WeakReferenceMessenger.Default.Send(new PlaylistChangedMessage(playlist));
     }
 
     [RelayCommand]
