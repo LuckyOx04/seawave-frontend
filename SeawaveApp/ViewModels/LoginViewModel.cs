@@ -38,6 +38,12 @@ public partial class LoginViewModel(MainViewModel mainShell, AuthStateManager au
     }
 
     [RelayCommand]
+    private void NavigateBack()
+    {
+        mainShell.ActiveOverlay = null;
+    }
+    
+    [RelayCommand]
     private void NavigateToRegister()
     {
         mainShell.ActiveOverlay = new RegisterViewModel(mainShell, authStateManager);
