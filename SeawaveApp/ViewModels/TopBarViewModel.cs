@@ -43,12 +43,6 @@ public partial class TopBarViewModel(
     }
 
     [RelayCommand]
-    private void OpenLoginOrProfile()
-    {
-        mainShell.OpenLoginOrProfileCommand.Execute(null);
-    }
-
-    [RelayCommand]
     private async Task ExecuteSearchAsync()
     {
         await _searchCts?.CancelAsync()!;

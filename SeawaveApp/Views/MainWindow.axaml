@@ -104,12 +104,12 @@
             </Border>
         </Grid>
 
-        <!-- <Grid x:Name="FullScreenOverlayContainer" -->
-        <!--       IsVisible="{Binding IsOverlayActive}"> -->
-        <!--     <Border Background="{StaticResource BrushAbyssalDark}" -->
-        <!--             Padding="40"> -->
-        <!--         <ContentControl Content="{Binding ActiveOverlay}" /> -->
-        <!--     </Border> -->
-        <!-- </Grid> -->
+        <Grid x:Name="FullScreenOverlayContainer"
+              IsVisible="{Binding IsOverlayActive}">
+            <Border Background="{StaticResource BrushAbyssalDark}"
+                    Padding="40">
+                <ContentControl Content="{Binding ActiveOverlay}" />
+            </Border>
+        </Grid>
     </Panel>
 </Window>

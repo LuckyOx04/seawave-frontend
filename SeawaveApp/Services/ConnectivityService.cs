@@ -29,7 +29,7 @@ public class ConnectivityService
             field = value;
             ConnectivityChanged?.Invoke(field);
         }
-    }
+    } = false;
 
     public ConnectivityService()
     {
@@ -45,7 +45,8 @@ public class ConnectivityService
         try
         {
             var response = await Client.SendAsync(new HttpRequestMessage(HttpMethod.Head,
-                "https://localhost:7212/api/Music/search/tracks?q=test"));
+                "https://localhost:7212/api/Music/search/tracks?q=test"), 
+                HttpCompletionOption.ResponseHeadersRead);
             IsServiceReachable = response.IsSuccessStatusCode || (int)response.StatusCode == 401;
         }
         catch

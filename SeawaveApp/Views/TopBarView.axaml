@@ -15,8 +15,12 @@
         <Button Grid.Column="0"
                 Background="Transparent"
                 BorderThickness="0"
+                Height="30"
                 Margin="12,0"
-                Command="{Binding OpenLoginOrProfileCommand}">
+                Command="{Binding $parent[Window].((vm:MainViewModel)DataContext).OpenLoginOrProfileCommand,
+                FallbackValue={x:Null}}"
+                IsEnabled="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnline,
+                FallbackValue={x:Null}}">
             <StackPanel Orientation="Horizontal"
                         Spacing="8">
                 <TextBlock Text="👤"
@@ -32,8 +36,7 @@
                     IsVisible="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsLoggedIn,
                     FallbackValue={x:Null}}"
                     FontWeight="SemiBold"
-                    VerticalAlignment="Center" 
-                    Background="Red"/>
+                    VerticalAlignment="Center" />
             </StackPanel>
         </Button>
 
