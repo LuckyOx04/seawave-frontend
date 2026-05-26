@@ -27,14 +27,14 @@
                            VerticalAlignment="Center" />
                 <TextBlock Text="Log In"
                            IsVisible="{Binding !$parent[Window].((vm:MainViewModel)DataContext).IsLoggedIn,
-                           FallbackValue={x:Null}}"
+                           FallbackValue={x:True}}"
                            FontWeight="SemiBold"
                            VerticalAlignment="Center" />
                 <TextBlock
                     Text="{Binding $parent[Window].((vm:MainViewModel)DataContext).Username,
                     FallbackValue={x:Null}}"
                     IsVisible="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsLoggedIn,
-                    FallbackValue={x:Null}}"
+                    FallbackValue={x:False}}"
                     FontWeight="SemiBold"
                     VerticalAlignment="Center" />
             </StackPanel>
@@ -46,6 +46,8 @@
                     HorizontalAlignment="Center">
             <TextBox Width="350"
                      Height="36"
+                     IsEnabled="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnline,
+                     FallbackValue={x:False}}"
                      Watermark="Search tracks..."
                      Text="{Binding SearchQuery, Mode=TwoWay}"
                      CornerRadius="18" BorderThickness="1"
@@ -56,6 +58,8 @@
                      ToolTip.Tip="Type to search." />
 
             <Button Content="Search"
+                    IsEnabled="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnline,
+                     FallbackValue={x:False}}"
                     Command="{Binding ExecuteSearchCommand}"
                     Classes="Modern"
                     Height="36"
