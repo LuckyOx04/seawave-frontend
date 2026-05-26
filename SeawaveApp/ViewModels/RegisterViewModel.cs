@@ -65,6 +65,10 @@ public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager
 
         if (result.IsSuccess)
         {
+            Username = string.Empty;
+            Email = string.Empty;
+            Password = string.Empty;
+            ConfirmPassword = string.Empty;
             IsSuccessState = true;
             StatusMessage = result.Message!;
         }
