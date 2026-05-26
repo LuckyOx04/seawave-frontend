@@ -13,11 +13,13 @@ public class ApiService
 {
     private readonly HttpClient _httpClient;
     private string? _token;
+    
+    public bool IsLoggedInOnStartup { get; private set; }
 
     public ApiService()
     {
         _httpClient = new HttpClient { BaseAddress = new Uri("https://localhost:7212") };
-        _token = SessionStorage.Load();
+        _token = SessionStorage.Load()?.Token;
         UpdateAuthHeader();
     }
 
@@ -25,6 +27,7 @@ public class ApiService
     {
         _httpClient.DefaultRequestHeaders.Authorization =
             !string.IsNullOrEmpty(_token) ? new AuthenticationHeaderValue(_token) : null;
+        IsLoggedInOnStartup = !string.IsNullOrEmpty(_token);
     }
 
     private async Task<string> GetMessage(HttpResponseMessage response)
@@ -60,7 +63,7 @@ public class ApiService
         {
             return new ApiDataResult<LoginResponse>(false, null,"Token missing from response.");
         }
-        SessionStorage.Save(_token);
+        SessionStorage.Save(_token, data?.Username);
         UpdateAuthHeader();
         
         return new ApiDataResult<LoginResponse>(true, data, "Login successful.");

@@ -16,7 +16,7 @@ public class AuthStateManager(ApiService api)
             field = value;
             StateChanged?.Invoke();
         }
-    }
+    } = api.IsLoggedInOnStartup;
 
     public string? Username
     {
@@ -26,7 +26,7 @@ public class AuthStateManager(ApiService api)
             field = value;
             StateChanged?.Invoke();
         }
-    }
+    } = SessionStorage.Load()?.Username;
 
     public async Task<ApiDataResult<LoginResponse>> Login(string identifier, string password)
     {

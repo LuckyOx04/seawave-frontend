@@ -10,6 +10,9 @@ namespace SeawaveApp.ViewModels;
 public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager authStateManager) : ViewModelBase
 {
     private readonly ApiService _api = new();
+    
+    private static readonly IBrush SuccessBrush = new SolidColorBrush(Color.Parse("#007bff"));
+    private static readonly IBrush FailureBrush = new SolidColorBrush(Color.Parse("#ff6666"));
 
     [ObservableProperty] private string _username = string.Empty;
     [ObservableProperty] private string _email = string.Empty;
@@ -22,14 +25,7 @@ public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager
 
     [ObservableProperty] private bool _isBusy;
 
-    public IBrush StatusColor
-    {
-        get
-        {
-            var hexColor = IsSuccessState ? "#007bff" : "ffff6666";
-            return new SolidColorBrush(Color.Parse(hexColor));
-        }
-    }
+    public IBrush StatusColor => IsSuccessState ? SuccessBrush : FailureBrush;
 
     [RelayCommand]
     private async Task ExecuteRegisterAsync()

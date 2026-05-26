@@ -2,4 +2,4 @@ using System;
 
 namespace SeawaveApp.Models;
 
-public record UserSession(string Token, DateTime CreatedAt);
+public record UserSession(string Token, DateTime CreatedAt, string? Username);

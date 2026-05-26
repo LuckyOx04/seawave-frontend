@@ -97,7 +97,7 @@
                            HorizontalAlignment="Center"
                            TextWrapping="Wrap"
                            IsVisible="{Binding StatusMessage, 
-                           Converter={x:Static StringConverters.IsNullOrEmpty}}" />
+                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
 
                 <Separator Background="{StaticResource BrushSurfaceHover}"
                            Height="1"

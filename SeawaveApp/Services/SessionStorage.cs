@@ -11,14 +11,14 @@ public static class SessionStorage
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "seawave", "session.json");
 
-    public static void Save(string token)
+    public static void Save(string token, string? username)
     {
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(Path)!);
-        var session = new UserSession(token, DateTime.UtcNow);
+        var session = new UserSession(token, DateTime.UtcNow, username);
         File.WriteAllText(Path, JsonSerializer.Serialize(session));
     }
 
-    public static string? Load()
+    public static UserSession? Load()
     {
         if (!File.Exists(Path))
         {
@@ -29,8 +29,9 @@ public static class SessionStorage
 
         if (session != null && !((DateTime.UtcNow - session.CreatedAt).TotalDays > 7))
         {
-            return session.Token;
+            return session;
         }
+        
         File.Delete(Path);
         return null;
     }
