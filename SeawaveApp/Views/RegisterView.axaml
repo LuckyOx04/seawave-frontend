@@ -18,15 +18,10 @@
                 CornerRadius="12"
                 BoxShadow="0 8 24 0 #2A000000">
             <StackPanel Spacing="18">
-                <StackPanel Spacing="4">
-                    <TextBlock Text="Create Account"
-                               FontSize="24"
-                               FontWeight="Bold"
-                               Foreground="White" />
-                    <TextBlock Text="Join the cloud stream synchronization platform"
-                               FontSize="12"
-                               Foreground="{StaticResource BrushTextMuted}" />
-                </StackPanel>
+                <TextBlock Text="Create Account"
+                           FontSize="24"
+                           FontWeight="Bold"
+                           Foreground="White" />
 
                 <StackPanel Spacing="6">
                     <TextBlock Text="Username"
@@ -96,17 +91,16 @@
                                  VerticalContentAlignment="Center" />
                     </StackPanel>
                 </Grid>
-                
+
                 <TextBlock Text="{Binding StatusMessage}"
-                           Foreground="{Binding IsSuccessState, 
-                           Converter={StaticResource BooleanToBrushConverter}}"
+                           Foreground="{Binding StatusColor}"
                            FontSize="12"
                            HorizontalAlignment="Center"
                            TextWrapping="Wrap"
                            IsVisible="{Binding StatusMessage, 
-                           Converter={x:Static StringConverters.IsNullOrEmpty}}"/>
+                           Converter={x:Static StringConverters.IsNullOrEmpty}}" />
 
-                <Button Content="Register Account"
+                <Button Content="Register"
                         Command="{Binding ExecuteRegisterCommand}"
                         IsEnabled="{Binding !IsBusy}"
                         Background="{StaticResource BrushElectricBlue}"

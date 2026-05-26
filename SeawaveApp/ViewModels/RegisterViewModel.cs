@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SeawaveApp.Models;
@@ -9,14 +10,26 @@ namespace SeawaveApp.ViewModels;
 public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager authStateManager) : ViewModelBase
 {
     private readonly ApiService _api = new();
-    
+
     [ObservableProperty] private string _username = string.Empty;
     [ObservableProperty] private string _email = string.Empty;
     [ObservableProperty] private string _password = string.Empty;
     [ObservableProperty] private string _confirmPassword = string.Empty;
     [ObservableProperty] private string _statusMessage = string.Empty;
-    [ObservableProperty] private bool _isSuccessState;
+
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(StatusColor))]
+    private bool _isSuccessState;
+
     [ObservableProperty] private bool _isBusy;
+
+    public IBrush StatusColor
+    {
+        get
+        {
+            var hexColor = IsSuccessState ? "#007bff" : "ffff6666";
+            return new SolidColorBrush(Color.Parse(hexColor));
+        }
+    }
 
     [RelayCommand]
     private async Task ExecuteRegisterAsync()
@@ -26,17 +39,20 @@ public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager
             StatusMessage = "Username cannot be empty or contain @ symbol.";
             return;
         }
+
         if (!ValidatorService.IsValidEmail(Email))
         {
             StatusMessage = "Invalid email format.";
             return;
         }
+
         if (!ValidatorService.IsValidPassword(Password))
         {
             StatusMessage = "Password must have at least 8 characters," +
-                                      "an upper case letter, a lower case letter and a digit.";
+                            "an upper case letter, a lower case letter and a digit.";
             return;
         }
+
         if (Password != ConfirmPassword)
         {
             StatusMessage = "Passwords do not match.";

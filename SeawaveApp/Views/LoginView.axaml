@@ -29,10 +29,6 @@
                                FontWeight="Bold"
                                Foreground="White"
                                LetterSpacing="2" />
-                    <TextBlock Text="Sign in to sync your music stream"
-                               FontSize="12"
-                               Foreground="{StaticResource BrushTextMuted}"
-                               HorizontalAlignment="Center" />
                 </StackPanel>
 
                 <StackPanel Spacing="6">
