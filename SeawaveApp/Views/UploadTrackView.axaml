@@ -24,7 +24,7 @@
                                FontSize="20"
                                FontWeight="Bold"
                                Foreground="White" />
-                    <TextBlock Text="Specify an audio file along with title and artist properties to upload."
+                    <TextBlock Text="Specify an audio file along with title and artist to upload."
                                FontSize="12"
                                Foreground="{StaticResource BrushTextMuted}" />
                 </StackPanel>
@@ -92,7 +92,7 @@
                 </Grid>
 
                 <TextBlock Text="{Binding StatusMessage}"
-                           Foreground="White"
+                           Foreground="{Binding StatusColor}"
                            FontSize="12"
                            HorizontalAlignment="Center"
                            TextWrapping="Wrap"

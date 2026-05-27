@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SeawaveApp.Models;
@@ -11,11 +12,19 @@ public partial class UploadTrackViewModel(MainViewModel mainShell, AuthStateMana
 {
     private readonly AvaloniaFileDialogService _fileDialogService = new();
     
+    private static readonly IBrush SuccessBrush = new SolidColorBrush(Color.Parse("#007bff"));
+    private static readonly IBrush FailureBrush = new SolidColorBrush(Color.Parse("#ff6666"));
+    
     [ObservableProperty] private string _title = string.Empty;
     [ObservableProperty] private string _artist = string.Empty;
     [ObservableProperty] private string _filePath = string.Empty;
     [ObservableProperty] private string _statusMessage = string.Empty;
     [ObservableProperty] private bool _isBusy;
+    
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(StatusColor))]
+    private bool _isSuccessState;
+    
+    public IBrush StatusColor => IsSuccessState ? SuccessBrush : FailureBrush;
 
     [RelayCommand]
     private async Task ExecuteBrowseAsync()
@@ -34,17 +43,29 @@ public partial class UploadTrackViewModel(MainViewModel mainShell, AuthStateMana
             string.IsNullOrWhiteSpace(Artist))
         {
             StatusMessage = "All parameters (Title, Artist and File) must be set.";
+            IsSuccessState = false;
             return;
         }
         
         IsBusy = true;
+        IsSuccessState = true;
         StatusMessage = "Initiating file upload...";
 
         var request = new UploadTrackRequest(Title, Artist, FilePath);
         var response = await api.UploadTrackAsync(request);
 
-        StatusMessage = response.Message!;
         IsBusy = false;
+
+        if (response.IsSuccess)
+        {
+            IsSuccessState = true;
+            StatusMessage = "Track successfully uploaded for review.";
+        }
+        else
+        {
+            IsSuccessState = false;
+            StatusMessage = response.Message!;
+        }
     }
 
     [RelayCommand]
