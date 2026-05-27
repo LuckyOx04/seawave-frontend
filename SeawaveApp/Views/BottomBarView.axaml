@@ -96,22 +96,17 @@
                             Margin="8,0"
                             Minimum="0"
                             Maximum="{Binding TrackDurationSeconds}"
-                            Value="{Binding CurrentPositionSeconds}"
+                            Value="{Binding SliderValue, Mode=TwoWay}"
                             TickFrequency="1"
                             IsSnapToTickEnabled="True"
                             SmallChange="1"
                             Foreground="{StaticResource BrushElectricBlue}"
                             Height="40"
-                            VerticalAlignment="Bottom">
-                        
-                            <Interaction.Behaviors>
-                                <EventTriggerBehavior EventName="DragCompleted"
-                                                      SourceObject="{Binding $self}">
-                                    <InvokeCommandAction Command="{Binding SeekToTimeCommand}"
-                                                         CommandParameter="{Binding $parent[Slider].Value}" />
-                                </EventTriggerBehavior>
-                            </Interaction.Behaviors>
-                    </Slider>
+                            VerticalAlignment="Bottom"
+                            Thumb.DragStarted="Thumb_OnDragStarted"
+                            Thumb.DragCompleted="Thumb_OnDragCompleted"
+                            PointerPressed="InputElement_OnPointerPressed"
+                            PointerMoved="InputElement_OnPointerMoved"/>
 
                     <TextBlock Grid.Column="2"
                                Text="{Binding TrackDuration, 

@@ -12,15 +12,24 @@ public partial class BottomBarViewModel : ViewModelBase
 
     [ObservableProperty] private UnifiedTrack? _currentTrack;
     [ObservableProperty] private bool _isPlaying;
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(CurrentPositionSeconds))]
-    private TimeSpan _currentPosition;
+    [ObservableProperty] private TimeSpan _currentPosition;
     [ObservableProperty] [NotifyPropertyChangedFor(nameof(TrackDurationSeconds))]
     private TimeSpan _trackDuration;
     [ObservableProperty] private bool _isShuffleOn;
     [ObservableProperty] private string _repeatModeLabel = "Repeat: Off";
     [ObservableProperty] private bool _isUserDragging;
 
-    public double CurrentPositionSeconds => CurrentPosition.TotalSeconds;
+    public double SliderValue
+    {
+        get => CurrentPosition.TotalSeconds;
+        set
+        {
+            if (IsUserDragging)
+            {
+                CurrentPosition = TimeSpan.FromSeconds(value);
+            }
+        }
+    }
     public double TrackDurationSeconds => TrackDuration.TotalSeconds;
 
     public BottomBarViewModel(PlaybackManager playbackManager)
@@ -45,10 +54,13 @@ public partial class BottomBarViewModel : ViewModelBase
 
     private void OnPositionChanged(object? sender, TimeSpan position)
     {
-        if (!IsUserDragging)
+        if (IsUserDragging)
         {
-            CurrentPosition = position;
+            return;
         }
+        
+        CurrentPosition = position;
+        OnPropertyChanged(nameof(SliderValue));
     }
 
     private void OnDurationChanged(object? sender, TimeSpan duration)
