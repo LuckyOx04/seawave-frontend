@@ -11,7 +11,7 @@
 
     <Border Background="{StaticResource BrushSurfaceSlate}"
             Height="90"
-            Padding="16,0">
+            Padding="16,5, 16, 0">
         <Grid ColumnDefinitions="250, *, 250"
               VerticalAlignment="Center">
 
@@ -37,11 +37,12 @@
                     TextTrimming="WordEllipsis" />
             </StackPanel>
 
-            <StackPanel Grid.Column="1"
-                        VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal"
+            <Grid Grid.Column="1"
+                  RowDefinitions="Auto,Auto"
+                  VerticalAlignment="Center">
+                <StackPanel Grid.Row="0"
+                            Orientation="Horizontal"
                             HorizontalAlignment="Center"
-                            VerticalAlignment="Bottom"
                             Spacing="16">
                     <ToggleButton Content="⤮"
                                   IsChecked="{Binding IsShuffleOn}"
@@ -51,6 +52,7 @@
 
                     <Button Content="⏮"
                             Command="{Binding SkipPreviousCommand}"
+                            Foreground="White"
                             Background="Transparent" />
 
                     <Button Command="{Binding TogglePlayPauseCommand}"
@@ -62,16 +64,19 @@
                                VerticalAlignment="Center">
                             <TextBlock Text="⏸"
                                        IsVisible="{Binding IsPlaying}"
-                                       Foreground="White" />
+                                       Foreground="White"
+                                       Background="Transparent"/>
                             <TextBlock Text="▶"
                                        IsVisible="{Binding !IsPlaying}"
                                        Foreground="White"
+                                       Background="Transparent"
                                        Margin="2,0,0,0" />
                         </Panel>
                     </Button>
 
                     <Button Content="⏭"
                             Command="{Binding SkipNextCommand}"
+                            Foreground="White"
                             Background="Transparent" />
 
                     <Button Content="{Binding RepeatModeLabel}"
@@ -84,7 +89,10 @@
                             ToolTip.Tip="Switch repeat modes" />
                 </StackPanel>
 
-                <Grid ColumnDefinitions="Auto, *, Auto" Height="27">
+                <Grid Grid.Row="1"
+                      ColumnDefinitions="Auto, *, Auto" 
+                      VerticalAlignment="Center">
+                    
                     <TextBlock Grid.Column="0"
                                Text="{Binding CurrentPosition, 
                                StringFormat=\{0:mm\\:ss\}}"
@@ -101,12 +109,11 @@
                             IsSnapToTickEnabled="True"
                             SmallChange="1"
                             Foreground="{StaticResource BrushElectricBlue}"
-                            Height="40"
-                            VerticalAlignment="Bottom"
-                            Thumb.DragStarted="Thumb_OnDragStarted"
-                            Thumb.DragCompleted="Thumb_OnDragCompleted"
-                            PointerPressed="InputElement_OnPointerPressed"
-                            PointerMoved="InputElement_OnPointerMoved"/>
+                            Thumb.DragStarted="Slider_OnDragStarted"
+                            Thumb.DragCompleted="Slider_OnDragCompleted"
+                            PointerPressed="Slider_OnPointerPressed"
+                            PointerMoved="Slider_OnPointerMoved"
+                            ToolTip.Placement="Top"/>
 
                     <TextBlock Grid.Column="2"
                                Text="{Binding TrackDuration, 
@@ -115,9 +122,9 @@
                                Foreground="{StaticResource BrushTextMuted}"
                                VerticalAlignment="Center" />
                 </Grid>
-            </StackPanel>
+            </Grid>
 
-            <Panel Grid.Column="2" />
+            <Panel Grid.Column="2"/>
         </Grid>
     </Border>
 </UserControl>

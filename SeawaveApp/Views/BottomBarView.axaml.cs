@@ -15,7 +15,7 @@ public partial class BottomBarView : UserControl
         InitializeComponent();
     }
 
-    private void Thumb_OnDragStarted(object? sender, VectorEventArgs e)
+    private void Slider_OnDragStarted(object? sender, VectorEventArgs e)
     {
         if (DataContext is BottomBarViewModel vm)
         {
@@ -23,7 +23,7 @@ public partial class BottomBarView : UserControl
         }
     }
 
-    private void Thumb_OnDragCompleted(object? sender, VectorEventArgs e)
+    private void Slider_OnDragCompleted(object? sender, VectorEventArgs e)
     {
         if (sender is Slider slider && DataContext is BottomBarViewModel vm)
         {
@@ -31,24 +31,24 @@ public partial class BottomBarView : UserControl
         }
     }
 
-    private void InputElement_OnPointerPressed(object? sender, PointerPressedEventArgs e)
+    private void Slider_OnPointerPressed(object? sender, PointerPressedEventArgs e)
     {
         Console.WriteLine("Input element pressed");
         if (sender is not Slider slider || DataContext is not BottomBarViewModel vm || 
             e.Source is not Visual visualSource || visualSource.GetType().Name.Contains("Thumb"))
         {
-            Console.WriteLine("error");
             return;
         }
 
-        Console.WriteLine("Before the ui element");
+        vm.StartDragCommand.Execute(null);
+        
         Dispatcher.UIThread.Post(() =>
         {
             vm.SeekToTimeCommand.Execute(slider.Value);
-        });
+        }, DispatcherPriority.Input);
     }
 
-    private void InputElement_OnPointerMoved(object? sender, PointerEventArgs e)
+    private void Slider_OnPointerMoved(object? sender, PointerEventArgs e)
     {
         if (sender is not Slider slider)
         {
@@ -72,5 +72,8 @@ public partial class BottomBarView : UserControl
                 
         var timeString = hoverTime.ToString(@"mm\:ss");
         ToolTip.SetTip(slider, timeString);
+        
+        var centerOffset = mouseX - (trackWidth / 2);
+        ToolTip.SetHorizontalOffset(slider, centerOffset);
     }
 }
