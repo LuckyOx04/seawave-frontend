@@ -65,7 +65,7 @@
                             <TextBlock Text="⏸"
                                        IsVisible="{Binding IsPlaying}"
                                        Foreground="White"
-                                       Background="Transparent"/>
+                                       Background="Transparent" />
                             <TextBlock Text="▶"
                                        IsVisible="{Binding !IsPlaying}"
                                        Foreground="White"
@@ -90,9 +90,9 @@
                 </StackPanel>
 
                 <Grid Grid.Row="1"
-                      ColumnDefinitions="Auto, *, Auto" 
+                      ColumnDefinitions="Auto, *, Auto"
                       VerticalAlignment="Center">
-                    
+
                     <TextBlock Grid.Column="0"
                                Text="{Binding CurrentPosition, 
                                StringFormat=\{0:mm\\:ss\}}"
@@ -101,6 +101,7 @@
                                VerticalAlignment="Center" />
 
                     <Slider Grid.Column="1"
+                            x:Name="TrackSlider"
                             Margin="8,0"
                             Minimum="0"
                             Maximum="{Binding TrackDurationSeconds}"
@@ -109,11 +110,10 @@
                             IsSnapToTickEnabled="True"
                             SmallChange="1"
                             Foreground="{StaticResource BrushElectricBlue}"
-                            Thumb.DragStarted="Slider_OnDragStarted"
-                            Thumb.DragCompleted="Slider_OnDragCompleted"
                             PointerPressed="Slider_OnPointerPressed"
                             PointerMoved="Slider_OnPointerMoved"
-                            ToolTip.Placement="Top"/>
+                            PointerReleased="TrackSlider_OnPointerReleased"
+                            ToolTip.Placement="Top" />
 
                     <TextBlock Grid.Column="2"
                                Text="{Binding TrackDuration, 
@@ -124,7 +124,7 @@
                 </Grid>
             </Grid>
 
-            <Panel Grid.Column="2"/>
+            <Panel Grid.Column="2" />
         </Grid>
     </Border>
 </UserControl>
