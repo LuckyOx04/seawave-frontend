@@ -33,12 +33,14 @@ public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager
         if (string.IsNullOrWhiteSpace(Username) || !ValidatorService.IsValidUsername(Username))
         {
             StatusMessage = "Username cannot be empty or contain @ symbol.";
+            IsSuccessState = false;
             return;
         }
 
         if (!ValidatorService.IsValidEmail(Email))
         {
             StatusMessage = "Invalid email format.";
+            IsSuccessState = false;
             return;
         }
 
@@ -46,12 +48,14 @@ public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager
         {
             StatusMessage = "Password must have at least 8 characters," +
                             "an upper case letter, a lower case letter and a digit.";
+            IsSuccessState = false;
             return;
         }
 
         if (Password != ConfirmPassword)
         {
             StatusMessage = "Passwords do not match.";
+            IsSuccessState = false;
             return;
         }
 
@@ -75,6 +79,7 @@ public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager
         else
         {
             StatusMessage = result.Message ?? "Registration failed.";
+            IsSuccessState = false;
         }
     }
 
