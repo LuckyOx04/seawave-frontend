@@ -58,6 +58,9 @@ public partial class UploadTrackViewModel(MainViewModel mainShell, AuthStateMana
 
         if (response.IsSuccess)
         {
+            Title = string.Empty;
+            Artist = string.Empty;
+            FilePath = string.Empty;
             IsSuccessState = true;
             StatusMessage = "Track successfully uploaded for review.";
         }
