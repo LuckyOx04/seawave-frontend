@@ -12,10 +12,16 @@ public partial class BottomBarViewModel : ViewModelBase
 
     [ObservableProperty] private UnifiedTrack? _currentTrack;
     [ObservableProperty] private bool _isPlaying;
-    [ObservableProperty] private double _currentPositionSeconds;
-    [ObservableProperty] private double _trackDurationSeconds;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(CurrentPositionSeconds))]
+    private TimeSpan _currentPosition;
+    [ObservableProperty] [NotifyPropertyChangedFor(nameof(TrackDurationSeconds))]
+    private TimeSpan _trackDuration;
     [ObservableProperty] private bool _isShuffleOn;
     [ObservableProperty] private string _repeatModeLabel = "Repeat: Off";
+    [ObservableProperty] private bool _isUserDragging;
+
+    public double CurrentPositionSeconds => CurrentPosition.TotalSeconds;
+    public double TrackDurationSeconds => TrackDuration.TotalSeconds;
 
     public BottomBarViewModel(PlaybackManager playbackManager)
     {
@@ -23,8 +29,8 @@ public partial class BottomBarViewModel : ViewModelBase
 
         CurrentTrack = _playbackManager.CurrentTrack;
         IsPlaying = _playbackManager.IsPlaying;
-        CurrentPositionSeconds = _playbackManager.Position.TotalSeconds;
-        TrackDurationSeconds = _playbackManager.Duration.TotalSeconds;
+        CurrentPosition = _playbackManager.Position;
+        TrackDuration = _playbackManager.Duration;
         IsShuffleOn = _playbackManager.IsShuffle;
         UpdateRepeatLabel(_playbackManager.CurrentRepeatMode);
 
@@ -39,12 +45,15 @@ public partial class BottomBarViewModel : ViewModelBase
 
     private void OnPositionChanged(object? sender, TimeSpan position)
     {
-        CurrentPositionSeconds = position.TotalSeconds;
+        if (!IsUserDragging)
+        {
+            CurrentPosition = position;
+        }
     }
 
     private void OnDurationChanged(object? sender, TimeSpan duration)
     {
-        TrackDurationSeconds = duration.TotalSeconds;
+        TrackDuration = duration;
     }
 
     private void UpdateRepeatLabel(RepeatMode mode)
@@ -58,10 +67,17 @@ public partial class BottomBarViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void StartDrag()
+    {
+        IsUserDragging = true;
+    }
+
+    [RelayCommand]
     private void SeekToTime(double seconds)
     {
-        CurrentPositionSeconds = seconds;
+        CurrentPosition = TimeSpan.FromSeconds(seconds);
         _playbackManager.Seek(TimeSpan.FromSeconds(seconds));
+        IsUserDragging = false;
     }
 
     [RelayCommand]

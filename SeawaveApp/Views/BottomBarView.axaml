@@ -86,7 +86,7 @@
 
                 <Grid ColumnDefinitions="Auto, *, Auto" Height="27">
                     <TextBlock Grid.Column="0"
-                               Text="{Binding CurrentPositionSeconds, 
+                               Text="{Binding CurrentPosition, 
                                StringFormat=\{0:mm\\:ss\}}"
                                FontSize="11"
                                Foreground="{StaticResource BrushTextMuted}"
@@ -111,10 +111,10 @@
                                                          CommandParameter="{Binding $parent[Slider].Value}" />
                                 </EventTriggerBehavior>
                             </Interaction.Behaviors>
-                        </Slider>
+                    </Slider>
 
                     <TextBlock Grid.Column="2"
-                               Text="{Binding TrackDurationSeconds, 
+                               Text="{Binding TrackDuration, 
                                StringFormat=\{0:mm\\:ss\}}"
                                FontSize="11"
                                Foreground="{StaticResource BrushTextMuted}"
