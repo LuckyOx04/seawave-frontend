@@ -48,7 +48,7 @@
                      Height="36"
                      IsEnabled="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnline,
                      FallbackValue={x:False}}"
-                     Watermark="Search tracks..."
+                     PlaceholderText="Search tracks..."
                      Text="{Binding SearchQuery, Mode=TwoWay}"
                      CornerRadius="18" BorderThickness="1"
                      BorderBrush="{StaticResource BrushSurfaceHover}"

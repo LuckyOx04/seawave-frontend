@@ -41,7 +41,7 @@
                         <TextBox Grid.Column="0"
                                  Text="{Binding FilePath}"
                                  IsEnabled="False"
-                                 Watermark="No local file selected for upload..."
+                                 PlaceholderText="No local file selected for upload..."
                                  IsReadOnly="True"
                                  Height="40"
                                  CornerRadius="6"
@@ -67,7 +67,7 @@
                                    FontSize="11"
                                    FontWeight="SemiBold"
                                    Foreground="{StaticResource BrushTextMuted}" />
-                        <TextBox Watermark="Enter track title..."
+                        <TextBox PlaceholderText="Enter track title..."
                                  Text="{Binding Title, Mode=TwoWay}"
                                  Height="40"
                                  CornerRadius="6"
@@ -81,7 +81,7 @@
                                    FontSize="11"
                                    FontWeight="SemiBold"
                                    Foreground="{StaticResource BrushTextMuted}" />
-                        <TextBox Watermark="Enter track artist..."
+                        <TextBox PlaceholderText="Enter track artist..."
                                  Text="{Binding Artist, Mode=TwoWay}"
                                  Height="40"
                                  CornerRadius="6"

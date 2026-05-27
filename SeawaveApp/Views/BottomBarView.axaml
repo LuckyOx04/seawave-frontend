@@ -86,22 +86,36 @@
 
                 <Grid ColumnDefinitions="Auto, *, Auto" Height="27">
                     <TextBlock Grid.Column="0"
-                               Text="{Binding CurrentPosition, StringFormat=\{0:mm\\:ss\}}"
+                               Text="{Binding CurrentPositionSeconds, 
+                               StringFormat=\{0:mm\\:ss\}}"
                                FontSize="11"
                                Foreground="{StaticResource BrushTextMuted}"
                                VerticalAlignment="Center" />
-                    
+
                     <Slider Grid.Column="1"
                             Margin="8,0"
                             Minimum="0"
                             Maximum="{Binding TrackDurationSeconds}"
-                            Value="{Binding CurrentPositionSeconds, Mode=TwoWay}"
-                            Foreground="{StaticResource BrushElectricBlue}" 
+                            Value="{Binding CurrentPositionSeconds}"
+                            TickFrequency="1"
+                            IsSnapToTickEnabled="True"
+                            SmallChange="1"
+                            Foreground="{StaticResource BrushElectricBlue}"
                             Height="40"
-                            VerticalAlignment="Bottom"/>
+                            VerticalAlignment="Bottom">
+                        
+                            <Interaction.Behaviors>
+                                <EventTriggerBehavior EventName="DragCompleted"
+                                                      SourceObject="{Binding $self}">
+                                    <InvokeCommandAction Command="{Binding SeekToTimeCommand}"
+                                                         CommandParameter="{Binding $parent[Slider].Value}" />
+                                </EventTriggerBehavior>
+                            </Interaction.Behaviors>
+                        </Slider>
 
                     <TextBlock Grid.Column="2"
-                               Text="{Binding TrackDuration, StringFormat=\{0:mm\\:ss\}}"
+                               Text="{Binding TrackDurationSeconds, 
+                               StringFormat=\{0:mm\\:ss\}}"
                                FontSize="11"
                                Foreground="{StaticResource BrushTextMuted}"
                                VerticalAlignment="Center" />

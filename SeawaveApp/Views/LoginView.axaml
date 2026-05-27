@@ -36,7 +36,7 @@
                                FontSize="11"
                                FontWeight="SemiBold"
                                Foreground="{StaticResource BrushTextMuted}" />
-                    <TextBox Watermark="Enter username..."
+                    <TextBox PlaceholderText="Enter username..."
                              Text="{Binding Identifier, Mode=TwoWay}"
                              Height="40"
                              CornerRadius="6"
@@ -52,7 +52,7 @@
                                FontSize="11"
                                FontWeight="SemiBold"
                                Foreground="{StaticResource BrushTextMuted}" />
-                    <TextBox Watermark="Enter password..."
+                    <TextBox PlaceholderText="Enter password..."
                              Text="{Binding Password, Mode=TwoWay}"
                              PasswordChar="●"
                              Height="40"

@@ -14,7 +14,7 @@
         <StackPanel Grid.Row="0"
                     Spacing="8"
                     Margin="0,0,0,16">
-            <TextBox Watermark="Filter playlists..."
+            <TextBox PlaceholderText="Filter playlists..."
                      Text="{Binding PlaylistSearchQuery, Mode=TwoWay}"
                      Background="{StaticResource BrushAbyssalDark}"
                      Foreground="{StaticResource BrushTextWhite}"

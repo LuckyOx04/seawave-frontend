@@ -12,24 +12,10 @@ public partial class BottomBarViewModel : ViewModelBase
 
     [ObservableProperty] private UnifiedTrack? _currentTrack;
     [ObservableProperty] private bool _isPlaying;
-    [ObservableProperty] private TimeSpan _currentPosition;
-    [ObservableProperty] private TimeSpan _trackDuration;
+    [ObservableProperty] private double _currentPositionSeconds;
+    [ObservableProperty] private double _trackDurationSeconds;
     [ObservableProperty] private bool _isShuffleOn;
     [ObservableProperty] private string _repeatModeLabel = "Repeat: Off";
-
-    public double CurrentPositionSeconds
-    {
-        get => CurrentPosition.TotalSeconds;
-        set
-        {
-            if (Math.Abs(CurrentPosition.TotalSeconds - value) > 0.9)
-            {
-                _playbackManager.Seek(TimeSpan.FromSeconds(value));
-            }
-        }
-    }
-
-    public double TrackDurationSeconds => TrackDuration.TotalSeconds;
 
     public BottomBarViewModel(PlaybackManager playbackManager)
     {
@@ -37,8 +23,8 @@ public partial class BottomBarViewModel : ViewModelBase
 
         CurrentTrack = _playbackManager.CurrentTrack;
         IsPlaying = _playbackManager.IsPlaying;
-        CurrentPosition = _playbackManager.Position;
-        TrackDuration = _playbackManager.Duration;
+        CurrentPositionSeconds = _playbackManager.Position.TotalSeconds;
+        TrackDurationSeconds = _playbackManager.Duration.TotalSeconds;
         IsShuffleOn = _playbackManager.IsShuffle;
         UpdateRepeatLabel(_playbackManager.CurrentRepeatMode);
 
@@ -53,14 +39,12 @@ public partial class BottomBarViewModel : ViewModelBase
 
     private void OnPositionChanged(object? sender, TimeSpan position)
     {
-        CurrentPosition = position;
-        OnPropertyChanged(nameof(CurrentPositionSeconds));
+        CurrentPositionSeconds = position.TotalSeconds;
     }
 
     private void OnDurationChanged(object? sender, TimeSpan duration)
     {
-        TrackDuration = duration;
-        OnPropertyChanged(nameof(TrackDurationSeconds));
+        TrackDurationSeconds = duration.TotalSeconds;
     }
 
     private void UpdateRepeatLabel(RepeatMode mode)
@@ -71,6 +55,13 @@ public partial class BottomBarViewModel : ViewModelBase
             RepeatMode.All => "Repeat: All",
             _ => "Repeat: Off"
         };
+    }
+
+    [RelayCommand]
+    private void SeekToTime(double seconds)
+    {
+        CurrentPositionSeconds = seconds;
+        _playbackManager.Seek(TimeSpan.FromSeconds(seconds));
     }
 
     [RelayCommand]
