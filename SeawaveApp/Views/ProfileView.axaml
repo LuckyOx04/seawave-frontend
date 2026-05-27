@@ -185,7 +185,7 @@
                                            FontWeight="Bold" />
                                 <TextBlock
                                     Text="{Binding CreatedAt}"
-                                    FontSize="28"
+                                    FontSize="12"
                                     FontWeight="Bold"
                                     Foreground="White" />
                             </StackPanel>
