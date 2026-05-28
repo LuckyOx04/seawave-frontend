@@ -50,42 +50,20 @@
                                   Width="26"
                                   Height="26"
                                   ToolTip.Tip="Toggle shuffle">
-                        <PathIcon Data="M 23.894531 -0.046875 L 23.894531 4.7792969 L 23.001953 4.7792969 
-                        C 20.090897 4.7792969 17.712567 6.3654563 15.888672 8.28125 
-                        C 14.064776 10.197044 12.599008 12.531666 11.173828 14.761719 
-                        C 9.7486488 16.991772 8.3636783 19.115548 7.0019531 20.544922 
-                        C 5.6402279 21.974296 4.496525 22.619141 3.2148438 22.619141 L 0 22.619141 L 0 27.220703 
-                        L 3.2148438 27.220703 C 6.1272095 27.220703 8.5068341 25.634621 10.332031 23.71875 
-                        C 12.157229 21.802879 13.625461 19.468555 15.050781 17.238281 
-                        C 16.476102 15.008008 17.859821 12.882576 19.220703 11.453125 
-                        C 20.581586 10.023674 21.723251 9.3789063 23.001953 9.3789062 L 23.894531 9.3789062 
-                        L 23.894531 14.205078 L 31.933594 7.078125 L 23.894531 -0.046875 z M 0 4.7792969 L 0 9.3808594 
-                        L 3.2148438 9.3808594 C 4.4965251 9.3808594 5.6402279 10.025704 7.0019531 11.455078 
-                        C 7.7456948 12.235768 8.4954853 13.223107 9.2558594 14.322266 
-                        C 9.3748002 14.137481 9.495203 13.951491 9.6152344 13.763672 
-                        C 10.356613 12.603597 11.11818 11.39349 11.960938 10.201172 
-                        C 11.446972 9.5308814 10.907033 8.8848166 10.332031 8.28125 
-                        C 8.5068344 6.3653788 6.1272095 4.7792969 3.2148438 4.7792969 L 0 4.7792969 z 
-                        M 16.966797 17.677734 C 16.848266 17.861913 16.729013 18.047171 16.609375 18.234375 
-                        C 15.867544 19.395158 15.105713 20.606084 14.261719 21.798828 
-                        C 14.775223 22.469252 15.313992 23.115114 15.888672 23.71875 
-                        C 17.712567 25.634544 20.090897 27.220703 23.001953 27.220703 L 23.894531 27.220703 
-                        L 23.894531 32.046875 L 31.933594 24.921875 L 23.894531 17.794922 L 23.894531 22.621094 
-                        L 23.001953 22.621094 C 21.723251 22.621094 20.581586 21.976326 19.220703 20.546875 
-                        C 18.477192 19.765901 17.727002 18.777796 16.966797 17.677734 z "
+                        <PathIcon Data="{StaticResource IconShuffle}"
                                   Width="16"
                                   Height="16"
-                                  Foreground="{StaticResource BrushTextWhite}"/>
+                                  Foreground="{StaticResource BrushTextWhite}" />
                     </ToggleButton>
 
                     <Button Command="{Binding SkipPreviousCommand}"
                             Background="Transparent"
                             Width="26"
                             Height="26">
-                        <PathIcon Data="M19,6 L19,18 L11,12 L19,6 Z M11,6 L11,18 L3,12 L11,6 Z"
+                        <PathIcon Data="{StaticResource IconPrevious}"
                                   Width="14"
                                   Height="14"
-                                  Foreground="{StaticResource BrushTextWhite}"/>
+                                  Foreground="{StaticResource BrushTextWhite}" />
                     </Button>
 
                     <Button Command="{Binding TogglePlayPauseCommand}"
@@ -95,17 +73,17 @@
                             CornerRadius="18">
                         <Panel HorizontalAlignment="Center"
                                VerticalAlignment="Center">
-                            <PathIcon Data="M14,19 H18 V5 H14 M6,19 H10 V5 H6"
-                                       IsVisible="{Binding IsPlaying}"
-                                       Foreground="{StaticResource BrushTextWhite}"
-                                       Width="14"
-                                       Height="14"/>
-                            <PathIcon Data="M8,5 V19 L19,12 Z"
-                                       IsVisible="{Binding !IsPlaying}"
-                                       Foreground="{StaticResource BrushTextWhite}"
-                                       Width="14"
-                                       Height="14"
-                                       Margin="2,0,0,0" />
+                            <PathIcon Data="{StaticResource IconPlay}"
+                                      IsVisible="{Binding IsPlaying}"
+                                      Foreground="{StaticResource BrushTextWhite}"
+                                      Width="14"
+                                      Height="14" />
+                            <PathIcon Data="{StaticResource IconPause}"
+                                      IsVisible="{Binding !IsPlaying}"
+                                      Foreground="{StaticResource BrushTextWhite}"
+                                      Width="14"
+                                      Height="14"
+                                      Margin="2,0,0,0" />
                         </Panel>
                     </Button>
 
@@ -113,10 +91,10 @@
                             Background="Transparent"
                             Width="26"
                             Height="26">
-                        <PathIcon Data="M5,6 L5,18 L13,12 L5,6 Z M13,6 L13,18 L21,12 L13,6 Z"
+                        <PathIcon Data="{StaticResource IconNext}"
                                   Width="14"
                                   Height="14"
-                                  Foreground="{StaticResource BrushTextWhite}"/>
+                                  Foreground="{StaticResource BrushTextWhite}" />
                     </Button>
 
                     <Button Content="{Binding RepeatModeLabel}"
