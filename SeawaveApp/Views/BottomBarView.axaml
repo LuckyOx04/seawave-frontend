@@ -73,12 +73,12 @@
                             CornerRadius="18">
                         <Panel HorizontalAlignment="Center"
                                VerticalAlignment="Center">
-                            <PathIcon Data="{StaticResource IconPlay}"
+                            <PathIcon Data="{StaticResource IconPause}"
                                       IsVisible="{Binding IsPlaying}"
                                       Foreground="{StaticResource BrushTextWhite}"
                                       Width="14"
                                       Height="14" />
-                            <PathIcon Data="{StaticResource IconPause}"
+                            <PathIcon Data="{StaticResource IconPlay}"
                                       IsVisible="{Binding !IsPlaying}"
                                       Foreground="{StaticResource BrushTextWhite}"
                                       Width="14"

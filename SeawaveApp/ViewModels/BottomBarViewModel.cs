@@ -11,17 +11,12 @@ public partial class BottomBarViewModel : ViewModelBase
     private readonly PlaybackManager _playbackManager;
 
     [ObservableProperty] public partial UnifiedTrack? CurrentTrack { get; set; }
-
     [ObservableProperty] public partial bool IsPlaying { get; set; }
-
     [ObservableProperty] public partial TimeSpan CurrentPosition { get; set; }
-
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TrackDurationSeconds))]
     public partial TimeSpan TrackDuration { get; set; }
-
     [ObservableProperty] public partial bool IsShuffleOn { get; set; }
-
     [ObservableProperty] public partial string RepeatModeLabel { get; set; } = "Repeat: Off";
 
     private bool _isUserDragging;
@@ -31,7 +26,11 @@ public partial class BottomBarViewModel : ViewModelBase
         get => CurrentPosition.TotalSeconds;
         set
         {
-            if (!_isUserDragging)
+            if (Math.Abs(value - CurrentPosition.TotalSeconds) < 1)
+            {
+                SkipNext();
+            }
+            else if (!_isUserDragging)
             {
                 CurrentPosition = TimeSpan.FromSeconds(value);
             }
@@ -46,8 +45,8 @@ public partial class BottomBarViewModel : ViewModelBase
 
         CurrentTrack = _playbackManager.CurrentTrack;
         IsPlaying = _playbackManager.IsPlaying;
-        CurrentPosition = _playbackManager.Position;
-        TrackDuration = _playbackManager.Duration;
+        CurrentPosition = CalculateCurrentPosition(_playbackManager.Position) ?? TimeSpan.Zero;
+        TrackDuration = CurrentTrack?.Duration ?? _playbackManager.Duration;
         IsShuffleOn = _playbackManager.IsShuffle;
         UpdateRepeatLabel(_playbackManager.CurrentRepeatMode);
 
@@ -60,6 +59,11 @@ public partial class BottomBarViewModel : ViewModelBase
         _playbackManager.DurationChanged += OnDurationChanged;
     }
 
+    private TimeSpan? CalculateCurrentPosition(TimeSpan playbackManagerPosition)
+    {
+        return playbackManagerPosition - CurrentTrack?.StartOffset;
+    }
+
     private void OnPositionChanged(object? sender, TimeSpan position)
     {
         if (_isUserDragging)
@@ -67,13 +71,13 @@ public partial class BottomBarViewModel : ViewModelBase
             return;
         }
 
-        CurrentPosition = position;
+        CurrentPosition = CalculateCurrentPosition(position) ?? TimeSpan.Zero;
         OnPropertyChanged(nameof(SliderValue));
     }
 
     private void OnDurationChanged(object? sender, TimeSpan duration)
     {
-        TrackDuration = duration;
+        TrackDuration = CurrentTrack?.Duration ?? duration;
     }
 
     private void UpdateRepeatLabel(RepeatMode mode)
@@ -96,7 +100,7 @@ public partial class BottomBarViewModel : ViewModelBase
     private void SeekToTime(double seconds)
     {
         CurrentPosition = TimeSpan.FromSeconds(seconds);
-        _playbackManager.Seek(TimeSpan.FromSeconds(seconds));
+        _playbackManager.Seek(CurrentTrack!.StartOffset + TimeSpan.FromSeconds(seconds));
         _isUserDragging = false;
     }
 

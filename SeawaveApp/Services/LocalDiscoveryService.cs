@@ -56,7 +56,7 @@ public class LocalDiscoveryService
         return [track];
     }
 
-    private async Task<UnifiedTrack> ExtractMetadata(string path)
+    private static async Task<UnifiedTrack> ExtractMetadata(string path)
     {
         return await Task.Run(() =>
         {
@@ -74,7 +74,7 @@ public class LocalDiscoveryService
         });
     }
     
-    private List<UnifiedTrack> ParseCueFile(string cuePath)
+    private static List<UnifiedTrack> ParseCueFile(string cuePath)
     {
         var tracks = new List<UnifiedTrack>();
         var lines = File.ReadAllLines(cuePath);
@@ -172,7 +172,7 @@ public class LocalDiscoveryService
         return tracks;
     }
 
-    private TimeSpan ParseCueTime(string time)
+    private static TimeSpan ParseCueTime(string time)
     {
         var parts = time.Split(':');
         if (parts.Length != 3)

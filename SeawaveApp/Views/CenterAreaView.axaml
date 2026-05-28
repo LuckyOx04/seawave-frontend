@@ -27,15 +27,18 @@
                                 Padding="12">
                             <Grid ColumnDefinitions="Auto, *, Auto">
                                 <Button Grid.Column="0"
-                                        Content="▶"
                                         Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).PlayTrackCommand, 
                                         FallbackValue={x:Null}}"
                                         CommandParameter="{Binding}"
                                         Classes="Modern"
                                         Padding="8,4"
                                         Margin="0,0,12,0"
-                                        ToolTip.Tip="Play now." />
-
+                                        ToolTip.Tip="Play now.">
+                                    <PathIcon Data="{StaticResource IconPlay}"
+                                              Width="14"
+                                              Height="14" />
+                                </Button>
+                                
                                 <StackPanel Grid.Column="1"
                                             VerticalAlignment="Center"
                                             Spacing="2">
