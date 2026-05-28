@@ -129,6 +129,8 @@ public class LocalDiscoveryService
                         tracks.Add(currentTrack);
                     }
 
+                    value = value.Split(' ')[0];
+                    
                     currentTrack = new UnifiedTrack
                     {
                         Id = $"{cuePath}_{value}",
@@ -153,7 +155,7 @@ public class LocalDiscoveryService
             tracks.Add(currentTrack);
         }
 
-        for (int i = 0; i < tracks.Count; i++)
+        for (var i = 0; i < tracks.Count; i++)
         {
             if (i < tracks.Count - 1)
             {

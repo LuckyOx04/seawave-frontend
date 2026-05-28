@@ -44,7 +44,7 @@ public class LocalDatabaseService
             );
 
             CREATE TABLE IF NOT EXISTS Playlists (
-                Id INTEGER PRIMARY KEY AUTO_INCREMENT,
+                Id INTEGER PRIMARY KEY AUTOINCREMENT,
                 Name TEXT NOT NULL
             );
 
