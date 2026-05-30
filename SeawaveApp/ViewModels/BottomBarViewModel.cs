@@ -37,7 +37,8 @@ public partial class BottomBarViewModel : ViewModelBase
         }
     }
 
-    public double TrackDurationSeconds => TrackDuration.TotalSeconds;
+    public double TrackDurationSeconds => CurrentTrack != null ? TrackDuration.TotalSeconds
+        : 0.1;
 
     public BottomBarViewModel(PlaybackManager playbackManager)
     {

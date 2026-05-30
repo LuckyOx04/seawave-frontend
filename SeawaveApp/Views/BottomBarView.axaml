@@ -120,6 +120,8 @@
 
                     <Slider Grid.Column="1"
                             x:Name="TrackSlider"
+                            IsEnabled="{Binding CurrentTrack,
+                            Converter={x:Static ObjectConverters.IsNotNull}}"
                             Margin="8,0"
                             Minimum="0"
                             Maximum="{Binding TrackDurationSeconds}"

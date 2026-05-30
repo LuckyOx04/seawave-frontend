@@ -31,7 +31,6 @@ public class PlaybackManager : IDisposable
 
     public event EventHandler<UnifiedTrack?>? TrackChanged;
     public event EventHandler<bool>? PlaybackStateChanged;
-    public event EventHandler? PlaybackStopped;
     public event EventHandler<TimeSpan>? PositionChanged;
     public event EventHandler<TimeSpan>? DurationChanged;
     public event EventHandler<bool>? ShuffleChanged;
@@ -51,7 +50,6 @@ public class PlaybackManager : IDisposable
             .Invoke(this, TimeSpan.FromMilliseconds(e.Length));
         _mediaPlayer.Playing += (_, _) => PlaybackStateChanged?.Invoke(this, true);
         _mediaPlayer.Paused += (_, _) => PlaybackStateChanged?.Invoke(this, false);
-        _mediaPlayer.Stopped += (_, _) => PlaybackStopped?.Invoke(this, EventArgs.Empty);
     }
 
     public void PlayFromPlaylist(IEnumerable<UnifiedTrack> tracks, int startIndex)
@@ -213,7 +211,8 @@ public class PlaybackManager : IDisposable
         }
         else
         {
-            _mediaPlayer.Stop();
+            ClearQueue();
+            TrackChanged?.Invoke(this, CurrentTrack);
         }
     }
 
