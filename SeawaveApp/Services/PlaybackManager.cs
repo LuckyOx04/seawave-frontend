@@ -232,12 +232,13 @@ public class PlaybackManager : IDisposable
     public void ToggleShuffle()
     {
         IsShuffle = !IsShuffle;
-        ShuffleChanged?.Invoke(this, IsShuffle);
 
         if (_orderIndex >= 0 && _orderIndex < PlaybackOrder.Count)
         {
             RebuildOrder(_orderIndex);
         }
+        
+        ShuffleChanged?.Invoke(this, IsShuffle);
     }
 
     public void CycleRepeat()
