@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using LibVLCSharp.Shared;
@@ -13,17 +12,17 @@ public class PlaybackManager : IDisposable
     private readonly LibVLC _libVlc;
     private readonly MediaPlayer _mediaPlayer;
     
-    private List<int> _playbackOrder = [];
     private int _orderIndex = -1;
     private readonly Random _rng = new();
 
-    public ObservableCollection<UnifiedTrack> TracksQueue { get; } = [];
+    public List<UnifiedTrack> TracksQueue { get; } = [];
+    public List<int> PlaybackOrder { get; private set; } = [];
     
-    public RepeatMode CurrentRepeatMode { get; set; } = RepeatMode.None;
-    public bool IsShuffle { get; set; }
+    public RepeatMode CurrentRepeatMode { get; private set; } = RepeatMode.None;
+    public bool IsShuffle { get; private set; }
 
-    public UnifiedTrack? CurrentTrack => (_orderIndex >= 0 && _orderIndex < _playbackOrder.Count)
-        ? TracksQueue[_playbackOrder[_orderIndex]]
+    public UnifiedTrack? CurrentTrack => (_orderIndex >= 0 && _orderIndex < PlaybackOrder.Count)
+        ? TracksQueue[PlaybackOrder[_orderIndex]]
         : null;
 
     public bool IsPlaying => _mediaPlayer.IsPlaying;
@@ -80,14 +79,14 @@ public class PlaybackManager : IDisposable
 
     private void RebuildOrder(int startIndex)
     {
-        _playbackOrder = Enumerable.Range(0, TracksQueue.Count).ToList();
+        PlaybackOrder = Enumerable.Range(0, TracksQueue.Count).ToList();
 
-        if (IsShuffle && _playbackOrder.Count > 1)
+        if (IsShuffle && PlaybackOrder.Count > 1)
         {
-            var current = _playbackOrder[startIndex];
-            _playbackOrder.RemoveAt(startIndex);
-            _playbackOrder = _playbackOrder.OrderBy(_ => _rng.Next()).ToList();
-            _playbackOrder.Insert(0, current);
+            var current = PlaybackOrder[startIndex];
+            PlaybackOrder.RemoveAt(startIndex);
+            PlaybackOrder = PlaybackOrder.OrderBy(_ => _rng.Next()).ToList();
+            PlaybackOrder.Insert(0, current);
             _orderIndex = 0;
         }
         else
@@ -103,23 +102,23 @@ public class PlaybackManager : IDisposable
         var newIndex = TracksQueue.Count - 1;
         if (IsShuffle)
         {
-            var insertPosition = _rng.Next(_orderIndex + 1, _playbackOrder.Count + 1);
-            _playbackOrder.Insert(insertPosition, newIndex);
+            var insertPosition = _rng.Next(_orderIndex + 1, PlaybackOrder.Count + 1);
+            PlaybackOrder.Insert(insertPosition, newIndex);
         }
         else
         {
-            _playbackOrder.Add(newIndex);
+            PlaybackOrder.Add(newIndex);
         }
     }
 
     private void PlayCurrent()
     {
-        if (_orderIndex < 0 || _orderIndex >= _playbackOrder.Count)
+        if (_orderIndex < 0 || _orderIndex >= PlaybackOrder.Count)
         {
             return;
         }
         
-        var trackIndex = _playbackOrder[_orderIndex];
+        var trackIndex = PlaybackOrder[_orderIndex];
         var track = TracksQueue[trackIndex];
         var media = GetMediaForTrack(track);
 
@@ -168,7 +167,7 @@ public class PlaybackManager : IDisposable
 
     public void Next()
     {
-        if (_orderIndex < _playbackOrder.Count - 1)
+        if (_orderIndex < PlaybackOrder.Count - 1)
         {
             _orderIndex++;
             PlayCurrent();
@@ -198,7 +197,7 @@ public class PlaybackManager : IDisposable
         IsShuffle = !IsShuffle;
         ShuffleChanged?.Invoke(this, IsShuffle);
 
-        if (_orderIndex >= 0 && _orderIndex < _playbackOrder.Count)
+        if (_orderIndex >= 0 && _orderIndex < PlaybackOrder.Count)
         {
             RebuildOrder(_orderIndex);
         }
@@ -225,25 +224,25 @@ public class PlaybackManager : IDisposable
         
         TracksQueue.RemoveAt(index);
 
-        var orderPosition = _playbackOrder.IndexOf(index);
+        var orderPosition = PlaybackOrder.IndexOf(index);
         if (orderPosition >= 0)
         {
-            _playbackOrder.RemoveAt(orderPosition);
+            PlaybackOrder.RemoveAt(orderPosition);
             if (_orderIndex >= orderPosition) // TODO: check for when the removed index is the current playing.
             {
                 _orderIndex--;
             }
-            else if (_orderIndex == orderPosition && _orderIndex >= _playbackOrder.Count)
+            else if (_orderIndex == orderPosition && _orderIndex >= PlaybackOrder.Count)
             {
-                _orderIndex = _playbackOrder.Count - 1;
+                _orderIndex = PlaybackOrder.Count - 1;
             }
         }
 
-        for (var i = 0; i < _playbackOrder.Count; i++)
+        for (var i = 0; i < PlaybackOrder.Count; i++)
         {
-            if (_playbackOrder[i] > index)
+            if (PlaybackOrder[i] > index)
             {
-                _playbackOrder[i]--;
+                PlaybackOrder[i]--;
             }
         }
     }
@@ -251,7 +250,7 @@ public class PlaybackManager : IDisposable
     public void ClearQueue()
     {
         TracksQueue.Clear();
-        _playbackOrder.Clear();
+        PlaybackOrder.Clear();
         _orderIndex = -1;
     }
     

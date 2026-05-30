@@ -1,26 +1,48 @@
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
 namespace SeawaveApp.ViewModels;
 
-public partial class RightBarViewModel(PlaybackManager playbackManager) : ViewModelBase
+public partial class RightBarViewModel : ViewModelBase
 {
-    public ObservableCollection<UnifiedTrack> QueueTracks => playbackManager.TracksQueue;
+    private readonly PlaybackManager _playbackManager;
+
+    [ObservableProperty] public partial IList<UnifiedTrack> DisplayQueue { get; private set; }
+
+    public RightBarViewModel(PlaybackManager playbackManager)
+    {
+        _playbackManager = playbackManager;
+        
+        UpdateDisplayTracks();
+
+        _playbackManager.ShuffleChanged += OnPlaybackManagerShuffleChanged;
+    }
+
+    private void OnPlaybackManagerShuffleChanged(object? sender, bool isShuffleOn)
+    {
+        UpdateDisplayTracks();
+    }
+
+    private void UpdateDisplayTracks()
+    {
+        DisplayQueue = new PermutationList(_playbackManager.TracksQueue, _playbackManager.PlaybackOrder);
+    }
 
     [RelayCommand]
     private void RemoveTrackFromQueue(UnifiedTrack? track)
     {
         if (track != null)
         {
-            playbackManager.RemoveTrack(track);
+            _playbackManager.RemoveTrack(track);
         }
     }
 
     [RelayCommand]
     private void ClearAllQueue()
     {
-        playbackManager.ClearQueue();
+        _playbackManager.ClearQueue();
     }
 }

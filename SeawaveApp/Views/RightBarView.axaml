@@ -30,7 +30,7 @@
         </Grid>
 
         <ListBox Grid.Row="1"
-                 ItemsSource="{Binding QueueTracks}"
+                 ItemsSource="{Binding DisplayQueue}"
                  Background="Transparent"
                  BorderThickness="0">
             <ListBox.ItemTemplate>
