@@ -43,7 +43,6 @@ public class PlaybackManager : IDisposable
         
         _libVlc = new LibVLC();
         _mediaPlayer = new MediaPlayer(_libVlc);
-        
 
         _mediaPlayer.EndReached += (_, _) => HandleTrackEnd();
         _mediaPlayer.TimeChanged += (_, e) => PositionChanged?
@@ -230,7 +229,7 @@ public class PlaybackManager : IDisposable
         if (orderPosition >= 0)
         {
             _playbackOrder.RemoveAt(orderPosition);
-            if (_orderIndex >= orderPosition)
+            if (_orderIndex >= orderPosition) // TODO: check for when the removed index is the current playing.
             {
                 _orderIndex--;
             }
