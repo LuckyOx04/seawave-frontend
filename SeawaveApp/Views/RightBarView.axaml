@@ -10,7 +10,8 @@
              x:DataType="vm:RightBarViewModel"
              Padding="16">
 
-    <Grid RowDefinitions="Auto, *">
+    <Grid RowDefinitions="Auto, Auto, Auto *">
+
         <Grid Grid.Row="0"
               ColumnDefinitions="*, Auto"
               Margin="0,0,0,16">
@@ -29,7 +30,54 @@
                     ToolTip.Tip="Flush entire current audio execution queue pipeline" />
         </Grid>
 
-        <ListBox Grid.Row="1"
+        <StackPanel Grid.Row="1"
+                    Spacing="6"
+                    Margin="0,0,0,16"
+                    IsVisible="{Binding CurrentDisplayTrack,
+                    Converter={x:Static ObjectConverters.IsNotNull}}">
+            <TextBlock Text="Now Playing"
+                       FontSize="11"
+                       FontWeight="Bold"
+                       Foreground="{StaticResource BrushTextWhite}"
+                       LetterSpacing="0.05" />
+
+            <Border Background="{StaticResource BrushAbyssalDark}"
+                    BorderBrush="{StaticResource BrushElectricBlue}"
+                    BorderThickness="1"
+                    Padding="8"
+                    CornerRadius="4">
+                <Grid ColumnDefinitions="*, Auto">
+                    <StackPanel Grid.Column="0" Spacing="2">
+                        <TextBlock
+                            Text="{Binding CurrentDisplayTrack.Title,
+                            FallbackValue={x:Null}}"
+                            Foreground="{StaticResource BrushTextWhite}"
+                            FontWeight="Bold"
+                            FontSize="14"
+                            TextTrimming="CharacterEllipsis" />
+                        <TextBlock
+                            Text="{Binding CurrentDisplayTrack.Artist,
+                            FallbackValue={x:Null}}"
+                            Foreground="{StaticResource BrushTextMuted}"
+                            FontSize="12"
+                            TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <Panel Grid.Column="1" />
+                </Grid>
+            </Border>
+        </StackPanel>
+        
+        <TextBlock Grid.Row="2"
+                   Text="Next Up"
+                   FontSize="11"
+                   FontWeight="Bold"
+                   Foreground="{StaticResource BrushTextMuted}"
+                   LetterSpacing="0.05"
+                   Margin="0,0,0,8"
+                   IsVisible="{Binding DisplayQueue.Count,
+                   FallbackValue=0}" />
+        
+        <ListBox Grid.Row="3"
                  ItemsSource="{Binding DisplayQueue}"
                  Background="Transparent"
                  BorderThickness="0">
