@@ -31,6 +31,7 @@ public class PlaybackManager : IDisposable
 
     public event EventHandler<UnifiedTrack?>? TrackChanged;
     public event EventHandler<bool>? PlaybackStateChanged;
+    public event EventHandler? PlaybackStopped;
     public event EventHandler<TimeSpan>? PositionChanged;
     public event EventHandler<TimeSpan>? DurationChanged;
     public event EventHandler<bool>? ShuffleChanged;
@@ -50,7 +51,7 @@ public class PlaybackManager : IDisposable
             .Invoke(this, TimeSpan.FromMilliseconds(e.Length));
         _mediaPlayer.Playing += (_, _) => PlaybackStateChanged?.Invoke(this, true);
         _mediaPlayer.Paused += (_, _) => PlaybackStateChanged?.Invoke(this, false);
-        _mediaPlayer.Stopped += (_, _) => PlaybackStateChanged?.Invoke(this, false);
+        _mediaPlayer.Stopped += (_, _) => PlaybackStopped?.Invoke(this, EventArgs.Empty);
     }
 
     public void PlayFromPlaylist(IEnumerable<UnifiedTrack> tracks, int startIndex)
@@ -62,6 +63,7 @@ public class PlaybackManager : IDisposable
         }
 
         RebuildOrder(startIndex: 0);
+        PlayCurrent();
     }
 
     public void PlaySingle(UnifiedTrack track)
@@ -69,12 +71,46 @@ public class PlaybackManager : IDisposable
         TracksQueue.Clear();
         TracksQueue.Add(track);
         RebuildOrder(startIndex: 0);
+        PlayCurrent();
     }
 
     public void AddToQueue(UnifiedTrack track)
     {
         TracksQueue.Add(track);
         UpdateOrderForNewTrack();
+    }
+    
+    public void RemoveTrack(UnifiedTrack track)
+    {
+        var index = TracksQueue.IndexOf(track);
+        if (index < 0)
+        {
+            return;
+        }
+        
+        TracksQueue.RemoveAt(index);
+
+        var orderPosition = PlaybackOrder.IndexOf(index);
+        if (orderPosition >= 0)
+        {
+            PlaybackOrder.RemoveAt(orderPosition);
+            if (_orderIndex >= orderPosition)
+            {
+                _orderIndex--;
+            }
+            else if (_orderIndex == orderPosition && _orderIndex >= PlaybackOrder.Count)
+            {
+                _orderIndex = PlaybackOrder.Count - 1;
+            }
+        }
+
+        for (var i = 0; i < PlaybackOrder.Count; i++)
+        {
+            if (PlaybackOrder[i] > index)
+            {
+                PlaybackOrder[i]--;
+            }
+        }
     }
 
     private void RebuildOrder(int startIndex)
@@ -93,8 +129,6 @@ public class PlaybackManager : IDisposable
         {
             _orderIndex = startIndex;
         }
-
-        PlayCurrent();
     }
 
     private void UpdateOrderForNewTrack()
@@ -177,6 +211,10 @@ public class PlaybackManager : IDisposable
             _orderIndex = 0;
             PlayCurrent();
         }
+        else
+        {
+            _mediaPlayer.Stop();
+        }
     }
 
     public void Previous()
@@ -212,39 +250,6 @@ public class PlaybackManager : IDisposable
             _ => RepeatMode.None
         };
         RepeatChanged?.Invoke(this, CurrentRepeatMode);
-    }
-
-    public void RemoveTrack(UnifiedTrack track)
-    {
-        var index = TracksQueue.IndexOf(track);
-        if (index < 0)
-        {
-            return;
-        }
-        
-        TracksQueue.RemoveAt(index);
-
-        var orderPosition = PlaybackOrder.IndexOf(index);
-        if (orderPosition >= 0)
-        {
-            PlaybackOrder.RemoveAt(orderPosition);
-            if (_orderIndex >= orderPosition) // TODO: check for when the removed index is the current playing.
-            {
-                _orderIndex--;
-            }
-            else if (_orderIndex == orderPosition && _orderIndex >= PlaybackOrder.Count)
-            {
-                _orderIndex = PlaybackOrder.Count - 1;
-            }
-        }
-
-        for (var i = 0; i < PlaybackOrder.Count; i++)
-        {
-            if (PlaybackOrder[i] > index)
-            {
-                PlaybackOrder[i]--;
-            }
-        }
     }
 
     public void ClearQueue()
