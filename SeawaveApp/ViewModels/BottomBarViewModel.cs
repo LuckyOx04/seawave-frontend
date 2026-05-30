@@ -26,7 +26,7 @@ public partial class BottomBarViewModel : ViewModelBase
         get => CurrentPosition.TotalSeconds;
         set
         {
-            if (Math.Abs(value - CurrentPosition.TotalSeconds) < 1)
+            if (Math.Abs(value - CurrentPosition.TotalSeconds) <= 1)
             {
                 SkipNext();
             }
