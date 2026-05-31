@@ -146,8 +146,6 @@ public class LibraryManager(
 
     public async Task AddLocalFileToTempAsync(string[] paths)
     {
-        // TODO: A way to clear the tracks now playing.
-        // TemporaryPlaylist.Tracks.Clear();
         foreach (var path in paths)
         {
             var tracks = await discovery.DiscoverAsync(path);

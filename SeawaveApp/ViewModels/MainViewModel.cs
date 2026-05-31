@@ -14,15 +14,24 @@ public partial class MainViewModel : ViewModelBase
     private readonly LibraryManager _libraryManager;
     private readonly ApiService _api;
 
-    [ObservableProperty] private bool _isOnline;
-    [ObservableProperty] private bool _isLoggedIn;
-    [ObservableProperty] private string _username = "Guest";
-    [ObservableProperty] private CenterContentMode _currentCenterMode = CenterContentMode.None;
-    [ObservableProperty] private Playlist? _activeCenterPlaylist;
+    [ObservableProperty]
+    public partial bool IsOnline { get; set; }
 
     [ObservableProperty]
-    [NotifyPropertyChangedFor(nameof(IsOverlayActive))] 
-    private ViewModelBase? _activeOverlay;
+    public partial bool IsLoggedIn { get; set; }
+
+    [ObservableProperty]
+    public partial string Username { get; set; }
+
+    [ObservableProperty]
+    public partial CenterContentMode CurrentCenterMode { get; set; } = CenterContentMode.None;
+
+    [ObservableProperty]
+    public partial Playlist? ActiveCenterPlaylist { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsOverlayActive))]
+    public partial ViewModelBase? ActiveOverlay { get; set; }
 
     public bool IsOverlayActive => ActiveOverlay != null;
 

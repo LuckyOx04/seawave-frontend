@@ -14,8 +14,8 @@ public partial class CenterAreaViewModel : ViewModelBase
     private readonly MainViewModel _mainShell;
     private readonly PlaybackManager _playbackManager;
 
-    [ObservableProperty] private string _headerTitle = "Welcome to Seawave";
-
+    [ObservableProperty]
+    public partial string HeaderTitle { get; set; } = "Welcome to Seawave";
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
 
     public CenterAreaViewModel(MainViewModel mainShell, PlaybackManager playbackManager)
@@ -27,7 +27,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 
         _mainShell.SearchResults.CollectionChanged += OnSearchResultsChanged;
 
-        WeakReferenceMessenger.Default.Register<PlaylistChangedMessage>(this, (r, m) =>
+        WeakReferenceMessenger.Default.Register<PlaylistChangedMessage>(this, (_, _) =>
         {
             SyncDisplayTracks();
         });

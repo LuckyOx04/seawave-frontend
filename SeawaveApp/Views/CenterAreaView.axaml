@@ -7,70 +7,81 @@
              d:DesignWidth="800"
              d:DesignHeight="450"
              x:Class="SeawaveApp.Views.CenterAreaView"
-             x:DataType="vm:CenterAreaViewModel">
+             x:DataType="vm:CenterAreaViewModel"
+             Padding="24">
 
-    <ScrollViewer Padding="24">
-        <StackPanel Spacing="20">
-            <TextBlock Text="{Binding HeaderTitle}"
-                       FontSize="22"
-                       FontWeight="Bold"
-                       Foreground="{StaticResource BrushTextWhite}" />
+    <Grid RowDefinitions="Auto, *">
 
-            <ListBox ItemsSource="{Binding DisplayTracks}"
-                     Background="Transparent"
-                     BorderThickness="0">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Border Background="{StaticResource BrushSurfaceSlate}"
-                                Margin="0,0,0,6"
-                                CornerRadius="6"
-                                Padding="12">
-                            <Grid ColumnDefinitions="Auto, *, Auto">
-                                <Button Grid.Column="0"
-                                        Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).PlayTrackCommand, 
-                                        FallbackValue={x:Null}}"
-                                        CommandParameter="{Binding}"
-                                        Classes="Modern"
-                                        Padding="8,4"
-                                        Margin="0,0,12,0"
-                                        ToolTip.Tip="Play now.">
-                                    <PathIcon Data="{StaticResource IconPlay}"
-                                              Width="14"
-                                              Height="14" />
-                                </Button>
-                                
-                                <StackPanel Grid.Column="1"
-                                            VerticalAlignment="Center"
-                                            Spacing="2">
-                                    <TextBlock Text="{Binding Title}"
-                                               Foreground="{StaticResource BrushTextWhite}"
-                                               FontWeight="Medium" />
-                                    <TextBlock Text="{Binding Artist}"
-                                               Foreground="{StaticResource BrushTextMuted}"
-                                               FontSize="12" />
-                                </StackPanel>
+        <TextBlock Grid.Row="0"
+                   Text="{Binding HeaderTitle}"
+                   FontSize="22"
+                   FontWeight="Bold"
+                   Foreground="{StaticResource BrushTextWhite}"
+                   Margin="0,0,0,20" />
 
-                                <Border Grid.Column="2"
-                                        Background="{StaticResource BrushAbyssalDark}"
-                                        CornerRadius="4"
-                                        Padding="6,3"
-                                        VerticalAlignment="Center">
-                                    <Panel>
-                                        <TextBlock Text="Online"
-                                                   IsVisible="{Binding IsRemote}"
-                                                   FontSize="10"
-                                                   Foreground="{StaticResource BrushTextMuted}" />
-                                        <TextBlock Text="Local"
-                                                   IsVisible="{Binding !IsRemote}"
-                                                   FontSize="10"
-                                                   Foreground="{StaticResource BrushTextMuted}" />
-                                    </Panel>
-                                </Border>
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </StackPanel>
-    </ScrollViewer>
+        <ListBox Grid.Row="1"
+                 ItemsSource="{Binding DisplayTracks}"
+                 Background="Transparent"
+                 BorderThickness="0"
+                 Padding="0,0,0,12">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+
+                    <Border Background="{StaticResource BrushSurfaceSlate}"
+                            Margin="0,0,0,6"
+                            CornerRadius="6"
+                            Padding="12">
+
+                        <Grid ColumnDefinitions="Auto, *, Auto">
+
+                            <Button Grid.Column="0"
+                                    Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).PlayTrackCommand, 
+                                    FallbackValue={x:Null}}"
+                                    CommandParameter="{Binding}"
+                                    Classes="Modern"
+                                    Padding="8,4"
+                                    Margin="0,0,12,0"
+                                    ToolTip.Tip="Play now.">
+                                <PathIcon Data="{StaticResource IconPlay}"
+                                          Width="14"
+                                          Height="14" />
+                            </Button>
+
+                            <StackPanel Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Spacing="2">
+                                <TextBlock Text="{Binding Title}"
+                                           Foreground="{StaticResource BrushTextWhite}"
+                                           FontWeight="Medium" />
+                                <TextBlock Text="{Binding Artist}"
+                                           Foreground="{StaticResource BrushTextMuted}"
+                                           FontSize="12" />
+                            </StackPanel>
+
+                            <Border Grid.Column="2"
+                                    Background="{StaticResource BrushAbyssalDark}"
+                                    CornerRadius="4"
+                                    Padding="6,3"
+                                    VerticalAlignment="Center">
+                                <Panel>
+                                    <TextBlock Text="Online"
+                                               IsVisible="{Binding IsRemote}"
+                                               FontSize="10"
+                                               Foreground="{StaticResource BrushTextMuted}" />
+                                    <TextBlock Text="Local"
+                                               IsVisible="{Binding !IsRemote}"
+                                               FontSize="10"
+                                               Foreground="{StaticResource BrushTextMuted}" />
+                                </Panel>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+        </ListBox>
+
+    </Grid>
 </UserControl>

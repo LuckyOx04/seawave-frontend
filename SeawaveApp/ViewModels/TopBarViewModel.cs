@@ -17,7 +17,8 @@ public partial class TopBarViewModel(
 {
     private CancellationTokenSource? _searchCts;
 
-    [ObservableProperty] private string _searchQuery = string.Empty;
+    [ObservableProperty]
+    public partial string SearchQuery { get; set; } = string.Empty;
 
     partial void OnSearchQueryChanged(string value)
     {
