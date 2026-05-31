@@ -56,12 +56,12 @@ public class PlaybackManager : IDisposable
     public void PlayFromPlaylist(IEnumerable<UnifiedTrack> tracks, int startIndex)
     {
         TracksQueue.Clear();
-        foreach (var track in tracks.Skip(startIndex))
+        foreach (var track in tracks/*.Skip(startIndex)*/)
         {
             TracksQueue.Add(track);
         }
 
-        RebuildOrder(startIndex: 0);
+        RebuildOrder(startIndex);
         PlayCurrent();
     }
 
@@ -236,7 +236,7 @@ public class PlaybackManager : IDisposable
 
         if (OrderIndex >= 0 && OrderIndex < PlaybackOrder.Count)
         {
-            RebuildOrder(OrderIndex);
+            RebuildOrder(PlaybackOrder[OrderIndex]);
         }
         
         ShuffleChanged?.Invoke(this, IsShuffle);
