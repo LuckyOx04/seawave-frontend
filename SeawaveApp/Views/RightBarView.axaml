@@ -86,7 +86,8 @@
                     <Border Background="{StaticResource BrushAbyssalDark}"
                             Margin="0,0,0,6"
                             Padding="8"
-                            CornerRadius="4">
+                            CornerRadius="4"
+                            DoubleTapped="Border_OnDoubleTapped">
                         <Grid ColumnDefinitions="*, Auto">
                             <StackPanel Grid.Column="0"
                                         Spacing="2">

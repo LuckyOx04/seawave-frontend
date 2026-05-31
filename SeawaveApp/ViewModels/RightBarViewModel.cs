@@ -38,6 +38,12 @@ public partial class RightBarViewModel : ViewModelBase
 
         DisplayQueue = fullPermutationList.Skip(_playbackManager.OrderIndex + 1).ToList();
     }
+    
+    [RelayCommand]
+    private void PlayTrack(UnifiedTrack selectedTrack)
+    {
+        _playbackManager.PlayFromQueue(selectedTrack);
+    }
 
     [RelayCommand]
     private void RemoveTrackFromQueue(UnifiedTrack? track)

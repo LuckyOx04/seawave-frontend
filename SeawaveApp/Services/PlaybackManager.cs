@@ -56,7 +56,7 @@ public class PlaybackManager : IDisposable
     public void PlayFromPlaylist(IEnumerable<UnifiedTrack> tracks, int startIndex)
     {
         TracksQueue.Clear();
-        foreach (var track in tracks/*.Skip(startIndex)*/)
+        foreach (var track in tracks)
         {
             TracksQueue.Add(track);
         }
@@ -70,6 +70,14 @@ public class PlaybackManager : IDisposable
         TracksQueue.Clear();
         TracksQueue.Add(track);
         RebuildOrder(startIndex: 0);
+        PlayCurrent();
+    }
+
+    public void PlayFromQueue(UnifiedTrack selectedTrack)
+    {
+        var trackIndex = TracksQueue.IndexOf(selectedTrack);
+        OrderIndex = PlaybackOrder.IndexOf(trackIndex);
+        
         PlayCurrent();
     }
 
