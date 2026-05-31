@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -80,15 +81,27 @@ public partial class MainViewModel : ViewModelBase
         _ = _libraryManager.RefreshPlaylistsAsync(IsOnline && IsLoggedIn);
     }
 
-    public void NavigateToPlaylist(Playlist playlist)
+    public async Task NavigateToPlaylist(Playlist? playlist)
     {
         ActiveCenterPlaylist = playlist;
-        CurrentCenterMode = playlist == _libraryManager.TemporaryPlaylist
-            ? CenterContentMode.TemporaryTracks
-            : CenterContentMode.PlaylistTracks;
+        
+        if (playlist == null)
+        {
+            CurrentCenterMode = CenterContentMode.None;
+            await _libraryManager.ClearTemporaryPlaylistAsync();
+        }
+        else if (playlist == _libraryManager.TemporaryPlaylist)
+        {
+            CurrentCenterMode = CenterContentMode.TemporaryTracks;
+        }
+        else
+        {
+            CurrentCenterMode = CenterContentMode.PlaylistTracks;
+        }
+        
         WeakReferenceMessenger.Default.Send(new PlaylistChangedMessage(playlist));
     }
-
+    
     [RelayCommand]
     private void OpenLoginOrProfile()
     {

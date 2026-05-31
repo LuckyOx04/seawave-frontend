@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -16,7 +17,10 @@ public partial class CenterAreaViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial string HeaderTitle { get; set; } = "Welcome to Seawave";
+
+    [ObservableProperty] public partial bool IsClearable { get; set; } = false;
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
+    
 
     public CenterAreaViewModel(MainViewModel mainShell, PlaybackManager playbackManager)
     {
@@ -62,6 +66,8 @@ public partial class CenterAreaViewModel : ViewModelBase
                 {
                     DisplayTracks.Add(track);
                 }
+
+                IsClearable = false;
                 break;
             case CenterContentMode.PlaylistTracks:
             case CenterContentMode.TemporaryTracks:
@@ -72,11 +78,13 @@ public partial class CenterAreaViewModel : ViewModelBase
                     {
                         DisplayTracks.Add(track);
                     }
+                    IsClearable = true;
                 }
                 break;
             case CenterContentMode.None:
             default:
                 HeaderTitle = "Select a Playlist or Search for Music";
+                IsClearable = false;
                 break;
         }
     }
@@ -94,5 +102,11 @@ public partial class CenterAreaViewModel : ViewModelBase
         {
             _playbackManager.PlayFromPlaylist(DisplayTracks, index);
         }
+    }
+
+    [RelayCommand]
+    private async Task ClearPlaylistAsync()
+    {
+        await _mainShell.NavigateToPlaylist(null);
     }
 }

@@ -155,4 +155,9 @@ public class LibraryManager(
             }
         }
     }
+
+    public async Task ClearTemporaryPlaylistAsync()
+    {
+        await Task.Run(() => TemporaryPlaylist.Tracks.Clear());
+    }
 }
