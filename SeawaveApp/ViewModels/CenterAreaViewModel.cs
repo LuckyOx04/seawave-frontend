@@ -16,7 +16,7 @@ public partial class CenterAreaViewModel : ViewModelBase
     private readonly PlaybackManager _playbackManager;
 
     [ObservableProperty]
-    public partial string HeaderTitle { get; set; } = "Welcome to Seawave";
+    public partial string HeaderTitle { get; set; } = "Select a Playlist, Search for Music or Add Local Files";
 
     [ObservableProperty] public partial bool IsClearable { get; set; } = false;
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
@@ -83,7 +83,7 @@ public partial class CenterAreaViewModel : ViewModelBase
                 break;
             case CenterContentMode.None:
             default:
-                HeaderTitle = "Select a Playlist or Search for Music";
+                HeaderTitle = "Select a Playlist, Search for Music or Add Local Files";
                 IsClearable = false;
                 break;
         }
