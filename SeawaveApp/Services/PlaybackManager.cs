@@ -221,6 +221,7 @@ public class PlaybackManager : IDisposable
         else
         {
             ClearQueue();
+            _mediaPlayer.Stop();
             TrackChanged?.Invoke(this, CurrentTrack);
         }
     }
