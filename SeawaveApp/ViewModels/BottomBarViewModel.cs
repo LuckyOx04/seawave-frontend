@@ -120,7 +120,14 @@ public partial class BottomBarViewModel : ViewModelBase
     [RelayCommand]
     private void SkipPrevious()
     {
-        _playbackManager.Previous();
+        if (SliderValue >= 2)
+        {
+            SeekToTime(0.0);
+        }
+        else
+        {
+            _playbackManager.Previous();
+        }
     }
 
     [RelayCommand]
