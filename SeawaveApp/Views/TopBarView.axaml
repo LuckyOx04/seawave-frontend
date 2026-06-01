@@ -19,9 +19,9 @@
                 ToolTip.Tip="Add local audio tracks or folders.">
             <StackPanel Orientation="Horizontal"
                         Spacing="8">
-                <TextBlock Text="＋"
-                           VerticalAlignment="Center"
-                           FontWeight="Bold" />
+                <PathIcon Data="{StaticResource IconPlus}"
+                          Width="16"
+                          Height="16"/>
                 <TextBlock Text="Add Local Tracks"
                            VerticalAlignment="Center" />
             </StackPanel>
