@@ -23,7 +23,7 @@
                     <TextBlock Text="Upload Track"
                                FontSize="20"
                                FontWeight="Bold"
-                               Foreground="White" />
+                               Foreground="{StaticResource BrushTextWhite}" />
                     <TextBlock Text="Specify an audio file along with title and artist to upload."
                                FontSize="12"
                                Foreground="{StaticResource BrushTextMuted}" />
@@ -46,13 +46,13 @@
                                  Height="40"
                                  CornerRadius="6"
                                  Background="{StaticResource BrushAbyssalDark}"
-                                 Foreground="White"
+                                 Foreground="{StaticResource BrushTextWhite}"
                                  VerticalContentAlignment="Center" />
                         <Button Grid.Column="2"
                                 Command="{Binding ExecuteBrowseCommand}"
                                 Content="Browse Local Storage"
                                 Background="{StaticResource BrushSurfaceHover}"
-                                Foreground="White"
+                                Foreground="{StaticResource BrushTextWhite}"
                                 Height="40"
                                 Padding="16,0"
                                 VerticalContentAlignment="Center"
@@ -72,7 +72,7 @@
                                  Height="40"
                                  CornerRadius="6"
                                  Background="{StaticResource BrushAbyssalDark}"
-                                 Foreground="White"
+                                 Foreground="{StaticResource BrushTextWhite}"
                                  VerticalContentAlignment="Center" />
                     </StackPanel>
                     <StackPanel Grid.Column="2"
@@ -86,7 +86,7 @@
                                  Height="40"
                                  CornerRadius="6"
                                  Background="{StaticResource BrushAbyssalDark}"
-                                 Foreground="White"
+                                 Foreground="{StaticResource BrushTextWhite}"
                                  VerticalContentAlignment="Center" />
                     </StackPanel>
                 </Grid>
@@ -117,7 +117,7 @@
                             Content="Upload"
                             HorizontalAlignment="Center"
                             Background="{StaticResource BrushElectricBlue}"
-                            Foreground="White"
+                            Foreground="{StaticResource BrushTextWhite}"
                             Height="42"
                             Padding="24,0"
                             VerticalContentAlignment="Center"

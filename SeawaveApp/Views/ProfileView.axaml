@@ -17,13 +17,23 @@
         <DockPanel Grid.Row="0"
                    Margin="0,0,0,32">
 
-            <Button Content="← Return to Music Player"
-                    Command="{Binding ReturnToMainWindowCommand}"
+            <Button Command="{Binding ReturnToMainWindowCommand}"
                     Background="{StaticResource BrushSurfaceSlate}"
-                    Foreground="White"
+                    Foreground="{StaticResource BrushTextWhite}"
                     Padding="14,8"
                     CornerRadius="6"
-                    FontWeight="SemiBold" />
+                    FontWeight="SemiBold">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="8">
+
+                    <PathIcon Data="{StaticResource IconLeftArrow}"
+                              Width="14"
+                              Height="14" />
+
+                    <TextBlock Text="Return to Music Player" />
+
+                </StackPanel>
+            </Button>
             <TextBlock Text="USER PROFILE"
                        VerticalAlignment="Center"
                        HorizontalAlignment="Right"
@@ -51,10 +61,10 @@
                             Background="{StaticResource BrushAbyssalDark}"
                             HorizontalAlignment="Center">
 
-                        <TextBlock Text="👤"
-                                   FontSize="44"
-                                   HorizontalAlignment="Center"
-                                   VerticalAlignment="Center" />
+                        <PathIcon Data="{StaticResource IconUser}"
+                                  Width="48"
+                                  Height="48"
+                                  Foreground="{StaticResource BrushElectricBlue}" />
                     </Border>
 
                     <StackPanel Spacing="4"
@@ -62,7 +72,7 @@
                         <TextBlock Text="{Binding UsernameText}"
                                    FontSize="20"
                                    FontWeight="Bold"
-                                   Foreground="White"
+                                   Foreground="{StaticResource BrushTextWhite}"
                                    HorizontalAlignment="Center" />
                         <TextBlock Text="{Binding EmailText}"
                                    FontSize="11"
@@ -76,20 +86,30 @@
 
                     <StackPanel Spacing="10">
 
-                        <Button Content="↑ Upload Track"
-                                Command="{Binding NavigateToUploadTrackCommand}"
+                        <Button Command="{Binding NavigateToUploadTrackCommand}"
                                 Background="{StaticResource BrushElectricBlue}"
-                                Foreground="White"
+                                Foreground="{StaticResource BrushTextWhite}"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center"
                                 Padding="0,12"
                                 CornerRadius="6"
-                                FontWeight="SemiBold" />
+                                FontWeight="SemiBold">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="5">
+
+                                <PathIcon Data="{StaticResource IconUpArrow}"
+                                          Width="14"
+                                          Height="14" />
+
+                                <TextBlock Text="Upload Track" />
+
+                            </StackPanel>
+                        </Button>
 
                         <Button Content="Change Password"
                                 Command="{Binding NavigateToChangePasswordCommand}"
                                 Background="{StaticResource BrushSurfaceHover}"
-                                Foreground="White"
+                                Foreground="{StaticResource BrushTextWhite}"
                                 Width="202"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center"
@@ -98,8 +118,8 @@
 
                         <Button Content="Logout"
                                 Command="{Binding ExecuteLogoutCommand}"
-                                Background="#33FF3333"
-                                Foreground="#FFFF6666"
+                                Background="{StaticResource BrushTransparentRed}"
+                                Foreground="{StaticResource BrushLightRed}"
                                 HorizontalAlignment="Stretch"
                                 HorizontalContentAlignment="Center"
                                 Padding="0,10"
@@ -117,7 +137,7 @@
                     <TextBlock Text="Account Overview"
                                FontSize="18"
                                FontWeight="Bold"
-                               Foreground="White" />
+                               Foreground="{StaticResource BrushTextWhite}" />
 
                     <Grid ColumnDefinitions="*, 16, *, 16, *"
                           RowDefinitions="*, 16, *">
@@ -135,7 +155,7 @@
                                 <TextBlock Text="{Binding CreatedPlaylistsCount}"
                                            FontSize="28"
                                            FontWeight="Bold"
-                                           Foreground="White" />
+                                           Foreground="{StaticResource BrushTextWhite}" />
                             </StackPanel>
                         </Border>
                         <Border Grid.Row="0"
@@ -152,7 +172,7 @@
                                 <TextBlock Text="{Binding PendingTracksCount}"
                                            FontSize="28"
                                            FontWeight="Bold"
-                                           Foreground="White" />
+                                           Foreground="{StaticResource BrushTextWhite}" />
                             </StackPanel>
                         </Border>
                         <Border Grid.Row="0"
@@ -169,7 +189,7 @@
                                 <TextBlock Text="{Binding ApprovedTracksCount}"
                                            FontSize="28"
                                            FontWeight="Bold"
-                                           Foreground="White" />
+                                           Foreground="{StaticResource BrushTextWhite}" />
                             </StackPanel>
                         </Border>
                         <Border Grid.Row="2"
@@ -187,7 +207,7 @@
                                     Text="{Binding CreatedAt}"
                                     FontSize="12"
                                     FontWeight="Bold"
-                                    Foreground="White" />
+                                    Foreground="{StaticResource BrushTextWhite}" />
                             </StackPanel>
                         </Border>
                     </Grid>

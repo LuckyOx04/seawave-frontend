@@ -21,7 +21,7 @@
                         Spacing="8">
                 <PathIcon Data="{StaticResource IconPlus}"
                           Width="16"
-                          Height="16"/>
+                          Height="16" />
                 <TextBlock Text="Add Local Tracks"
                            VerticalAlignment="Center" />
             </StackPanel>
@@ -65,13 +65,16 @@
                 FallbackValue={x:Null}}">
             <StackPanel Orientation="Horizontal"
                         Spacing="8">
-                <TextBlock Text="👤"
-                           VerticalAlignment="Center" />
+
+                <PathIcon Data="{StaticResource IconUser}"
+                          Foreground="{StaticResource BrushElectricBlue}" />
+
                 <TextBlock Text="Log In"
                            IsVisible="{Binding !$parent[Window].((vm:MainViewModel)DataContext).IsLoggedIn,
                            FallbackValue={x:True}}"
                            FontWeight="SemiBold"
                            VerticalAlignment="Center" />
+
                 <TextBlock
                     Text="{Binding $parent[Window].((vm:MainViewModel)DataContext).Username,
                     FallbackValue={x:Null}}"
@@ -79,8 +82,9 @@
                     FallbackValue={x:False}}"
                     FontWeight="SemiBold"
                     VerticalAlignment="Center" />
+
             </StackPanel>
         </Button>
-        
+
     </Grid>
 </UserControl>

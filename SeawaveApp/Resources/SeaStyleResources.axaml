@@ -7,12 +7,36 @@
     <Color x:Key="ColorElectricHover">#0056b3</Color>
     <Color x:Key="ColorTextWhite">#f8fafc</Color>
     <Color x:Key="ColorTextMuted">#64748b</Color>
+    <Color x:Key="ColorTransparentRed">#33FF3333</Color>
+    <Color x:Key="ColorLightRed">#FF6666</Color>
+    <Color x:Key="ColorDarkWave">#07162C</Color>
+    <Color x:Key="ColorMediumWave">#005B94</Color>
+    <Color x:Key="ColorLightWave">#00BCD4</Color>
+    <Color x:Key="ColorWhiteWave">#E0F7FA</Color>
 
-    <SolidColorBrush x:Key="BrushAbyssalDark" Color="{StaticResource ColorAbyssalDark}" />
-    <SolidColorBrush x:Key="BrushSurfaceSlate" Color="{StaticResource ColorSurfaceSlate}" />
-    <SolidColorBrush x:Key="BrushSurfaceHover" Color="{StaticResource ColorSurfaceHover}" />
-    <SolidColorBrush x:Key="BrushElectricBlue" Color="{StaticResource ColorElectricBlue}" />
-    <SolidColorBrush x:Key="BrushElectricHover" Color="{StaticResource ColorElectricHover}" />
-    <SolidColorBrush x:Key="BrushTextWhite" Color="{StaticResource ColorTextWhite}" />
-    <SolidColorBrush x:Key="BrushTextMuted" Color="{StaticResource ColorTextMuted}" />
+    <SolidColorBrush x:Key="BrushAbyssalDark"
+                     Color="{StaticResource ColorAbyssalDark}" />
+    <SolidColorBrush x:Key="BrushSurfaceSlate"
+                     Color="{StaticResource ColorSurfaceSlate}" />
+    <SolidColorBrush x:Key="BrushSurfaceHover"
+                     Color="{StaticResource ColorSurfaceHover}" />
+    <SolidColorBrush x:Key="BrushElectricBlue"
+                     Color="{StaticResource ColorElectricBlue}" />
+    <SolidColorBrush x:Key="BrushElectricHover"
+                     Color="{StaticResource ColorElectricHover}" />
+    <SolidColorBrush x:Key="BrushTextWhite"
+                     Color="{StaticResource ColorTextWhite}" />
+    <SolidColorBrush x:Key="BrushTextMuted"
+                     Color="{StaticResource ColorTextMuted}" />
+    <SolidColorBrush x:Key="BrushTransparentRed"
+                     Color="{StaticResource ColorTransparentRed}" />
+    <SolidColorBrush x:Key="BrushLightRed"
+                     Color="{StaticResource ColorLightRed}" />
+    <SolidColorBrush x:Key="BrushMediumWave"
+                     Color="{StaticResource ColorMediumWave}" />
+    <SolidColorBrush x:Key="BrushTransparentMediumWave"
+                     Color="{StaticResource ColorMediumWave}"
+                     Opacity="0.7" />
+    <SolidColorBrush x:Key="BrushWhiteWave"
+                     Color="{StaticResource ColorWhiteWave}" />
 </ResourceDictionary>

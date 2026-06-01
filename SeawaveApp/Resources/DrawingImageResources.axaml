@@ -1,0 +1,66 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <DrawingImage x:Key="SeawaveLogo">
+
+        <DrawingGroup ClipGeometry="M 0,0 L 48,0 L 48,48 L 0,48 Z">
+            <DrawingGroup.Children>
+
+                <GeometryDrawing>
+                    <GeometryDrawing.Brush>
+                        <LinearGradientBrush StartPoint="0%,100%"
+                                             EndPoint="100%,20%">
+
+                            <GradientStop Offset="0.0"
+                                          Color="{StaticResource ColorDarkWave}" />
+
+                            <GradientStop Offset="0.45"
+                                          Color="{StaticResource ColorMediumWave}" />
+
+                            <GradientStop Offset="0.85"
+                                          Color="{StaticResource ColorLightWave}" />
+
+                            <GradientStop Offset="1.0"
+                                          Color="{StaticResource ColorWhiteWave}" />
+
+                        </LinearGradientBrush>
+                    </GeometryDrawing.Brush>
+
+                    <GeometryDrawing.Geometry>
+                        <PathGeometry
+                            Figures="M 4,40 C 8,40 7,37 9,37 C 11,37 10,41 12,41 C 14,41 13,35 15,35 
+                        C 17,35 16,42 19,42 C 22,42 20,32 23,32 C 26,32 25,43 28,43 C 32,43 31,26 34,26 
+                        C 37,26 35,38 38,38 C 40,38 39,18 41,14 C 42,12 44,11 44,13 C 44,14 42,18 41,21 
+                        C 39,27 41,32 39,36 C 37,40 35,44 31,44 C 25,44 26,41 22,41 C 18,41 19,43 15,43 
+                        C 12,43 13,39 10,39 C 8,39 7,40 4,40 Z" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <GeometryDrawing Brush="{StaticResource BrushWhiteWave}">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="43,8"
+                                         RadiusX="0.8"
+                                         RadiusY="0.8" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <GeometryDrawing Brush="{StaticResource BrushMediumWave}">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="39,10"
+                                         RadiusX="0.6"
+                                         RadiusY="0.6" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+                <GeometryDrawing Brush="{StaticResource BrushTransparentMediumWave}">
+                    <GeometryDrawing.Geometry>
+                        <EllipseGeometry Center="36,15"
+                                         RadiusX="0.5"
+                                         RadiusY="0.5" />
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+
+            </DrawingGroup.Children>
+        </DrawingGroup>
+    </DrawingImage>
+</ResourceDictionary>

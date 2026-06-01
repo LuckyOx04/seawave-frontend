@@ -21,7 +21,7 @@
                 <TextBlock Text="Create Account"
                            FontSize="24"
                            FontWeight="Bold"
-                           Foreground="White" />
+                           Foreground="{StaticResource BrushTextWhite}" />
 
                 <StackPanel Spacing="6">
                     <TextBlock Text="Username"
@@ -33,7 +33,7 @@
                              Height="40"
                              CornerRadius="6"
                              Background="{StaticResource BrushAbyssalDark}"
-                             Foreground="White"
+                             Foreground="{StaticResource BrushTextWhite}"
                              BorderThickness="1"
                              BorderBrush="{StaticResource BrushSurfaceHover}"
                              VerticalContentAlignment="Center" />
@@ -49,7 +49,7 @@
                              Height="40"
                              CornerRadius="6"
                              Background="{StaticResource BrushAbyssalDark}"
-                             Foreground="White"
+                             Foreground="{StaticResource BrushTextWhite}"
                              BorderThickness="1"
                              BorderBrush="{StaticResource BrushSurfaceHover}"
                              VerticalContentAlignment="Center" />
@@ -68,7 +68,7 @@
                                  Height="40"
                                  CornerRadius="6"
                                  Background="{StaticResource BrushAbyssalDark}"
-                                 Foreground="White"
+                                 Foreground="{StaticResource BrushTextWhite}"
                                  BorderThickness="1"
                                  BorderBrush="{StaticResource BrushSurfaceHover}"
                                  VerticalContentAlignment="Center" />
@@ -85,7 +85,7 @@
                                  Height="40"
                                  CornerRadius="6"
                                  Background="{StaticResource BrushAbyssalDark}"
-                                 Foreground="White"
+                                 Foreground="{StaticResource BrushTextWhite}"
                                  BorderThickness="1"
                                  BorderBrush="{StaticResource BrushSurfaceHover}"
                                  VerticalContentAlignment="Center" />
@@ -104,7 +104,7 @@
                         Command="{Binding ExecuteRegisterCommand}"
                         IsEnabled="{Binding !IsBusy}"
                         Background="{StaticResource BrushElectricBlue}"
-                        Foreground="White"
+                        Foreground="{StaticResource BrushTextWhite}"
                         Height="42"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center"

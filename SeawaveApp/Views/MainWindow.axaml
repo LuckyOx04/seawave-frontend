@@ -12,38 +12,38 @@
         Title="Seawave Player" Height="750" Width="1100"
         Background="{StaticResource BrushAbyssalDark}"
         x:DataType="vm:MainViewModel">
-    
+
     <Window.DataTemplates>
         <DataTemplate DataType="vm:LoginViewModel">
-            <views:LoginView/>
+            <views:LoginView />
         </DataTemplate>
         <DataTemplate DataType="vm:RegisterViewModel">
-            <views:RegisterView/>
+            <views:RegisterView />
         </DataTemplate>
         <DataTemplate DataType="vm:ForgotPasswordViewModel">
-            <views:ForgotPasswordView/>
+            <views:ForgotPasswordView />
         </DataTemplate>
         <DataTemplate DataType="vm:ProfileViewModel">
-            <views:ProfileView/>
+            <views:ProfileView />
         </DataTemplate>
         <DataTemplate DataType="vm:ChangePasswordViewModel">
-            <views:ChangePasswordView/>
+            <views:ChangePasswordView />
         </DataTemplate>
         <DataTemplate DataType="vm:UploadTrackViewModel">
-            <views:UploadTrackView/>
+            <views:UploadTrackView />
         </DataTemplate>
     </Window.DataTemplates>
 
     <Panel>
         <Grid x:Name="PlayerWorkspaceLayout"
               RowDefinitions="60,*,100">
-            
+
             <Border Grid.Row="0"
                     Background="{StaticResource BrushSurfaceSlate}"
                     Margin="8,8,8,4"
                     CornerRadius="8">
                 <Grid ColumnDefinitions="Auto, *">
-                    
+
                     <ContentControl Grid.Column="1"
                                     Content="{Binding TopBar}" />
                 </Grid>
@@ -52,7 +52,7 @@
             <Grid Grid.Row="1"
                   Margin="8,4,8,4"
                   ColumnDefinitions="Auto,*,Auto">
-                
+
                 <StackPanel Grid.Column="0"
                             Orientation="Horizontal"
                             Margin="0,0,4,0">

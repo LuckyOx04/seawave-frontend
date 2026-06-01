@@ -41,7 +41,7 @@
                        Foreground="{StaticResource BrushTextMuted}"
                        Margin="4, 0"
                        LetterSpacing="1"
-                       VerticalAlignment="Center"/>
+                       VerticalAlignment="Center" />
 
             <Button Grid.Column="1"
                     Background="Transparent"
@@ -51,7 +51,7 @@
                     ToolTip.Tip="Add new playlist.">
                 <PathIcon Data="{StaticResource IconPlus}"
                           Width="16"
-                          Height="16"/>
+                          Height="16" />
             </Button>
 
         </Grid>
