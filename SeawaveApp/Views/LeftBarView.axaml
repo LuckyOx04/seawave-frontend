@@ -4,8 +4,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
-             d:DesignWidth="800"
-             d:DesignHeight="450"
+             d:DesignWidth="240"
+             d:DesignHeight="920"
              x:Class="SeawaveApp.Views.LeftBarView"
              x:DataType="vm:LeftBarViewModel"
              Padding="12">
@@ -31,13 +31,30 @@
                       ToolTip.Tip="Isolate native local storage items" />
         </StackPanel>
 
-        <TextBlock Grid.Row="1"
-                   Text="PLAYLISTS"
-                   FontSize="11"
-                   FontWeight="Bold"
-                   Foreground="{StaticResource BrushTextMuted}"
-                   Margin="4,0,0,8"
-                   LetterSpacing="1" />
+        <Grid Grid.Row="1"
+              ColumnDefinitions="*, Auto">
+
+            <TextBlock Grid.Column="0"
+                       Text="PLAYLISTS"
+                       FontSize="11"
+                       FontWeight="Bold"
+                       Foreground="{StaticResource BrushTextMuted}"
+                       Margin="4, 0"
+                       LetterSpacing="1"
+                       VerticalAlignment="Center"/>
+
+            <Button Grid.Column="1"
+                    Background="Transparent"
+                    VerticalAlignment="Center"
+                    Padding="0"
+                    Margin="4,0"
+                    ToolTip.Tip="Add new playlist.">
+                <PathIcon Data="{StaticResource IconPlus}"
+                          Width="16"
+                          Height="16"/>
+            </Button>
+
+        </Grid>
 
         <ListBox Grid.Row="2"
                  ItemsSource="{Binding FilteredPlaylists}"
