@@ -14,11 +14,18 @@ public partial class LeftBarViewModel : ViewModelBase
     private readonly LibraryManager _libraryManager;
     private readonly MainViewModel _mainShell;
 
-    [ObservableProperty] private string _playlistSearchQuery = string.Empty;
-    [ObservableProperty] private bool _showOnlineOnly;
-    [ObservableProperty] private bool _showOfflineOnly;
-    [ObservableProperty] private Playlist? _selectedPlaylist;
+    [ObservableProperty]
+    public partial string PlaylistSearchQuery { get; set; } = string.Empty;
 
+    [ObservableProperty]
+    public partial bool ShowOnlineOnly { get; set; }
+
+    [ObservableProperty]
+    public partial bool ShowOfflineOnly { get; set; }
+
+    [ObservableProperty]
+    public partial Playlist? SelectedPlaylist { get; set; }
+    
     public ObservableCollection<Playlist> FilteredPlaylists { get; } = [];
 
     public LeftBarViewModel(MainViewModel mainShell, LibraryManager libraryManager)
@@ -67,7 +74,7 @@ public partial class LeftBarViewModel : ViewModelBase
         ApplyFilter();
     }
 
-    public void ApplyFilter()
+    private void ApplyFilter()
     {
         FilteredPlaylists.Clear();
 

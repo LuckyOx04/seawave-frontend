@@ -19,16 +19,16 @@
                      Background="{StaticResource BrushAbyssalDark}"
                      Foreground="{StaticResource BrushTextWhite}"
                      CornerRadius="4"
-                     ToolTip.Tip="Type here to dynamically filter your current collections list" />
+                     ToolTip.Tip="Filter your playlists results" />
 
             <CheckBox Content="Online Only"
                       IsChecked="{Binding ShowOnlineOnly, Mode=TwoWay}"
                       Foreground="{StaticResource BrushTextMuted}"
-                      ToolTip.Tip="Isolate cloud-hosted streaming configurations" />
+                      ToolTip.Tip="Show online only playlists" />
             <CheckBox Content="Offline Only"
                       IsChecked="{Binding ShowOfflineOnly, Mode=TwoWay}"
                       Foreground="{StaticResource BrushTextMuted}"
-                      ToolTip.Tip="Isolate native local storage items" />
+                      ToolTip.Tip="Show offline only playlists" />
         </StackPanel>
 
         <Grid Grid.Row="1"
