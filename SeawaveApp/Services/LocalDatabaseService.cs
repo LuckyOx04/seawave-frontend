@@ -33,25 +33,25 @@ public class LocalDatabaseService
             PRAGMA journal_mode=WAL;
             CREATE TABLE IF NOT EXISTS Tracks (
                 Id TEXT PRIMARY KEY,
-                Title TEXT,
+                Title TEXT NOT NULL,
                 Artist TEXT,
                 Album TEXT,
-                DurationSeconds REAL,
-                IsRemote INTEGER,
-                RemoteUrl TEXT,
-                LocalPath TEXT,
-                StartOffsetTicks INTEGER
+                DurationSeconds REAL NOT NULL,
+                IsRemote INTEGER DEFAULT 0,
+                RemoteUrl TEXT UNIQUE,
+                LocalPath TEXT UNIQUE,
+                StartOffset REAL
             );
 
             CREATE TABLE IF NOT EXISTS Playlists (
-                Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                Id TEXT PRIMARY KEY,
                 Name TEXT NOT NULL
             );
 
             CREATE TABLE IF NOT EXISTS PlaylistTracks (
-                PlaylistId INTEGER,
-                TrackId TEXT,
-                SortOrder INTEGER,
+                PlaylistId INTEGER NOT NULL,
+                TrackId TEXT NOT NULL,
+                PRIMARY KEY(PlaylistId, TrackId),
                 FOREIGN KEY(PlaylistId) REFERENCES Playlists(Id) ON DELETE CASCADE,
                 FOREIGN KEY(TrackId) REFERENCES Tracks(Id) ON DELETE CASCADE
             );
