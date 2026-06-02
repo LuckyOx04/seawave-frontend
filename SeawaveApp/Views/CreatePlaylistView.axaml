@@ -1,0 +1,69 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:SeawaveApp.ViewModels"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" 
+             d:DesignWidth="800" 
+             d:DesignHeight="450"
+             x:Class="SeawaveApp.Views.CreatePlaylistView"
+             x:DataType="vm:CreatePlaylistViewModel">
+    
+    <Panel HorizontalAlignment="Stretch"
+           VerticalAlignment="Stretch">
+        
+        <Button Background="Transparent"
+                BorderThickness="0"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Command="{Binding CancelCommand}" />
+        
+        <Border Background="{StaticResource BrushAbyssalDark}"
+                BorderBrush="{StaticResource BrushElectricBlue}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="24"
+                Width="340"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                BoxShadow="0 6 24 #AA000000">
+            
+            <StackPanel Spacing="16">
+                <TextBlock Text="{Binding DialogTitle}"
+                           FontWeight="Bold"
+                           FontSize="15"
+                           Foreground="{StaticResource BrushTextWhite}" />
+                
+                <TextBox Text="{Binding PlaylistName, Mode=TwoWay}"
+                         PlaceholderText="Enter playlist title..."
+                         HorizontalAlignment="Stretch">
+                    <TextBox.KeyBindings>
+                        <KeyBinding Gesture="Enter"
+                                    Command="{Binding ConfirmCommand}" />
+                        <KeyBinding Gesture="Escape"
+                                    Command="{Binding CancelCommand}"/>
+                    </TextBox.KeyBindings>
+                </TextBox>
+                
+                <Grid ColumnDefinitions="*, *">
+                    <Button Grid.Column="0"
+                            Content="Cancel"
+                            Command="{Binding CancelCommand}"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,0,6,0"
+                            Background="Transparent"
+                            BorderBrush="{StaticResource BrushTextMuted}"
+                            BorderThickness="1" />
+                    <Button Grid.Column="1"
+                            Content="Create"
+                            Command="{Binding ConfirmCommand}"
+                            HorizontalAlignment="Stretch"
+                            Margin="6,0,0,0"
+                            Background="{StaticResource BrushElectricBlue}"
+                            Foreground="{StaticResource BrushTextWhite}" />
+                </Grid>
+            </StackPanel>
+        </Border>
+    </Panel>
+    
+</UserControl>

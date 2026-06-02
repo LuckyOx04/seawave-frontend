@@ -32,6 +32,9 @@
         <DataTemplate DataType="vm:UploadTrackViewModel">
             <views:UploadTrackView />
         </DataTemplate>
+        <DataTemplate DataType="vm:CreatePlaylistViewModel">
+            <views:CreatePlaylistView />
+        </DataTemplate>
     </Window.DataTemplates>
 
     <Panel>

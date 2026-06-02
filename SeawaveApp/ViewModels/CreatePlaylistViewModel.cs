@@ -3,13 +3,11 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace SeawaveApp.ViewModels;
 
-2
-
 public partial class CreatePlaylistViewModel : ViewModelBase
 {
     private readonly MainViewModel _mainShell;
 
-    [ObservableProperty] public partial string DialogTitle { get; set; } = string.Empty;
+    [ObservableProperty] public partial string DialogTitle { get; set; }
     [ObservableProperty] public partial string PlaylistName { get; set; } = string.Empty;
     
     public bool IsOnlinePlaylist { get; }
@@ -28,11 +26,8 @@ public partial class CreatePlaylistViewModel : ViewModelBase
         {
             return;
         }
-
-        string resultName = PlaylistName;
-        bool isOnline = IsOnlinePlaylist;
         
-        System.Diagnostics.Debug.WriteLine($"Menu result obtained -> Name: {resultName}, Online: {isOnline}");
+        System.Diagnostics.Debug.WriteLine($"Menu result obtained -> Name: {PlaylistName}, Online: {IsOnlinePlaylist}");
 
         CloseDialog();
     }
