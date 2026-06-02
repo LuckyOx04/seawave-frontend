@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
@@ -113,5 +114,17 @@ public partial class LeftBarViewModel : ViewModelBase
         }
         
         await _mainShell.NavigateToPlaylist(playlist);
+    }
+
+    [RelayCommand]
+    private void PromptCreateLocalPlaylist()
+    {
+        _mainShell.ActiveOverlay = new CreatePlaylistViewModel(_mainShell, isOnlinePlaylist: false);
+    }
+
+    [RelayCommand]
+    private void PromptCreateOnlinePlaylist()
+    {
+        _mainShell.ActiveOverlay = new CreatePlaylistViewModel(_mainShell, isOnlinePlaylist: true);
     }
 }

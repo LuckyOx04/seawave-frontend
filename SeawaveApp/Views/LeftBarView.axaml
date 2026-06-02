@@ -52,6 +52,19 @@
                 <PathIcon Data="{StaticResource IconPlus}"
                           Width="16"
                           Height="16" />
+                
+                <Button.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedRight">
+                        <MenuItem Header="Create Local Playlist"
+                                  Command="{Binding PromptCreateLocalPlaylistCommand}" />
+                        <MenuItem Header="Create Online Playlist"
+                                  Command="{Binding PromptCreateOnlinePlaylistCommand}"
+                                  IsVisible="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsLoggedIn,
+                                  FallbackValue={x:False}}"
+                                  IsEnabled="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnline,
+                                  FallbackValue={x:False}}"/>
+                    </MenuFlyout>
+                </Button.Flyout>
             </Button>
 
         </Grid>
