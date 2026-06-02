@@ -69,7 +69,7 @@ public class LibraryManager(
         }
         else
         {
-            var localTracks = await db.GetPlaylistTracksAsync(int.Parse(playlist.Id));
+            var localTracks = await db.GetPlaylistTracksAsync(playlist.Id);
             foreach (var track in localTracks)
             {
                 playlist.Tracks.Add(track);
@@ -85,7 +85,9 @@ public class LibraryManager(
         }
         else
         {
-            await db.CretePlaylistAsync(playlistName);
+            var uniquePlaylistSeed = $"{playlistName}_{Guid.NewGuid()}";
+            var playlistId = IdGenerator.GenerateSha256Id(uniquePlaylistSeed);
+            await db.CretePlaylistAsync(playlistId, playlistName);
         }
     }
 
@@ -152,7 +154,7 @@ public class LibraryManager(
             return new ApiResult(response.IsSuccess, response.Message);
         }
 
-        await db.AddTrackToPlaylistAsync(int.Parse(playlist.Id), track);
+        await db.AddTrackToPlaylistAsync(playlist.Id, track);
         return new ApiResult(true, "Added track to playlist.");
     }
 

@@ -18,7 +18,7 @@ public class LocalDatabaseService
         Directory.CreateDirectory(folder);
         var dbPath = Path.Combine(folder, "seawave.db");
         _connectionString = $"Data Source={dbPath}";
-        
+
         InitializeDatabase();
     }
 
@@ -26,7 +26,7 @@ public class LocalDatabaseService
     {
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
-        
+
         var command = connection.CreateCommand();
         command.CommandText =
             """
@@ -56,7 +56,7 @@ public class LocalDatabaseService
                 FOREIGN KEY(TrackId) REFERENCES Tracks(Id) ON DELETE CASCADE
             );
             """;
-        
+
         command.ExecuteNonQuery();
     }
 
@@ -65,16 +65,16 @@ public class LocalDatabaseService
         var playlists = new List<Playlist>();
         await using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
-        
+
         var command = connection.CreateCommand();
         command.CommandText = "SELECT Id, Name FROM Playlists";
-        
+
         await using var reader = await command.ExecuteReaderAsync();
         while (await reader.ReadAsync())
         {
             playlists.Add(new Playlist
             {
-                Id = reader.GetInt32(0).ToString(),
+                Id = reader.GetString(0),
                 Name = reader.GetString(1),
                 IsOnline = false
             });
@@ -87,7 +87,7 @@ public class LocalDatabaseService
     {
         await using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
-        
+
         await using var transaction = await connection.BeginTransactionAsync();
 
         try
@@ -98,18 +98,18 @@ public class LocalDatabaseService
                 command.CommandText =
                     """
                     REPLACE INTO Tracks
-                    (Id, Title, Artist, Album, DurationTicks, IsRemote, RemoteUrl, LocalPath, StartOffsetTicks)
+                    (Id, Title, Artist, Album, DurationSeconds, IsRemote, RemoteUrl, LocalPath, StartOffset)
                     VALUES ($id, $title, $artist, $album, $duration, $isRemote, $remoteUrl, $localPath, $startOffset)
                     """;
                 command.Parameters.AddWithValue("$id", track.Id);
                 command.Parameters.AddWithValue("$title", track.Title);
                 command.Parameters.AddWithValue("$artist", track.Artist);
                 command.Parameters.AddWithValue("$album", (object?)track.Album ?? DBNull.Value);
-                command.Parameters.AddWithValue("$duration", track.Duration.Ticks);
+                command.Parameters.AddWithValue("$duration", track.Duration.TotalSeconds);
                 command.Parameters.AddWithValue("$isRemote", track.IsRemote ? 1 : 0);
                 command.Parameters.AddWithValue("$remoteUrl", (object?)track.RemoteUrl ?? DBNull.Value);
                 command.Parameters.AddWithValue("$localPath", (object?)track.LocalPath ?? DBNull.Value);
-                command.Parameters.AddWithValue("$startOffset", track.StartOffset.Ticks);
+                command.Parameters.AddWithValue("$startOffset", track.StartOffset.TotalSeconds);
                 await command.ExecuteNonQueryAsync();
             }
 
@@ -122,31 +122,33 @@ public class LocalDatabaseService
         }
     }
 
-    public async Task<int> CretePlaylistAsync(string name)
+    public async Task CretePlaylistAsync(string id, string name)
     {
         await using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
         var command = connection.CreateCommand();
-        command.CommandText = "INSERT INTO Playlists (Name) VALUES ($name); SELECT last_insert_rowid();";
+        command.CommandText = "INSERT INTO Playlists (Id, Name) VALUES ($id, $name);";
+        command.Parameters.AddWithValue("$id", id);
         command.Parameters.AddWithValue("$name", name);
-        
-        return Convert.ToInt32(await command.ExecuteScalarAsync());
+
+        await command.ExecuteNonQueryAsync();
     }
 
-    public async Task AddTrackToPlaylistAsync(int playlistId, UnifiedTrack track)
+    public async Task AddTrackToPlaylistAsync(string playlistId, UnifiedTrack track)
     {
         await UpsertTracksAsync([track]);
 
         await using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
         var command = connection.CreateCommand();
-        command.CommandText = "INSERT INTO PlaylistTracks (PlaylistId, TrackId) VALUES ($playlistId, $trackId)";
+        command.CommandText =
+            "INSERT OR IGNORE INTO PlaylistTracks (PlaylistId, TrackId) VALUES ($playlistId, $trackId)";
         command.Parameters.AddWithValue("$playlistId", playlistId);
         command.Parameters.AddWithValue("$trackId", track.Id);
         await command.ExecuteNonQueryAsync();
     }
 
-    public async Task<List<UnifiedTrack>> GetPlaylistTracksAsync(int playlistId)
+    public async Task<List<UnifiedTrack>> GetPlaylistTracksAsync(string playlistId)
     {
         var tracks = new List<UnifiedTrack>();
         await using var connection = new SqliteConnection(_connectionString);
@@ -166,11 +168,11 @@ public class LocalDatabaseService
         {
             tracks.Add(MapTrack(reader));
         }
-        
+
         return tracks;
     }
 
-    private UnifiedTrack MapTrack(SqliteDataReader reader)
+    private static UnifiedTrack MapTrack(SqliteDataReader reader)
     {
         return new UnifiedTrack
         {
@@ -178,11 +180,11 @@ public class LocalDatabaseService
             Title = reader.GetString(1),
             Artist = reader.GetString(2),
             Album = reader.IsDBNull(3) ? null : reader.GetString(3),
-            Duration = TimeSpan.FromTicks(reader.GetInt64(4)),
+            Duration = TimeSpan.FromSeconds(reader.GetDouble(4)),
             IsRemote = reader.GetInt32(5) == 1,
             RemoteUrl = reader.IsDBNull(6) ? null : reader.GetString(6),
             LocalPath = reader.IsDBNull(7) ? null : reader.GetString(7),
-            StartOffset = TimeSpan.FromTicks(reader.GetInt64(8))
+            StartOffset = TimeSpan.FromSeconds(reader.GetDouble(8))
         };
     }
 }
