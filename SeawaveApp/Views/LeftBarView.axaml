@@ -28,7 +28,7 @@
             <CheckBox Content="Offline Only"
                       IsChecked="{Binding ShowOfflineOnly, Mode=TwoWay}"
                       Foreground="{StaticResource BrushTextMuted}"
-                      ToolTip.Tip="Show offline only playlists" />
+                      ToolTip.Tip="Show local only playlists" />
         </StackPanel>
 
         <Grid Grid.Row="1"
