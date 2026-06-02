@@ -52,18 +52,71 @@
                 <PathIcon Data="{StaticResource IconPlus}"
                           Width="16"
                           Height="16" />
-                
+
                 <Button.Flyout>
-                    <MenuFlyout Placement="BottomEdgeAlignedRight">
-                        <MenuItem Header="Create Local Playlist"
-                                  Command="{Binding PromptCreateLocalPlaylistCommand}" />
-                        <MenuItem Header="Create Online Playlist"
-                                  Command="{Binding PromptCreateOnlinePlaylistCommand}"
-                                  IsVisible="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsLoggedIn,
-                                  FallbackValue={x:False}}"
-                                  IsEnabled="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnline,
-                                  FallbackValue={x:False}}"/>
-                    </MenuFlyout>
+                    <Flyout Placement="BottomEdgeAlignedRight"
+                            Closed="Flyout_OnClosed">
+
+                        <Panel Width="240">
+                            <StackPanel Spacing="4"
+                                        IsVisible="{Binding !IsPlaylistWizardActive}">
+                                <Button Content="Create Local Playlist"
+                                        Command="{Binding SelectPlaylistTypeCommand}"
+                                        CommandParameter="{x:False}"
+                                        HorizontalAlignment="Stretch"
+                                        Background="Transparent"
+                                        HorizontalContentAlignment="Left"
+                                        Padding="12,8" />
+                                <Button Content="Create Online Playlist"
+                                        Command="{Binding SelectPlaylistTypeCommand}"
+                                        CommandParameter="{x:True}"
+                                        HorizontalAlignment="Stretch"
+                                        Background="Transparent"
+                                        HorizontalContentAlignment="Left"
+                                        Padding="12,8" />
+                            </StackPanel>
+
+                            <StackPanel Spacing="12"
+                                        IsVisible="{Binding IsPlaylistWizardActive}">
+                                <TextBlock Text="{Binding WizardTitle}"
+                                           FontWeight="Bold"
+                                           FontSize="13"
+                                           Foreground="{StaticResource BrushTextWhite}" />
+
+                                <TextBox Text="{Binding NewPlaylistName, Mode=TwoWay}"
+                                         PlaceholderText="Enter title..."
+                                         HorizontalAlignment="Stretch">
+                                    <TextBox.KeyBindings>
+                                        <KeyBinding Gesture="Enter"
+                                                    Command="{Binding ConfirmWizardCommand}" />
+                                    </TextBox.KeyBindings>
+                                </TextBox>
+
+                                <TextBlock Text="{Binding WizardMessage}"
+                                           IsVisible="{Binding WizardMessage,
+                                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                                <Grid ColumnDefinitions="*, *">
+                                    <Button Grid.Column="0"
+                                            Content="Back"
+                                            Command="{Binding ResetWizardCommand}"
+                                            HorizontalAlignment="Stretch"
+                                            Margin="0,0,4,0"
+                                            HorizontalContentAlignment="Center"
+                                            Background="Transparent" />
+                                    <Button Grid.Column="1"
+                                            Content="Create"
+                                            Command="{Binding ConfirmWizardCommand}"
+                                            HorizontalAlignment="Stretch"
+                                            Margin="4,0,0,0"
+                                            HorizontalContentAlignment="Center"
+                                            Background="{StaticResource BrushElectricBlue}"
+                                            Foreground="{StaticResource BrushTextWhite}" />
+                                </Grid>
+                            </StackPanel>
+
+                        </Panel>
+                    </Flyout>
                 </Button.Flyout>
             </Button>
 

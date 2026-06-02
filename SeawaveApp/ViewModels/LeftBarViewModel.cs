@@ -14,19 +14,18 @@ public partial class LeftBarViewModel : ViewModelBase
 {
     private readonly LibraryManager _libraryManager;
     private readonly MainViewModel _mainShell;
-
-    [ObservableProperty]
-    public partial string PlaylistSearchQuery { get; set; } = string.Empty;
-
-    [ObservableProperty]
-    public partial bool ShowOnlineOnly { get; set; }
-
-    [ObservableProperty]
-    public partial bool ShowOfflineOnly { get; set; }
-
-    [ObservableProperty]
-    public partial Playlist? SelectedPlaylist { get; set; }
     
+    private bool _isOnlineTarget;
+
+    [ObservableProperty] public partial string PlaylistSearchQuery { get; set; } = string.Empty;
+    [ObservableProperty] public partial bool ShowOnlineOnly { get; set; }
+    [ObservableProperty] public partial bool ShowOfflineOnly { get; set; }
+    [ObservableProperty] public partial Playlist? SelectedPlaylist { get; set; }
+    [ObservableProperty] public partial bool IsPlaylistWizardActive { get; set; }
+    [ObservableProperty] public partial string WizardTitle { get; set; } = string.Empty;
+    [ObservableProperty] public partial string NewPlaylistName { get; set; } = string.Empty;
+    [ObservableProperty] public partial string? WizardMessage { get; set; }
+
     public ObservableCollection<Playlist> FilteredPlaylists { get; } = [];
 
     public LeftBarViewModel(MainViewModel mainShell, LibraryManager libraryManager)
@@ -51,7 +50,7 @@ public partial class LeftBarViewModel : ViewModelBase
         {
             ShowOfflineOnly = false;
         }
-        
+
         ApplyFilter();
     }
 
@@ -112,19 +111,46 @@ public partial class LeftBarViewModel : ViewModelBase
         {
             await _libraryManager.LoadPlaylistTracksAsync(playlist);
         }
-        
+
         await _mainShell.NavigateToPlaylist(playlist);
     }
 
     [RelayCommand]
-    private void PromptCreateLocalPlaylist()
+    private void SelectPlaylistType(bool isOnlineSelected)
     {
-        _mainShell.ActiveOverlay = new CreatePlaylistViewModel(_mainShell, isOnlinePlaylist: false);
+        _isOnlineTarget = isOnlineSelected;
+
+        WizardTitle = _isOnlineTarget ? "New Online Playlist" : "New Local Playlist";
+
+        NewPlaylistName = string.Empty;
+
+        IsPlaylistWizardActive = true;
+
+        WizardMessage = null;
     }
 
     [RelayCommand]
-    private void PromptCreateOnlinePlaylist()
+    private void ConfirmWizard()
     {
-        _mainShell.ActiveOverlay = new CreatePlaylistViewModel(_mainShell, isOnlinePlaylist: true);
+        if (string.IsNullOrWhiteSpace(NewPlaylistName))
+        {
+            WizardMessage = "Playlist name cannot be empty.";
+            return;
+        }
+
+        WizardMessage = null;
+
+        Console.WriteLine(
+            $"Flyout Extracted Data -> Title: {NewPlaylistName}, IsOnline: {_isOnlineTarget}");
+
+        ResetWizard();
+    }
+
+    [RelayCommand]
+    private void ResetWizard()
+    {
+        IsPlaylistWizardActive = false;
+        NewPlaylistName = string.Empty;
+        WizardTitle = string.Empty;
     }
 }
