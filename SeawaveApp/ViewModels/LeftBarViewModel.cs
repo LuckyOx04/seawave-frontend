@@ -130,7 +130,7 @@ public partial class LeftBarViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void ConfirmWizard()
+    private async Task ConfirmWizard()
     {
         if (string.IsNullOrWhiteSpace(NewPlaylistName))
         {
@@ -139,9 +139,8 @@ public partial class LeftBarViewModel : ViewModelBase
         }
 
         WizardMessage = null;
-
-        Console.WriteLine(
-            $"Flyout Extracted Data -> Title: {NewPlaylistName}, IsOnline: {_isOnlineTarget}");
+        
+        await _libraryManager.CreatePlaylist(NewPlaylistName, _isOnlineTarget);
 
         ResetWizard();
     }

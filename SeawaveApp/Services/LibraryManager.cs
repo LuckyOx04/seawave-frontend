@@ -77,6 +77,18 @@ public class LibraryManager(
         }
     }
 
+    public async Task CreatePlaylist(string playlistName, bool isOnlinePlaylist)
+    {
+        if (isOnlinePlaylist)
+        {
+            await api.CreatePlaylistAsync(new CreatePlaylistRequest(playlistName));
+        }
+        else
+        {
+            await db.CretePlaylistAsync(playlistName);
+        }
+    }
+
     public void PlayTrackFromPlaylist(Playlist playlist, UnifiedTrack track)
     {
         var index = playlist.Tracks.IndexOf(track);
