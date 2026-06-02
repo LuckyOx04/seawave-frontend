@@ -12,12 +12,12 @@ public partial class ProfileViewModel : ViewModelBase
     private readonly AuthStateManager _authStateManager;
     private readonly ApiService _api;
 
-    [ObservableProperty] private string _usernameText = "Loading...";
-    [ObservableProperty] private string _emailText = "Loading...";
-    [ObservableProperty] private string _createdAt = "Loading...";
-    [ObservableProperty] private int _createdPlaylistsCount;
-    [ObservableProperty] private int _pendingTracksCount;
-    [ObservableProperty] private int _approvedTracksCount;
+    [ObservableProperty] public partial string UsernameText { get; set; } = "Loading...";
+    [ObservableProperty] public partial string EmailText { get; set; } = "Loading...";
+    [ObservableProperty] public partial string CreatedAt { get; set; } = "Loading...";
+    [ObservableProperty] public partial int CreatedPlaylistsCount { get; set; }
+    [ObservableProperty] public partial int PendingTracksCount { get; set; }
+    [ObservableProperty] public partial int ApprovedTracksCount { get; set; }
 
     public ProfileViewModel(MainViewModel mainShell, AuthStateManager authStateManager, ApiService api)
     {
@@ -35,7 +35,7 @@ public partial class ProfileViewModel : ViewModelBase
         {
             UsernameText = response.Data.Username;
             EmailText = response.Data.Email;
-            CreatedAt = response.Data.CreatedAt.ToString("dd MMM yyyy", new CultureInfo("en-US"));
+            CreatedAt = response.Data.CreatedAt.ToLocalTime().ToString("D", CultureInfo.CurrentCulture);
             PendingTracksCount = response.Data.PendingTracksCount;
             ApprovedTracksCount = response.Data.ApprovedTracksCount;
         }

@@ -2,7 +2,7 @@ using System;
 
 namespace SeawaveApp.Models;
 
-public record UnifiedTrack()
+public record UnifiedTrack
 {
     public string Id { get; init; } = string.Empty;
     public string Title { get; init; } = "Unknown Title";

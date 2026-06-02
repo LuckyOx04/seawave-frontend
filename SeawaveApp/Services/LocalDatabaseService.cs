@@ -36,7 +36,7 @@ public class LocalDatabaseService
                 Title TEXT,
                 Artist TEXT,
                 Album TEXT,
-                DurationTicks INTEGER,
+                DurationSeconds REAL,
                 IsRemote INTEGER,
                 RemoteUrl TEXT,
                 LocalPath TEXT,
