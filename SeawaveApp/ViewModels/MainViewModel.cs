@@ -81,6 +81,11 @@ public partial class MainViewModel : ViewModelBase
         _ = _libraryManager.RefreshPlaylistsAsync(IsOnline && IsLoggedIn);
     }
 
+    public async Task RefreshDisplayedPlaylists()
+    {
+        await _libraryManager.RefreshPlaylistsAsync(IsOnline && IsLoggedIn);
+    }
+
     public async Task NavigateToPlaylist(Playlist? playlist)
     {
         ActiveCenterPlaylist = playlist;

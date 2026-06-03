@@ -14,7 +14,7 @@ public class LibraryManager(
 
     public ObservableCollection<Playlist> AllPlaylists { get; } = [];
 
-    public Playlist TemporaryPlaylist { get; } = new() { Name = "Now Playing (Local)", IsOnline = false };
+    public Playlist TemporaryPlaylist { get; } = new() {Id = "0", Name = "Now Playing (Local)", IsOnline = false };
 
     public async Task RefreshPlaylistsAsync(bool includeOnline)
     {

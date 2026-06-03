@@ -154,6 +154,8 @@ public partial class LeftBarViewModel : ViewModelBase
         ResetWizard();
         
         IsFlyoutVisible = false;
+
+        await _mainShell.RefreshDisplayedPlaylists();
     }
 
     [RelayCommand]

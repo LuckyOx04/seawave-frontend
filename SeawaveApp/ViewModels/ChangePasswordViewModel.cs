@@ -7,21 +7,24 @@ using SeawaveApp.Services;
 
 namespace SeawaveApp.ViewModels;
 
-public partial class ChangePasswordViewModel(MainViewModel mainShell, AuthStateManager authStateManager,
+public partial class ChangePasswordViewModel(
+    MainViewModel mainShell,
+    AuthStateManager authStateManager,
     ApiService api) : ViewModelBase
 {
     private static readonly IBrush SuccessBrush = new SolidColorBrush(Color.Parse("#007bff"));
     private static readonly IBrush FailureBrush = new SolidColorBrush(Color.Parse("#ff6666"));
-    
-    [ObservableProperty] private string _currentPassword = string.Empty;
-    [ObservableProperty] private string _newPassword = string.Empty;
-    [ObservableProperty] private string _confirmPassword = string.Empty;
-    [ObservableProperty] private string _statusMessage = string.Empty;
-    [ObservableProperty] private bool _isBusy;
 
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(StatusColor))]
-    private bool _isSuccessState;
-    
+    [ObservableProperty] public partial string CurrentPassword { get; set; } = string.Empty;
+    [ObservableProperty] public partial string NewPassword { get; set; } = string.Empty;
+    [ObservableProperty] public partial string ConfirmPassword { get; set; } = string.Empty;
+    [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
+    [ObservableProperty] public partial bool IsBusy { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StatusColor))]
+    private partial bool IsSuccessState { get; set; }
+
     public IBrush StatusColor => IsSuccessState ? SuccessBrush : FailureBrush;
 
     [RelayCommand]
@@ -30,10 +33,11 @@ public partial class ChangePasswordViewModel(MainViewModel mainShell, AuthStateM
         if (!ValidatorService.IsValidPassword(NewPassword))
         {
             StatusMessage = "Password must have at least 8 characters," +
-                                      "an upper case letter, a lower case letter and a digit.";
+                            "an upper case letter, a lower case letter and a digit.";
             IsSuccessState = false;
             return;
         }
+
         if (NewPassword != ConfirmPassword)
         {
             StatusMessage = "Confirmed password does not match the new password.";
@@ -46,7 +50,7 @@ public partial class ChangePasswordViewModel(MainViewModel mainShell, AuthStateM
 
         var request = new ChangePasswordRequest(CurrentPassword, NewPassword, ConfirmPassword);
         var response = await api.ChangePasswordAsync(request);
-        
+
         IsBusy = false;
 
         if (response.IsSuccess)
