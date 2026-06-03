@@ -26,7 +26,7 @@ public partial class LeftBarViewModel : ViewModelBase
     [ObservableProperty] public partial string NewPlaylistName { get; set; } = string.Empty;
     [ObservableProperty] public partial string? WizardMessage { get; set; }
 
-    public ObservableCollection<Playlist> FilteredPlaylists { get; } = [];
+    public ObservableCollection<Playlist> DisplayedPlaylists { get; } = [];
 
     public LeftBarViewModel(MainViewModel mainShell, LibraryManager libraryManager)
     {
@@ -35,13 +35,13 @@ public partial class LeftBarViewModel : ViewModelBase
 
         _libraryManager.AllPlaylists.CollectionChanged += OnSourcePlaylistsChanged;
 
-        ApplyFilter();
+        RefreshDisplayedPlaylists();
     }
 
     partial void OnPlaylistSearchQueryChanged(string value)
     {
         _ = value;
-        ApplyFilter();
+        RefreshDisplayedPlaylists();
     }
 
     partial void OnShowOnlineOnlyChanged(bool value)
@@ -51,7 +51,7 @@ public partial class LeftBarViewModel : ViewModelBase
             ShowOfflineOnly = false;
         }
 
-        ApplyFilter();
+        RefreshDisplayedPlaylists();
     }
 
     partial void OnShowOfflineOnlyChanged(bool value)
@@ -61,7 +61,7 @@ public partial class LeftBarViewModel : ViewModelBase
             ShowOnlineOnly = false;
         }
 
-        ApplyFilter();
+        RefreshDisplayedPlaylists();
     }
 
     partial void OnSelectedPlaylistChanged(Playlist? value)
@@ -71,12 +71,12 @@ public partial class LeftBarViewModel : ViewModelBase
 
     private void OnSourcePlaylistsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        ApplyFilter();
+        RefreshDisplayedPlaylists();
     }
 
-    private void ApplyFilter()
+    private void RefreshDisplayedPlaylists()
     {
-        FilteredPlaylists.Clear();
+        DisplayedPlaylists.Clear();
 
         var query = _libraryManager.AllPlaylists.AsEnumerable();
 
@@ -96,7 +96,7 @@ public partial class LeftBarViewModel : ViewModelBase
 
         foreach (var playlist in query)
         {
-            FilteredPlaylists.Add(playlist);
+            DisplayedPlaylists.Add(playlist);
         }
     }
 
@@ -142,6 +142,8 @@ public partial class LeftBarViewModel : ViewModelBase
         
         await _libraryManager.CreatePlaylist(NewPlaylistName, _isOnlineTarget);
 
+        RefreshDisplayedPlaylists();
+        
         ResetWizard();
     }
 

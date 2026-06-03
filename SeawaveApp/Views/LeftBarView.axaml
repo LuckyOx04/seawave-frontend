@@ -63,10 +63,6 @@
                                 <Button Content="Create Local Playlist"
                                         Command="{Binding SelectPlaylistTypeCommand}"
                                         CommandParameter="{x:False}"
-                                        IsVisible="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsLoggedIn,
-                                        FallbackValue={x:False}}"
-                                        IsEnabled="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnline,
-                                        FallbackValue={x:False}}"
                                         HorizontalAlignment="Stretch"
                                         Background="Transparent"
                                         HorizontalContentAlignment="Left"
@@ -74,6 +70,10 @@
                                 <Button Content="Create Online Playlist"
                                         Command="{Binding SelectPlaylistTypeCommand}"
                                         CommandParameter="{x:True}"
+                                        IsVisible="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsLoggedIn,
+                                        FallbackValue={x:False}}"
+                                        IsEnabled="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnline,
+                                        FallbackValue={x:False}}"
                                         HorizontalAlignment="Stretch"
                                         Background="Transparent"
                                         HorizontalContentAlignment="Left"
@@ -127,7 +127,7 @@
         </Grid>
 
         <ListBox Grid.Row="2"
-                 ItemsSource="{Binding FilteredPlaylists}"
+                 ItemsSource="{Binding DisplayedPlaylists}"
                  SelectedItem="{Binding SelectedPlaylist, Mode=TwoWay}"
                  Background="Transparent"
                  BorderThickness="0">
