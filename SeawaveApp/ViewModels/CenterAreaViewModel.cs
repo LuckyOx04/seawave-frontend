@@ -18,7 +18,7 @@ public partial class CenterAreaViewModel : ViewModelBase
     [ObservableProperty]
     public partial string HeaderTitle { get; set; } = "Select a Playlist, Search for Music or Add Local Files";
 
-    [ObservableProperty] public partial bool IsClearable { get; set; } = false;
+    [ObservableProperty] public partial bool IsClearable { get; set; }
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
     
 
@@ -30,6 +30,8 @@ public partial class CenterAreaViewModel : ViewModelBase
         _mainShell.PropertyChanged += OnShellPropertyChanged;
 
         _mainShell.SearchResults.CollectionChanged += OnSearchResultsChanged;
+
+        IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
 
         WeakReferenceMessenger.Default.Register<PlaylistChangedMessage>(this, (_, _) =>
         {
@@ -67,7 +69,7 @@ public partial class CenterAreaViewModel : ViewModelBase
                     DisplayTracks.Add(track);
                 }
 
-                IsClearable = false;
+                IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
                 break;
             case CenterContentMode.PlaylistTracks:
             case CenterContentMode.TemporaryTracks:
@@ -78,13 +80,13 @@ public partial class CenterAreaViewModel : ViewModelBase
                     {
                         DisplayTracks.Add(track);
                     }
-                    IsClearable = true;
+                    IsClearable = _mainShell.ActiveCenterPlaylist.Id == "0";
                 }
                 break;
             case CenterContentMode.None:
             default:
                 HeaderTitle = "Select a Playlist, Search for Music or Add Local Files";
-                IsClearable = false;
+                IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
                 break;
         }
     }

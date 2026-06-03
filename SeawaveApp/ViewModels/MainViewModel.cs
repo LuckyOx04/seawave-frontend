@@ -101,6 +101,7 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
+            await _libraryManager.ClearTemporaryPlaylistAsync();
             CurrentCenterMode = CenterContentMode.PlaylistTracks;
         }
         
