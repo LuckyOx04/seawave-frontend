@@ -26,7 +26,7 @@
                     Foreground="{StaticResource BrushTextWhite}"
                     FontWeight="SemiBold"
                     FontSize="14"
-                    TextTrimming="WordEllipsis" />
+                    TextTrimming="CharacterEllipsis" />
                 <TextBlock
                     Text="{Binding CurrentTrack.Artist, 
                     FallbackValue='No Album'}"
@@ -34,7 +34,7 @@
                     Converter={x:Static ObjectConverters.IsNotNull}}"
                     Foreground="{StaticResource BrushTextMuted}"
                     FontSize="12"
-                    TextTrimming="WordEllipsis" />
+                    TextTrimming="CharacterEllipsis" />
             </StackPanel>
 
             <Grid Grid.Column="1"

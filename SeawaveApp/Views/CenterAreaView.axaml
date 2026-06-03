@@ -64,28 +64,25 @@
                                         Spacing="2">
                                 <TextBlock Text="{Binding Title}"
                                            Foreground="{StaticResource BrushTextWhite}"
-                                           FontWeight="Medium" />
+                                           FontWeight="Medium"
+                                           TextTrimming="CharacterEllipsis"/>
                                 <TextBlock Text="{Binding Artist}"
                                            Foreground="{StaticResource BrushTextMuted}"
-                                           FontSize="12" />
+                                           FontSize="12"
+                                           TextTrimming="CharacterEllipsis"/>
                             </StackPanel>
 
-                            <Border Grid.Column="2"
-                                    Background="{StaticResource BrushAbyssalDark}"
-                                    CornerRadius="4"
-                                    Padding="6,3"
-                                    VerticalAlignment="Center">
-                                <Panel>
-                                    <TextBlock Text="Online"
-                                               IsVisible="{Binding IsRemote}"
-                                               FontSize="10"
-                                               Foreground="{StaticResource BrushTextMuted}" />
-                                    <TextBlock Text="Local"
-                                               IsVisible="{Binding !IsRemote}"
-                                               FontSize="10"
-                                               Foreground="{StaticResource BrushTextMuted}" />
-                                </Panel>
-                            </Border>
+                            <Button Grid.Column="2"
+                                    Background="Transparent"
+                                    Padding="0"
+                                    Margin="10, 0, 0, 0">
+                                <PathIcon Data="{StaticResource IconOptions}"
+                                          Width="14"
+                                          Height="14" />
+                                <Button.Flyout>
+                                    
+                                </Button.Flyout>
+                            </Button>
                         </Grid>
                     </Border>
 

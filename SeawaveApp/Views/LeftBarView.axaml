@@ -48,7 +48,7 @@
                     Background="Transparent"
                     VerticalAlignment="Center"
                     Padding="0"
-                    Margin="4,0"
+                    Margin="4,0, 0, 10"
                     ToolTip.Tip="Add new playlist.">
                 <PathIcon Data="{StaticResource IconPlus}"
                           Width="16"
