@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SeawaveApp.Helpers;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
@@ -10,7 +11,7 @@ namespace SeawaveApp.ViewModels;
 public partial class UploadTrackViewModel(MainViewModel mainShell, AuthStateManager authStateManager,
     ApiService api) : ViewModelBase
 {
-    private readonly AvaloniaFileDialogService _fileDialogService = new();
+    private readonly AvaloniaFileDialog _fileDialog = new();
     
     private static readonly IBrush SuccessBrush = new SolidColorBrush(Color.Parse("#007bff"));
     private static readonly IBrush FailureBrush = new SolidColorBrush(Color.Parse("#ff6666"));
@@ -29,7 +30,7 @@ public partial class UploadTrackViewModel(MainViewModel mainShell, AuthStateMana
     [RelayCommand]
     private async Task ExecuteBrowseAsync()
     {
-        var paths = await _fileDialogService.SelectPathsAsync(true);
+        var paths = await _fileDialog.SelectPathsAsync(true);
         if (paths is { Length: > 0 })
         {
             FilePath = paths[0];            

@@ -147,7 +147,7 @@ public partial class LeftBarViewModel : ViewModelBase
 
         WizardMessage = null;
 
-        await _libraryManager.CreatePlaylist(NewPlaylistName, _isOnlineTarget);
+        await _libraryManager.CreatePlaylistAsync(NewPlaylistName, _isOnlineTarget);
 
         RefreshDisplayedPlaylists();
 

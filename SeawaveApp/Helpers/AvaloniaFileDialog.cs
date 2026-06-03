@@ -4,9 +4,9 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Platform.Storage;
 
-namespace SeawaveApp.Services;
+namespace SeawaveApp.Helpers;
 
-public class AvaloniaFileDialogService : IFileDialogService
+public class AvaloniaFileDialog : IFileDialog
 {
     private IStorageProvider? GetStorageProvider()
     {

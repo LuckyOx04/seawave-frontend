@@ -4,6 +4,8 @@ using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using SeawaveApp.Helpers;
+using SeawaveApp.Messages;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
@@ -11,7 +13,7 @@ namespace SeawaveApp.ViewModels;
 
 public partial class MainViewModel : ViewModelBase
 {
-    private readonly ConnectivityService _connectivityService;
+    private readonly ConnectivityChecker _connectivityChecker;
     private readonly AuthStateManager _authStateManager;
     private readonly LibraryManager _libraryManager;
     private readonly ApiService _api;
@@ -44,11 +46,11 @@ public partial class MainViewModel : ViewModelBase
     public TopBarViewModel TopBar { get; }
     public BottomBarViewModel BottomBar { get; }
 
-    public MainViewModel(ConnectivityService connectivityService, AuthStateManager authStateManager,
+    public MainViewModel(ConnectivityChecker connectivityChecker, AuthStateManager authStateManager,
         LibraryManager libraryManager, PlaybackManager playbackManager, ApiService api, 
-        IFileDialogService fileDialogService)
+        IFileDialog fileDialog)
     {
-        _connectivityService = connectivityService;
+        _connectivityChecker = connectivityChecker;
         _authStateManager = authStateManager;
         _libraryManager = libraryManager;
         _api = api;
@@ -56,15 +58,15 @@ public partial class MainViewModel : ViewModelBase
         LeftBar = new LeftBarViewModel(this, _libraryManager);
         RightBar = new RightBarViewModel(playbackManager);
         CenterArea = new CenterAreaViewModel(this, libraryManager);
-        TopBar = new TopBarViewModel(_api, _libraryManager, this, fileDialogService);
+        TopBar = new TopBarViewModel(_api, _libraryManager, this, fileDialog);
         BottomBar = new BottomBarViewModel(playbackManager);
 
-        IsOnline = _connectivityService.IsServiceReachable;
+        IsOnline = _connectivityChecker.IsServiceReachable;
         IsLoggedIn = _authStateManager.IsLoggedIn;
         Username = _authStateManager.Username ?? "Guest";
         ShowConnectivityMessage = !IsOnline;
 
-        _connectivityService.ConnectivityChanged += OnConnectivityChanged;
+        _connectivityChecker.ConnectivityChanged += OnConnectivityChanged;
         _authStateManager.StateChanged += OnAuthStateChanged;
 
         _ = _libraryManager.RefreshPlaylistsAsync(IsOnline && IsLoggedIn);

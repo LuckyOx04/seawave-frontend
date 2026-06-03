@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 
-namespace SeawaveApp.Services;
+namespace SeawaveApp.Helpers;
 
-public interface IFileDialogService
+public interface IFileDialog
 {
     Task<string[]> SelectPathsAsync(bool isSingleFile);
 }

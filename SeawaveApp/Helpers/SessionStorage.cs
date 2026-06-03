@@ -3,7 +3,7 @@ using System.IO;
 using System.Text.Json;
 using SeawaveApp.Models;
 
-namespace SeawaveApp.Services;
+namespace SeawaveApp.Helpers;
 
 public static class SessionStorage
 {

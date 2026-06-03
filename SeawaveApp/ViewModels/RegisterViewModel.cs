@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SeawaveApp.Helpers;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
@@ -30,21 +31,21 @@ public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager
     [RelayCommand]
     private async Task ExecuteRegisterAsync()
     {
-        if (string.IsNullOrWhiteSpace(Username) || !ValidatorService.IsValidUsername(Username))
+        if (string.IsNullOrWhiteSpace(Username) || !StringValidator.IsValidUsername(Username))
         {
             StatusMessage = "Username cannot be empty or contain @ symbol.";
             IsSuccessState = false;
             return;
         }
 
-        if (!ValidatorService.IsValidEmail(Email))
+        if (!StringValidator.IsValidEmail(Email))
         {
             StatusMessage = "Invalid email format.";
             IsSuccessState = false;
             return;
         }
 
-        if (!ValidatorService.IsValidPassword(Password))
+        if (!StringValidator.IsValidPassword(Password))
         {
             StatusMessage = "Password must have at least 8 characters," +
                             "an upper case letter, a lower case letter and a digit.";

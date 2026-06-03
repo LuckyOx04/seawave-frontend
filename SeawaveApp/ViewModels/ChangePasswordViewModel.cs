@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SeawaveApp.Helpers;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
@@ -30,7 +31,7 @@ public partial class ChangePasswordViewModel(
     [RelayCommand]
     private async Task ExecuteChangePasswordAsync()
     {
-        if (!ValidatorService.IsValidPassword(NewPassword))
+        if (!StringValidator.IsValidPassword(NewPassword))
         {
             StatusMessage = "Password must have at least 8 characters," +
                             "an upper case letter, a lower case letter and a digit.";

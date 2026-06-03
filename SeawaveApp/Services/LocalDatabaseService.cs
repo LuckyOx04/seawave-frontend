@@ -134,6 +134,17 @@ public class LocalDatabaseService
         await command.ExecuteNonQueryAsync();
     }
 
+    public async Task DeletePlaylistAsync(string id)
+    {
+        await using var connection = new SqliteConnection(_connectionString);
+        await connection.OpenAsync();
+        var command = connection.CreateCommand();
+        command.CommandText = "DELETE FROM Playlists WHERE Id = $id";
+        command.Parameters.AddWithValue("$id", id);
+
+        await command.ExecuteNonQueryAsync();
+    }
+
     public async Task AddTrackToPlaylistAsync(string playlistId, UnifiedTrack track)
     {
         await UpsertTracksAsync([track]);

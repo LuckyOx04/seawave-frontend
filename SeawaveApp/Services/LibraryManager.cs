@@ -1,6 +1,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using SeawaveApp.Helpers;
 using SeawaveApp.Models;
 
 namespace SeawaveApp.Services;
@@ -77,7 +78,7 @@ public class LibraryManager(
         }
     }
 
-    public async Task CreatePlaylist(string playlistName, bool isOnlinePlaylist)
+    public async Task CreatePlaylistAsync(string playlistName, bool isOnlinePlaylist)
     {
         if (isOnlinePlaylist)
         {
@@ -88,6 +89,18 @@ public class LibraryManager(
             var uniquePlaylistSeed = $"{playlistName}_{Guid.NewGuid()}";
             var playlistId = IdGenerator.GenerateSha256Id(uniquePlaylistSeed);
             await db.CretePlaylistAsync(playlistId, playlistName);
+        }
+    }
+
+    public async Task DeletePlaylistAsync(Playlist playlist)
+    {
+        if (playlist.IsOnline)
+        {
+            await api.DeletePlaylistAsync(int.Parse(playlist.Id));
+        }
+        else
+        {
+            await db.DeletePlaylistAsync(playlist.Id);
         }
     }
 

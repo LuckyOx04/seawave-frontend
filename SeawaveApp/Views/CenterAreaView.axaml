@@ -53,6 +53,28 @@
             <PathIcon Data="{StaticResource IconOptions}"
                       Width="22"
                       Height="22" />
+            <Button.Flyout>
+                <Flyout Placement="BottomEdgeAlignedRight"
+                        IsOpen="{Binding IsPlaylistFlyoutVisible}">
+                    
+                    <Panel Width="240">
+                        <StackPanel Spacing="4">
+                            <Button Content="Add playlist to queue"
+                                    Command="{Binding AddPlaylistToQueueCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    Background="Transparent"
+                                    HorizontalContentAlignment="Left"
+                                    Padding="12, 8"/>
+                            <Button Content="Delete playlist"
+                                    Command="{Binding RemovePlaylistCommand}"
+                                    HorizontalAlignment="Stretch"
+                                    Background="Transparent"
+                                    HorizontalContentAlignment="Left"
+                                    Padding="12, 8"></Button>
+                        </StackPanel>
+                    </Panel>
+                </Flyout>
+            </Button.Flyout>
         </Button>
         
         <Separator Grid.Row="2"

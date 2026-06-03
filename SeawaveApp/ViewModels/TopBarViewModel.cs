@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using SeawaveApp.Helpers;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
@@ -12,7 +13,7 @@ public partial class TopBarViewModel(
     ApiService api,
     LibraryManager libraryManager,
     MainViewModel mainShell,
-    IFileDialogService fileDialogService)
+    IFileDialog fileDialog)
     : ViewModelBase
 {
     private CancellationTokenSource? _searchCts;
@@ -80,7 +81,7 @@ public partial class TopBarViewModel(
     [RelayCommand]
     private async Task AddFileAsync()
     {
-        var paths = await fileDialogService.SelectPathsAsync(false);
+        var paths = await fileDialog.SelectPathsAsync(false);
         if (paths is { Length: > 0 })
         {
             await libraryManager.AddLocalFileToTempAsync(paths);

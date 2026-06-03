@@ -2,7 +2,7 @@ using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace SeawaveApp.Services;
+namespace SeawaveApp.Helpers;
 
 public static class IdGenerator
 {

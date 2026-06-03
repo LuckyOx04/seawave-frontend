@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
 
-namespace SeawaveApp.Services;
+namespace SeawaveApp.Helpers;
 
-public static partial class ValidatorService
+public static partial class StringValidator
 {
     public static bool IsValidEmail(string email) 
         => AllowedEmailsRegex().IsMatch(email);

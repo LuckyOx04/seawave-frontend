@@ -5,6 +5,7 @@ using Avalonia.Data.Core.Plugins;
 using System.Linq;
 using Avalonia.Markup.Xaml;
 using Microsoft.Extensions.DependencyInjection;
+using SeawaveApp.Helpers;
 using SeawaveApp.Services;
 using SeawaveApp.ViewModels;
 using SeawaveApp.Views;
@@ -43,8 +44,8 @@ public partial class App : Application
     {
         services.AddSingleton<ApiService>();
         services.AddSingleton<AuthStateManager>();
-        services.AddSingleton<ConnectivityService>();
-        services.AddSingleton<IFileDialogService, AvaloniaFileDialogService>();
+        services.AddSingleton<ConnectivityChecker>();
+        services.AddSingleton<IFileDialog, AvaloniaFileDialog>();
         services.AddSingleton<PlaybackManager>();
         services.AddSingleton<LocalDatabaseService>();
         services.AddSingleton<LocalDiscoveryService>();

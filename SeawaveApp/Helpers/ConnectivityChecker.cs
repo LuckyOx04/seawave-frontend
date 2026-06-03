@@ -3,9 +3,9 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace SeawaveApp.Services;
+namespace SeawaveApp.Helpers;
 
-public class ConnectivityService
+public class ConnectivityChecker
 {
     private static readonly HttpClient Client = new()
     {
@@ -31,7 +31,7 @@ public class ConnectivityService
         }
     } = false;
 
-    public ConnectivityService()
+    public ConnectivityChecker()
     {
         _timer = new Timer(5000);
         _timer.Elapsed += async (_, _) => await CheckConnectionAsync();

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
+using SeawaveApp.Messages;
 using SeawaveApp.Models;
 using SeawaveApp.Services;
 
@@ -20,6 +21,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 
     [ObservableProperty] public partial bool IsClearable { get; set; }
     [ObservableProperty] public partial bool IsPlaylist { get; set; }
+    [ObservableProperty] public partial bool IsPlaylistFlyoutVisible { get; set; }
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
 
 
@@ -122,6 +124,36 @@ public partial class CenterAreaViewModel : ViewModelBase
         }
 
         await _libraryManager.PlayPlaylistAsync(_mainShell.ActiveCenterPlaylist);
+    }
+
+    [RelayCommand]
+    private void OpenFlyout()
+    {
+        IsPlaylistFlyoutVisible = true;
+    }
+    
+    [RelayCommand]
+    private async Task AddPlaylistToQueueAsync()
+    {
+        if (_mainShell.ActiveCenterPlaylist == null)
+        {
+            return;
+        }
+        
+        await _libraryManager.AddPlaylistToQueueAsync(_mainShell.ActiveCenterPlaylist);
+        IsPlaylistFlyoutVisible = false;
+    }
+    
+    [RelayCommand]
+    private async Task RemovePlaylistAsync()
+    {
+        if (_mainShell.ActiveCenterPlaylist == null)
+        {
+            return;
+        }
+        
+        await _libraryManager.DeletePlaylistAsync(_mainShell.ActiveCenterPlaylist);
+        IsPlaylistFlyoutVisible = false;
     }
 
     [RelayCommand]
