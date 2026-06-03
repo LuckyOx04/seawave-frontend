@@ -145,7 +145,7 @@ public partial class CenterAreaViewModel : ViewModelBase
     }
     
     [RelayCommand]
-    private async Task RemovePlaylistAsync()
+    private async Task DeletePlaylistAsync()
     {
         if (_mainShell.ActiveCenterPlaylist == null)
         {
@@ -153,6 +153,8 @@ public partial class CenterAreaViewModel : ViewModelBase
         }
         
         await _libraryManager.DeletePlaylistAsync(_mainShell.ActiveCenterPlaylist);
+        await _mainShell.RefreshDisplayedPlaylists();
+        _mainShell.NavigateToPlaylist(null);
         IsPlaylistFlyoutVisible = false;
     }
 

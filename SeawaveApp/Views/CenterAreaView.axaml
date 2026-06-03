@@ -46,6 +46,7 @@
         
         <Button Grid.Row="1"
                 Grid.Column="1"
+                Command="{Binding OpenFlyoutCommand}"
                 Margin="0"
                 Padding="0"
                 Background="Transparent"
@@ -66,7 +67,7 @@
                                     HorizontalContentAlignment="Left"
                                     Padding="12, 8"/>
                             <Button Content="Delete playlist"
-                                    Command="{Binding RemovePlaylistCommand}"
+                                    Command="{Binding DeletePlaylistCommand}"
                                     HorizontalAlignment="Stretch"
                                     Background="Transparent"
                                     HorizontalContentAlignment="Left"

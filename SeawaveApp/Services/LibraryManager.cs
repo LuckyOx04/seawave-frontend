@@ -97,6 +97,7 @@ public class LibraryManager(
         if (playlist.IsOnline)
         {
             await api.DeletePlaylistAsync(int.Parse(playlist.Id));
+            
         }
         else
         {
