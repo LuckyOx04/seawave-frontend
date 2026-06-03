@@ -20,7 +20,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 
     [ObservableProperty] public partial bool IsClearable { get; set; }
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
-    
+
 
     public CenterAreaViewModel(MainViewModel mainShell, PlaybackManager playbackManager)
     {
@@ -80,8 +80,10 @@ public partial class CenterAreaViewModel : ViewModelBase
                     {
                         DisplayTracks.Add(track);
                     }
+
                     IsClearable = _mainShell.ActiveCenterPlaylist.Id == "0";
                 }
+
                 break;
             case CenterContentMode.None:
             default:

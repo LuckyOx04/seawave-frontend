@@ -36,7 +36,7 @@
 
     <Panel>
         <Grid x:Name="PlayerWorkspaceLayout"
-              RowDefinitions="60,*,100">
+              RowDefinitions="60, *, Auto, 100">
 
             <Border Grid.Row="0"
                     Background="{StaticResource BrushSurfaceSlate}"
@@ -97,6 +97,18 @@
                 </StackPanel>
             </Grid>
             <Border Grid.Row="2"
+                    Padding="0"
+                    Margin="8, 4"
+                    CornerRadius="8"
+                    IsVisible="{Binding ShowConnectivityMessage}">
+                <TextBlock Margin="0"
+                           Background="{Binding ConnectivityBrush}"
+                           Foreground="{StaticResource BrushTextWhite}"
+                           Text="{Binding ConnectivityMessage}"
+                           HorizontalAlignment="Stretch"
+                           TextAlignment="Center"/>
+            </Border>
+            <Border Grid.Row="3"
                     Background="{StaticResource BrushSurfaceSlate}"
                     Margin="8,4,8,8"
                     CornerRadius="8">

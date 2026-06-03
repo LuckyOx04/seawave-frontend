@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -14,27 +15,27 @@ public partial class MainViewModel : ViewModelBase
     private readonly AuthStateManager _authStateManager;
     private readonly LibraryManager _libraryManager;
     private readonly ApiService _api;
+    
+    private static readonly IBrush OfflineBrush = new SolidColorBrush(Color.Parse("#0b0f17"));
+    private static readonly IBrush OnlineBrush = new SolidColorBrush(Color.Parse("#007bff"));
 
-    [ObservableProperty]
+    [ObservableProperty] 
+    [NotifyPropertyChangedFor(nameof(ConnectivityMessage))]
+    [NotifyPropertyChangedFor(nameof(ConnectivityBrush))]
     public partial bool IsOnline { get; set; }
-
-    [ObservableProperty]
-    public partial bool IsLoggedIn { get; set; }
-
-    [ObservableProperty]
-    public partial string Username { get; set; }
-
-    [ObservableProperty]
-    public partial CenterContentMode CurrentCenterMode { get; set; } = CenterContentMode.None;
-
-    [ObservableProperty]
-    public partial Playlist? ActiveCenterPlaylist { get; set; }
-
+    [ObservableProperty] public partial bool IsLoggedIn { get; set; }
+    [ObservableProperty] public partial string Username { get; set; }
+    [ObservableProperty] public partial CenterContentMode CurrentCenterMode { get; set; } = CenterContentMode.None;
+    [ObservableProperty] public partial Playlist? ActiveCenterPlaylist { get; set; }
+    [ObservableProperty] public partial bool ShowConnectivityMessage { get; set; }
+    
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsOverlayActive))]
     public partial ViewModelBase? ActiveOverlay { get; set; }
 
     public bool IsOverlayActive => ActiveOverlay != null;
+    public string ConnectivityMessage => IsOnline ? "Back online" : "Offline mode";
+    public IBrush ConnectivityBrush => IsOnline ? OnlineBrush : OfflineBrush;
 
     public ObservableCollection<UnifiedTrack> SearchResults { get; } = [];
     public LeftBarViewModel LeftBar { get; }
@@ -61,6 +62,7 @@ public partial class MainViewModel : ViewModelBase
         IsOnline = _connectivityService.IsServiceReachable;
         IsLoggedIn = _authStateManager.IsLoggedIn;
         Username = _authStateManager.Username ?? "Guest";
+        ShowConnectivityMessage = !IsOnline;
 
         _connectivityService.ConnectivityChanged += OnConnectivityChanged;
         _authStateManager.StateChanged += OnAuthStateChanged;
@@ -68,9 +70,19 @@ public partial class MainViewModel : ViewModelBase
         _ = _libraryManager.RefreshPlaylistsAsync(IsOnline && IsLoggedIn);
     }
 
-    private void OnConnectivityChanged(bool isReachable)
+    private async void OnConnectivityChanged(bool isReachable)
     {
         IsOnline = isReachable;
+        
+        if (IsOnline)
+        {
+            await ShowOnlineStatusMessage();
+        }
+        else
+        {
+            ShowOfflineStatusMessage();
+        }
+        
         _ = _libraryManager.RefreshPlaylistsAsync(IsOnline && IsLoggedIn);
     }
 
@@ -79,6 +91,18 @@ public partial class MainViewModel : ViewModelBase
         IsLoggedIn = _authStateManager.IsLoggedIn;
         Username = _authStateManager.Username ?? "Guest";
         _ = _libraryManager.RefreshPlaylistsAsync(IsOnline && IsLoggedIn);
+    }
+    
+    private async Task ShowOnlineStatusMessage()
+    {
+        ShowConnectivityMessage = true;
+        await Task.Delay(3000);
+        ShowConnectivityMessage = false;
+    }
+    
+    private void ShowOfflineStatusMessage()
+    {
+        ShowConnectivityMessage = true;
     }
 
     public async Task RefreshDisplayedPlaylists()
