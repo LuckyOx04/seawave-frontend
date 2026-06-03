@@ -55,7 +55,7 @@ public partial class MainViewModel : ViewModelBase
 
         LeftBar = new LeftBarViewModel(this, _libraryManager);
         RightBar = new RightBarViewModel(playbackManager);
-        CenterArea = new CenterAreaViewModel(this, playbackManager);
+        CenterArea = new CenterAreaViewModel(this, libraryManager);
         TopBar = new TopBarViewModel(_api, _libraryManager, this, fileDialogService);
         BottomBar = new BottomBarViewModel(playbackManager);
 
@@ -110,14 +110,14 @@ public partial class MainViewModel : ViewModelBase
         await _libraryManager.RefreshPlaylistsAsync(IsOnline && IsLoggedIn);
     }
 
-    public async Task NavigateToPlaylist(Playlist? playlist)
+    public void NavigateToPlaylist(Playlist? playlist)
     {
         ActiveCenterPlaylist = playlist;
         
         if (playlist == null)
         {
             CurrentCenterMode = CenterContentMode.None;
-            await _libraryManager.ClearTemporaryPlaylistAsync();
+            _libraryManager.ClearTemporaryPlaylistAsync();
         }
         else if (playlist == _libraryManager.TemporaryPlaylist)
         {
@@ -125,7 +125,7 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            await _libraryManager.ClearTemporaryPlaylistAsync();
+            _libraryManager.ClearTemporaryPlaylistAsync();
             CurrentCenterMode = CenterContentMode.PlaylistTracks;
         }
         

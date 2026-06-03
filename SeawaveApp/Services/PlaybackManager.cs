@@ -11,14 +11,14 @@ public class PlaybackManager : IDisposable
 {
     private readonly LibVLC _libVlc;
     private readonly MediaPlayer _mediaPlayer;
-    
-    
+
+
     private readonly Random _rng = new();
 
     public List<UnifiedTrack> TracksQueue { get; } = [];
     public List<int> PlaybackOrder { get; private set; } = [];
     public int OrderIndex { get; private set; } = -1;
-    
+
     public RepeatMode CurrentRepeatMode { get; private set; } = RepeatMode.None;
     public bool IsShuffle { get; private set; }
 
@@ -40,7 +40,7 @@ public class PlaybackManager : IDisposable
     public PlaybackManager()
     {
         Core.Initialize();
-        
+
         _libVlc = new LibVLC();
         _mediaPlayer = new MediaPlayer(_libVlc);
 
@@ -77,7 +77,7 @@ public class PlaybackManager : IDisposable
     {
         var trackIndex = TracksQueue.IndexOf(selectedTrack);
         OrderIndex = PlaybackOrder.IndexOf(trackIndex);
-        
+
         PlayCurrent();
     }
 
@@ -86,7 +86,7 @@ public class PlaybackManager : IDisposable
         TracksQueue.Add(track);
         UpdateOrderForNewTrack();
     }
-    
+
     public void RemoveTrack(UnifiedTrack track)
     {
         var index = TracksQueue.IndexOf(track);
@@ -94,7 +94,7 @@ public class PlaybackManager : IDisposable
         {
             return;
         }
-        
+
         TracksQueue.RemoveAt(index);
 
         var orderPosition = PlaybackOrder.IndexOf(index);
@@ -158,7 +158,7 @@ public class PlaybackManager : IDisposable
         {
             return;
         }
-        
+
         var trackIndex = PlaybackOrder[OrderIndex];
         var track = TracksQueue[trackIndex];
         var media = GetMediaForTrack(track);
@@ -169,7 +169,8 @@ public class PlaybackManager : IDisposable
 
     private Media GetMediaForTrack(UnifiedTrack track)
     {
-        var media = track.IsRemote ? new Media(_libVlc, new Uri(track.RemoteUrl!)) 
+        var media = track.IsRemote
+            ? new Media(_libVlc, new Uri(track.RemoteUrl!))
             : new Media(_libVlc, track.LocalPath!);
 
         if (track.StartOffset > TimeSpan.Zero)
@@ -189,7 +190,7 @@ public class PlaybackManager : IDisposable
                 PlayCurrent();
                 return;
             }
-            
+
             Next();
         });
     }
@@ -232,6 +233,7 @@ public class PlaybackManager : IDisposable
         {
             return;
         }
+
         OrderIndex--;
         PlayCurrent();
     }
@@ -247,7 +249,7 @@ public class PlaybackManager : IDisposable
         {
             RebuildOrder(PlaybackOrder[OrderIndex]);
         }
-        
+
         ShuffleChanged?.Invoke(this, IsShuffle);
     }
 
@@ -268,7 +270,7 @@ public class PlaybackManager : IDisposable
         PlaybackOrder.Clear();
         OrderIndex = -1;
     }
-    
+
     public void Dispose()
     {
         _mediaPlayer.Dispose();

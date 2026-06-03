@@ -10,7 +10,7 @@
              x:DataType="vm:CenterAreaViewModel"
              Padding="24">
 
-    <Grid RowDefinitions="Auto, *"
+    <Grid RowDefinitions="Auto, Auto, Auto *"
           ColumnDefinitions="*, Auto">
 
         <TextBlock Grid.Row="0"
@@ -19,15 +19,48 @@
                    FontSize="22"
                    FontWeight="Bold"
                    Foreground="{StaticResource BrushTextWhite}"
-                   Margin="0,0,0,20" />
+                   Margin="0,0,0,10"
+                   VerticalAlignment="Center"/>
         
         <Button Grid.Row="0"
                 Grid.Column="1"
                 Content="Clear Playlist"
                 Command="{Binding ClearPlaylistCommand}"
+                Background="Transparent"
+                Margin="4, 0,0,10"
+                VerticalAlignment="Center"
+                VerticalContentAlignment="Center"
                 IsVisible="{Binding IsClearable}"/>
+        
+        <Button Grid.Row="1"
+                Grid.Column="0"
+                Command="{Binding PlayPlaylistCommand}"
+                Classes="Modern"
+                Margin="0"
+                IsVisible="{Binding IsPlaylist}"
+                ToolTip.Tip="Play this playlist">
+            <PathIcon Data="{StaticResource IconPlay}"
+                      Width="14"
+                      Height="14" />
+        </Button>
+        
+        <Button Grid.Row="1"
+                Grid.Column="1"
+                Margin="0"
+                Padding="0"
+                Background="Transparent"
+                IsVisible="{Binding IsPlaylist}">
+            <PathIcon Data="{StaticResource IconOptions}"
+                      Width="22"
+                      Height="22" />
+        </Button>
+        
+        <Separator Grid.Row="2"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   Margin="0, 20, 0, 5"/>
 
-        <ListBox Grid.Row="1"
+        <ListBox Grid.Row="3"
                  Grid.Column="0"
                  Grid.ColumnSpan="2"
                  ItemsSource="{Binding DisplayTracks}"

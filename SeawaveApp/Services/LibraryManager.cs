@@ -11,7 +11,7 @@ public class LibraryManager(
     PlaybackManager playback,
     LocalDiscoveryService discovery)
 {
-
+    private readonly Random _rng = new();
     public ObservableCollection<Playlist> AllPlaylists { get; } = [];
 
     public Playlist TemporaryPlaylist { get; } = new() {Id = "0", Name = "Now Playing (Local)", IsOnline = false };
@@ -117,7 +117,8 @@ public class LibraryManager(
                 await LoadPlaylistTracksAsync(playlist);
                 break;
             case > 0:
-                playback.PlayFromPlaylist(playlist.Tracks, 0);
+                var startIndex = playback.IsShuffle ? _rng.Next(playlist.Tracks.Count) : 0;
+                playback.PlayFromPlaylist(playlist.Tracks, startIndex);
                 break;
         }
     }
@@ -170,8 +171,8 @@ public class LibraryManager(
         }
     }
 
-    public async Task ClearTemporaryPlaylistAsync()
+    public void ClearTemporaryPlaylistAsync()
     {
-        await Task.Run(() => TemporaryPlaylist.Tracks.Clear());
+        TemporaryPlaylist.Tracks.Clear();
     }
 }

@@ -13,25 +13,27 @@ namespace SeawaveApp.ViewModels;
 public partial class CenterAreaViewModel : ViewModelBase
 {
     private readonly MainViewModel _mainShell;
-    private readonly PlaybackManager _playbackManager;
+    private readonly LibraryManager _libraryManager;
 
     [ObservableProperty]
     public partial string HeaderTitle { get; set; } = "Select a Playlist, Search for Music or Add Local Files";
 
     [ObservableProperty] public partial bool IsClearable { get; set; }
+    [ObservableProperty] public partial bool IsPlaylist { get; set; }
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
 
 
-    public CenterAreaViewModel(MainViewModel mainShell, PlaybackManager playbackManager)
+    public CenterAreaViewModel(MainViewModel mainShell, LibraryManager libraryManager)
     {
         _mainShell = mainShell;
-        _playbackManager = playbackManager;
+        _libraryManager = libraryManager;
 
         _mainShell.PropertyChanged += OnShellPropertyChanged;
 
         _mainShell.SearchResults.CollectionChanged += OnSearchResultsChanged;
 
         IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
+        IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
 
         WeakReferenceMessenger.Default.Register<PlaylistChangedMessage>(this, (_, _) =>
         {
@@ -70,6 +72,7 @@ public partial class CenterAreaViewModel : ViewModelBase
                 }
 
                 IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
+                IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
                 break;
             case CenterContentMode.PlaylistTracks:
             case CenterContentMode.TemporaryTracks:
@@ -82,6 +85,7 @@ public partial class CenterAreaViewModel : ViewModelBase
                     }
 
                     IsClearable = _mainShell.ActiveCenterPlaylist.Id == "0";
+                    IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
                 }
 
                 break;
@@ -89,6 +93,7 @@ public partial class CenterAreaViewModel : ViewModelBase
             default:
                 HeaderTitle = "Select a Playlist, Search for Music or Add Local Files";
                 IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
+                IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
                 break;
         }
     }
@@ -96,7 +101,7 @@ public partial class CenterAreaViewModel : ViewModelBase
     [RelayCommand]
     private void PlayTrack(UnifiedTrack? selectedTrack)
     {
-        if (selectedTrack == null)
+        if (selectedTrack == null || _mainShell.ActiveCenterPlaylist == null)
         {
             return;
         }
@@ -104,13 +109,24 @@ public partial class CenterAreaViewModel : ViewModelBase
         var index = DisplayTracks.IndexOf(selectedTrack);
         if (index >= 0)
         {
-            _playbackManager.PlayFromPlaylist(DisplayTracks, index);
+            _libraryManager.PlayTrackFromPlaylist(_mainShell.ActiveCenterPlaylist, selectedTrack);
         }
     }
 
     [RelayCommand]
-    private async Task ClearPlaylistAsync()
+    private async Task PlayPlaylist()
     {
-        await _mainShell.NavigateToPlaylist(null);
+        if (DisplayTracks.Count == 0 || _mainShell.ActiveCenterPlaylist == null)
+        {
+            return;
+        }
+
+        await _libraryManager.PlayPlaylistAsync(_mainShell.ActiveCenterPlaylist);
+    }
+
+    [RelayCommand]
+    private void ClearPlaylist()
+    {
+        _mainShell.NavigateToPlaylist(null);
     }
 }

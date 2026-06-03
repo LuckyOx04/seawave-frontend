@@ -113,7 +113,7 @@ public partial class LeftBarViewModel : ViewModelBase
             await _libraryManager.LoadPlaylistTracksAsync(playlist);
         }
 
-        await _mainShell.NavigateToPlaylist(playlist);
+        _mainShell.NavigateToPlaylist(playlist);
     }
 
     [RelayCommand]
