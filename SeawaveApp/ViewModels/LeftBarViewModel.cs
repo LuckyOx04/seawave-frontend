@@ -14,7 +14,7 @@ public partial class LeftBarViewModel : ViewModelBase
 {
     private readonly LibraryManager _libraryManager;
     private readonly MainViewModel _mainShell;
-    
+
     private bool _isOnlineTarget;
 
     [ObservableProperty] public partial string PlaylistSearchQuery { get; set; } = string.Empty;
@@ -25,6 +25,7 @@ public partial class LeftBarViewModel : ViewModelBase
     [ObservableProperty] public partial string WizardTitle { get; set; } = string.Empty;
     [ObservableProperty] public partial string NewPlaylistName { get; set; } = string.Empty;
     [ObservableProperty] public partial string? WizardMessage { get; set; }
+    [ObservableProperty] public partial bool IsFlyoutVisible { get; set; }
 
     public ObservableCollection<Playlist> DisplayedPlaylists { get; } = [];
 
@@ -116,6 +117,12 @@ public partial class LeftBarViewModel : ViewModelBase
     }
 
     [RelayCommand]
+    private void OpenFlyout()
+    {
+        IsFlyoutVisible = true;
+    }
+
+    [RelayCommand]
     private void SelectPlaylistType(bool isOnlineSelected)
     {
         _isOnlineTarget = isOnlineSelected;
@@ -139,12 +146,14 @@ public partial class LeftBarViewModel : ViewModelBase
         }
 
         WizardMessage = null;
-        
+
         await _libraryManager.CreatePlaylist(NewPlaylistName, _isOnlineTarget);
 
         RefreshDisplayedPlaylists();
-        
+
         ResetWizard();
+        
+        IsFlyoutVisible = false;
     }
 
     [RelayCommand]

@@ -44,6 +44,7 @@
                        VerticalAlignment="Center" />
 
             <Button Grid.Column="1"
+                    Command="{Binding OpenFlyoutCommand}"
                     Background="Transparent"
                     VerticalAlignment="Center"
                     Padding="0"
@@ -55,7 +56,8 @@
 
                 <Button.Flyout>
                     <Flyout Placement="BottomEdgeAlignedRight"
-                            Closed="Flyout_OnClosed">
+                            Closed="Flyout_OnClosed"
+                            IsOpen="{Binding IsFlyoutVisible}">
 
                         <Panel Width="240">
                             <StackPanel Spacing="4"
@@ -98,7 +100,8 @@
 
                                 <TextBlock Text="{Binding WizardMessage}"
                                            IsVisible="{Binding WizardMessage,
-                                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+                                           Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           Foreground="{StaticResource BrushLightRed}"/>
 
                                 <Grid ColumnDefinitions="*, *">
                                     <Button Grid.Column="0"
