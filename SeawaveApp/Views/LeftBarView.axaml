@@ -63,6 +63,10 @@
                                 <Button Content="Create Local Playlist"
                                         Command="{Binding SelectPlaylistTypeCommand}"
                                         CommandParameter="{x:False}"
+                                        IsVisible="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsLoggedIn,
+                                        FallbackValue={x:False}}"
+                                        IsEnabled="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnline,
+                                        FallbackValue={x:False}}"
                                         HorizontalAlignment="Stretch"
                                         Background="Transparent"
                                         HorizontalContentAlignment="Left"
