@@ -59,7 +59,9 @@
                     <Button Command="{Binding SkipPreviousCommand}"
                             Background="Transparent"
                             Width="26"
-                            Height="26">
+                            Height="26"
+                            IsEnabled="{Binding CurrentTrack,
+                            Converter={x:Static ObjectConverters.IsNotNull}}">
                         <PathIcon Data="{StaticResource IconPrevious}"
                                   Width="14"
                                   Height="14"
@@ -70,7 +72,9 @@
                             Background="{StaticResource BrushElectricBlue}"
                             Width="36"
                             Height="36"
-                            CornerRadius="18">
+                            CornerRadius="18"
+                            IsEnabled="{Binding CurrentTrack,
+                            Converter={x:Static ObjectConverters.IsNotNull}}">
                         <Panel HorizontalAlignment="Center"
                                VerticalAlignment="Center">
                             <PathIcon Data="{StaticResource IconPause}"
@@ -90,7 +94,9 @@
                     <Button Command="{Binding SkipNextCommand}"
                             Background="Transparent"
                             Width="26"
-                            Height="26">
+                            Height="26"
+                            IsEnabled="{Binding CurrentTrack,
+                            Converter={x:Static ObjectConverters.IsNotNull}}">
                         <PathIcon Data="{StaticResource IconNext}"
                                   Width="14"
                                   Height="14"
