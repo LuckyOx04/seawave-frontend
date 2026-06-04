@@ -99,7 +99,7 @@ public class LocalDatabaseService
                     """
                     REPLACE INTO Tracks
                     (Id, Title, Artist, Album, DurationSeconds, IsRemote, RemoteUrl, LocalPath, StartOffset)
-                    VALUES ($id, $title, $artist, $album, $duration, $isRemote, $remoteUrl, $localPath, $startOffset)
+                    VALUES ($id, $title, $artist, $album, $duration, $isRemote, $remoteUrl, $localPath, $startOffset);
                     """;
                 command.Parameters.AddWithValue("$id", track.Id);
                 command.Parameters.AddWithValue("$title", track.Title);
@@ -139,7 +139,7 @@ public class LocalDatabaseService
         await using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
         var command = connection.CreateCommand();
-        command.CommandText = "DELETE FROM Playlists WHERE Id = $id";
+        command.CommandText = "DELETE FROM Playlists WHERE Id = $id;";
         command.Parameters.AddWithValue("$id", id);
 
         await command.ExecuteNonQueryAsync();
@@ -153,7 +153,18 @@ public class LocalDatabaseService
         await connection.OpenAsync();
         var command = connection.CreateCommand();
         command.CommandText =
-            "INSERT OR IGNORE INTO PlaylistTracks (PlaylistId, TrackId) VALUES ($playlistId, $trackId)";
+            "INSERT OR IGNORE INTO PlaylistTracks (PlaylistId, TrackId) VALUES ($playlistId, $trackId);";
+        command.Parameters.AddWithValue("$playlistId", playlistId);
+        command.Parameters.AddWithValue("$trackId", track.Id);
+        await command.ExecuteNonQueryAsync();
+    }
+
+    public async Task RemoveTrackFromPlaylistAsync(string playlistId, UnifiedTrack track)
+    {
+        await using var connection = new SqliteConnection(_connectionString);
+        await connection.OpenAsync();
+        var command = connection.CreateCommand();
+        command.CommandText = "DELETE FROM PlaylistTracks WHERE PlaylistId = $playlistId AND TrackId = $trackId;";
         command.Parameters.AddWithValue("$playlistId", playlistId);
         command.Parameters.AddWithValue("$trackId", track.Id);
         await command.ExecuteNonQueryAsync();
@@ -170,7 +181,7 @@ public class LocalDatabaseService
             """
             SELECT t.* FROM Tracks t
             JOIN PlaylistTracks pt ON t.Id = pt.TrackId
-            WHERE pt.PlaylistId = $playlistId
+            WHERE pt.PlaylistId = $playlistId;
             """;
         command.Parameters.AddWithValue("$playlistId", playlistId);
 

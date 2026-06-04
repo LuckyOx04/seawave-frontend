@@ -170,7 +170,20 @@ public class LibraryManager(
         }
 
         await db.AddTrackToPlaylistAsync(playlist.Id, track);
-        return new ApiResult(true, "Added track to playlist.");
+        return new ApiResult(true, "Added track to local playlist.");
+    }
+
+    public async Task<ApiResult> RemoveTrackFromPlaylistAsync(UnifiedTrack track, Playlist playlist)
+    {
+        if (playlist.IsOnline)
+        {
+            var response = await api.RemoveTrackFromPlaylistAsync(int.Parse(playlist.Id), 
+                int.Parse(track.Id));
+            return new ApiResult(response.IsSuccess, response.Message);
+        }
+        
+        await db.RemoveTrackFromPlaylistAsync(playlist.Id, track);
+        return new ApiResult(true, "Removed track from local playlist.");
     }
 
     public async Task AddLocalFileToTempAsync(string[] paths)

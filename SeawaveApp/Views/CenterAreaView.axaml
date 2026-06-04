@@ -46,7 +46,7 @@
         
         <Button Grid.Row="1"
                 Grid.Column="1"
-                Command="{Binding OpenFlyoutCommand}"
+                Command="{Binding OpenPlaylistFlyoutCommand}"
                 Margin="0"
                 Padding="0"
                 Background="Transparent"
@@ -129,6 +129,8 @@
                             </StackPanel>
 
                             <Button Grid.Column="2"
+                                    Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).OpenTrackFlyoutCommand,
+                                    FallbackValue={x:Null}}"
                                     Background="Transparent"
                                     Padding="0"
                                     Margin="10, 0, 0, 0">
@@ -136,7 +138,66 @@
                                           Width="14"
                                           Height="14" />
                                 <Button.Flyout>
-                                    
+                                    <Flyout Placement="BottomEdgeAlignedRight"
+                                            IsOpen="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).IsTrackFlyoutVisible,
+                                            FallbackValue={x:False}}">
+                                        
+                                        <Panel Width="240">
+                                            <StackPanel Spacing="4"
+                                                        IsVisible="{Binding !$parent[UserControl].((vm:CenterAreaViewModel)DataContext).IsPlaylistSelectionFlyoutVisible,
+                                                        FallbackValue={x:True}}">
+                                                
+                                                <Button Content="Add Track to Queue"
+                                                        Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).AddTrackToQueueCommand,
+                                                        FallbackValue={x:Null}}"
+                                                        CommandParameter="{Binding}"
+                                                        HorizontalAlignment="Stretch"
+                                                        Background="Transparent"
+                                                        HorizontalContentAlignment="Left"
+                                                        Padding="12, 8" />
+                                                
+                                                <Button Content="Add Track to Playlist"
+                                                        Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).PickTrackToAddToPlaylistCommand,
+                                                        FallbackValue={x:Null}}"
+                                                        CommandParameter="{Binding}"
+                                                        HorizontalAlignment="Stretch"
+                                                        Background="Transparent"
+                                                        HorizontalContentAlignment="Left"
+                                                        Padding="12, 8" />
+                                                
+                                                <Button Content="Remove Track from Playlist"
+                                                        Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).RemoveTrackFromPlaylistCommand,
+                                                        FallbackValue={x:Null}}"
+                                                        CommandParameter="{Binding}"
+                                                        HorizontalAlignment="Stretch"
+                                                        Background="Transparent"
+                                                        HorizontalContentAlignment="Left"
+                                                        Padding="12, 8" />
+                                            </StackPanel>
+                                            
+                                            <ListBox IsVisible="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).IsPlaylistSelectionFlyoutVisible,
+                                            FallbackValue={x:False}}"
+                                                     ItemsSource="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).FlyoutDisplayPlaylists,
+                                                     FallbackValue={x:Null}}"
+                                                     Background="Transparent"
+                                                     BorderThickness="0">
+                                                <ListBox.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Button Foreground="{StaticResource BrushTextWhite}"
+                                                                Padding="0"
+                                                                Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).AddTrackToPlaylistCommand,
+                                                                FallbackValue={x:Null}}"
+                                                                CommandParameter="{Binding}">
+                                                            <TextBlock Text="{Binding Name}"
+                                                                       Foreground="{StaticResource BrushTextWhite}"
+                                                                       Padding="4, 6"
+                                                                       TextTrimming="CharacterEllipsis" />
+                                                        </Button>
+                                                    </DataTemplate>
+                                                </ListBox.ItemTemplate>
+                                            </ListBox>
+                                        </Panel>
+                                    </Flyout>
                                 </Button.Flyout>
                             </Button>
                         </Grid>

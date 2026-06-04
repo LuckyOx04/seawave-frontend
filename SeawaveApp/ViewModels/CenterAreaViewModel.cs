@@ -15,6 +15,8 @@ public partial class CenterAreaViewModel : ViewModelBase
 {
     private readonly MainViewModel _mainShell;
     private readonly LibraryManager _libraryManager;
+    
+    private UnifiedTrack? _selectedTrackToAddToPlaylist;
 
     [ObservableProperty]
     public partial string HeaderTitle { get; set; } = "Select a Playlist, Search for Music or Add Local Files";
@@ -22,6 +24,10 @@ public partial class CenterAreaViewModel : ViewModelBase
     [ObservableProperty] public partial bool IsClearable { get; set; }
     [ObservableProperty] public partial bool IsPlaylist { get; set; }
     [ObservableProperty] public partial bool IsPlaylistFlyoutVisible { get; set; }
+    [ObservableProperty] public partial bool IsTrackFlyoutVisible { get; set; }
+    [ObservableProperty] public partial bool IsPlaylistSelectionFlyoutVisible { get; set; }
+    
+    public ObservableCollection<Playlist> FlyoutDisplayPlaylists => _libraryManager.AllPlaylists;
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
 
 
@@ -127,9 +133,55 @@ public partial class CenterAreaViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void OpenFlyout()
+    private void OpenPlaylistFlyout()
     {
         IsPlaylistFlyoutVisible = true;
+    }
+
+    [RelayCommand]
+    private void OpenTrackFlyout()
+    {
+        IsTrackFlyoutVisible = true;
+    }
+
+    [RelayCommand]
+    private void AddTrackToQueue(UnifiedTrack track)
+    {
+        _libraryManager.AddTrackToQueue(track);
+    }
+
+    [RelayCommand]
+    private void PickTrackToAddToPlaylist(UnifiedTrack track)
+    {
+        _selectedTrackToAddToPlaylist = track;
+        IsPlaylistSelectionFlyoutVisible = true;
+    }
+
+    [RelayCommand]
+    private async Task AddTrackToPlaylistAsync(Playlist playlist)
+    {
+        if (_selectedTrackToAddToPlaylist == null)
+        {
+            return;
+        }
+        
+        await _libraryManager.AddTrackToPlaylistAsync(_selectedTrackToAddToPlaylist, playlist);
+        
+        _selectedTrackToAddToPlaylist = null;
+        IsPlaylistSelectionFlyoutVisible = false;
+        IsTrackFlyoutVisible = false;
+    }
+    
+    [RelayCommand]
+    private async Task RemoveTrackFromPlaylist(UnifiedTrack track)
+    {
+        if (_mainShell.ActiveCenterPlaylist == null)
+        {
+            return;
+        }
+
+        await _libraryManager.RemoveTrackFromPlaylistAsync(track, _mainShell.ActiveCenterPlaylist);
+        IsTrackFlyoutVisible = false;
     }
     
     [RelayCommand]
