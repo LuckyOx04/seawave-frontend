@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -30,7 +31,7 @@ public partial class CenterAreaViewModel : ViewModelBase
     [ObservableProperty] public partial bool IsPlaylistSelectionFlyoutVisible { get; set; }
     [ObservableProperty] public partial Playlist? SelectedPlaylistToAddTo { get; set; }
     
-    public ObservableCollection<Playlist> FlyoutDisplayPlaylists => _libraryManager.AllPlaylists;
+    public ObservableCollection<Playlist> FlyoutDisplayPlaylists { get; } = [];
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
 
 
@@ -43,9 +44,13 @@ public partial class CenterAreaViewModel : ViewModelBase
 
         _mainShell.SearchResults.CollectionChanged += OnSearchResultsChanged;
 
+        _libraryManager.AllPlaylists.CollectionChanged += (_, _) => RefreshFlyoutPlaylists();
+
         IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
         IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
         IsPlaylistSelectionFlyoutVisible = false;
+
+        RefreshFlyoutPlaylists();
 
         WeakReferenceMessenger.Default.Register<PlaylistChangedMessage>(this, (_, _) =>
         {
@@ -59,6 +64,7 @@ public partial class CenterAreaViewModel : ViewModelBase
             or nameof(MainViewModel.ActiveCenterPlaylist.Tracks))
         {
             SyncDisplayTracks();
+            RefreshFlyoutPlaylists();
         }
     }
 
@@ -67,6 +73,19 @@ public partial class CenterAreaViewModel : ViewModelBase
         if (_mainShell.CurrentCenterMode == CenterContentMode.SearchResults)
         {
             SyncDisplayTracks();
+        }
+    }
+
+    private void RefreshFlyoutPlaylists()
+    {
+        FlyoutDisplayPlaylists.Clear();
+
+        var filteredPlaylists =
+            _libraryManager.AllPlaylists.Where(playlist => playlist != _mainShell.ActiveCenterPlaylist);
+
+        foreach (var playlist in filteredPlaylists)
+        {
+            FlyoutDisplayPlaylists.Add(playlist);
         }
     }
 
