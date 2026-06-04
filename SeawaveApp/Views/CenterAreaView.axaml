@@ -129,20 +129,19 @@
                             </StackPanel>
 
                             <Button Grid.Column="2"
-                                    Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).OpenTrackFlyoutCommand,
-                                    FallbackValue={x:Null}}"
                                     Background="Transparent"
                                     Padding="0"
-                                    Margin="10, 0, 0, 0">
+                                    Margin="10, 0, 0, 0"
+                                    ToolTip.Tip="Track options">
                                 <PathIcon Data="{StaticResource IconOptions}"
                                           Width="14"
                                           Height="14" />
                                 <Button.Flyout>
                                     <Flyout Placement="BottomEdgeAlignedRight"
-                                            IsOpen="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).IsTrackFlyoutVisible,
-                                            FallbackValue={x:False}}">
+                                            Closed="TrackFlyout_OnClosed">
                                         
                                         <Panel Width="240">
+                                            
                                             <StackPanel Spacing="4"
                                                         IsVisible="{Binding !$parent[UserControl].((vm:CenterAreaViewModel)DataContext).IsPlaylistSelectionFlyoutVisible,
                                                         FallbackValue={x:True}}">
@@ -150,7 +149,7 @@
                                                 <Button Content="Add Track to Queue"
                                                         Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).AddTrackToQueueCommand,
                                                         FallbackValue={x:Null}}"
-                                                        CommandParameter="{Binding}"
+                                                        CommandParameter="{Binding $parent[FlyoutPresenter]}"
                                                         HorizontalAlignment="Stretch"
                                                         Background="Transparent"
                                                         HorizontalContentAlignment="Left"
@@ -168,7 +167,7 @@
                                                 <Button Content="Remove Track from Playlist"
                                                         Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).RemoveTrackFromPlaylistCommand,
                                                         FallbackValue={x:Null}}"
-                                                        CommandParameter="{Binding}"
+                                                        CommandParameter="{Binding $parent[FlyoutPresenter]}"
                                                         HorizontalAlignment="Stretch"
                                                         Background="Transparent"
                                                         HorizontalContentAlignment="Left"
@@ -176,21 +175,28 @@
                                             </StackPanel>
                                             
                                             <ListBox IsVisible="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).IsPlaylistSelectionFlyoutVisible,
-                                            FallbackValue={x:False}}"
+                                                     FallbackValue={x:False}}"
                                                      ItemsSource="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).FlyoutDisplayPlaylists,
                                                      FallbackValue={x:Null}}"
+                                                     SelectedItem="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).SelectedPlaylistToAddTo,
+                                                     Mode=TwoWay,
+                                                     FallbackValue={x:Null}}"
                                                      Background="Transparent"
-                                                     BorderThickness="0">
+                                                     BorderThickness="0"
+                                                     Padding="0">
                                                 <ListBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <Button Foreground="{StaticResource BrushTextWhite}"
-                                                                Padding="0"
+                                                                HorizontalAlignment="Stretch"
+                                                                HorizontalContentAlignment="Left"
+                                                                Background="Transparent"
+                                                                Padding="12, 8"
+                                                                Margin="0"
                                                                 Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).AddTrackToPlaylistCommand,
                                                                 FallbackValue={x:Null}}"
-                                                                CommandParameter="{Binding}">
+                                                                CommandParameter="{Binding $parent[FlyoutPresenter]}">
                                                             <TextBlock Text="{Binding Name}"
                                                                        Foreground="{StaticResource BrushTextWhite}"
-                                                                       Padding="4, 6"
                                                                        TextTrimming="CharacterEllipsis" />
                                                         </Button>
                                                     </DataTemplate>

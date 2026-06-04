@@ -1,7 +1,10 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -24,8 +27,8 @@ public partial class CenterAreaViewModel : ViewModelBase
     [ObservableProperty] public partial bool IsClearable { get; set; }
     [ObservableProperty] public partial bool IsPlaylist { get; set; }
     [ObservableProperty] public partial bool IsPlaylistFlyoutVisible { get; set; }
-    [ObservableProperty] public partial bool IsTrackFlyoutVisible { get; set; }
     [ObservableProperty] public partial bool IsPlaylistSelectionFlyoutVisible { get; set; }
+    [ObservableProperty] public partial Playlist? SelectedPlaylistToAddTo { get; set; }
     
     public ObservableCollection<Playlist> FlyoutDisplayPlaylists => _libraryManager.AllPlaylists;
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
@@ -42,6 +45,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 
         IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
         IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
+        IsPlaylistSelectionFlyoutVisible = false;
 
         WeakReferenceMessenger.Default.Register<PlaylistChangedMessage>(this, (_, _) =>
         {
@@ -139,15 +143,20 @@ public partial class CenterAreaViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void OpenTrackFlyout()
+    private void AddTrackToQueue(object? parameter)
     {
-        IsTrackFlyoutVisible = true;
-    }
-
-    [RelayCommand]
-    private void AddTrackToQueue(UnifiedTrack track)
-    {
+        if (parameter is not FlyoutPresenter { DataContext: UnifiedTrack track } presenter)
+        {
+            return;
+        }
+        
         _libraryManager.AddTrackToQueue(track);
+        Console.WriteLine("Inside Add Track to Queue.");
+
+        if (presenter.Parent is Popup popup)
+        {
+            popup.IsOpen = false;
+        }
     }
 
     [RelayCommand]
@@ -158,30 +167,52 @@ public partial class CenterAreaViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task AddTrackToPlaylistAsync(Playlist playlist)
+    private async Task AddTrackToPlaylistAsync(object? parameter)
     {
-        if (_selectedTrackToAddToPlaylist == null)
+        if (_selectedTrackToAddToPlaylist == null || SelectedPlaylistToAddTo == null)
         {
+            ResetTrackFlyout();
             return;
         }
+
+        await _libraryManager.AddTrackToPlaylistAsync(_selectedTrackToAddToPlaylist, SelectedPlaylistToAddTo);
+        Console.WriteLine("Inside Add Track to Playlist.");
+
+        if (parameter is FlyoutPresenter { Parent: Popup popup })
+        {
+            popup.IsOpen = false;
+        }
         
-        await _libraryManager.AddTrackToPlaylistAsync(_selectedTrackToAddToPlaylist, playlist);
-        
-        _selectedTrackToAddToPlaylist = null;
-        IsPlaylistSelectionFlyoutVisible = false;
-        IsTrackFlyoutVisible = false;
+        ResetTrackFlyout();
     }
     
     [RelayCommand]
-    private async Task RemoveTrackFromPlaylist(UnifiedTrack track)
+    private async Task RemoveTrackFromPlaylist(object? parameter)
     {
         if (_mainShell.ActiveCenterPlaylist == null)
         {
             return;
         }
 
-        await _libraryManager.RemoveTrackFromPlaylistAsync(track, _mainShell.ActiveCenterPlaylist);
-        IsTrackFlyoutVisible = false;
+        if (parameter is FlyoutPresenter { DataContext: UnifiedTrack track } presenter)
+        {
+            await _libraryManager.RemoveTrackFromPlaylistAsync(track, _mainShell.ActiveCenterPlaylist);
+            Console.WriteLine("Inside Remove track from Playlist.");
+            if (presenter.Parent is Popup popup)
+            {
+                popup.IsOpen = false;
+            }
+        }
+
+        ResetTrackFlyout();
+    }
+    
+    [RelayCommand]
+    private void ResetTrackFlyout()
+    {
+        _selectedTrackToAddToPlaylist = null;
+        SelectedPlaylistToAddTo = null;
+        IsPlaylistSelectionFlyoutVisible = false;
     }
     
     [RelayCommand]

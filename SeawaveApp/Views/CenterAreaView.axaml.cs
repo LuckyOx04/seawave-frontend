@@ -1,8 +1,6 @@
 using System;
-using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
-using Avalonia.Markup.Xaml;
 using Avalonia.VisualTree;
 using SeawaveApp.Models;
 using SeawaveApp.ViewModels;
@@ -38,6 +36,24 @@ public partial class CenterAreaView : UserControl
         if (vm.PlayTrackCommand.CanExecute(selectedTrack))
         {
             vm.PlayTrackCommand.Execute(selectedTrack);
+        }
+    }
+
+    private void TrackFlyout_OnClosed(object? sender, EventArgs e)
+    {
+        if (sender is not Flyout)
+        {
+            return;
+        }
+
+        if (DataContext is not CenterAreaViewModel vm)
+        {
+            return;
+        }
+
+        if (vm.ResetTrackFlyoutCommand.CanExecute(null))
+        {
+            vm.ResetTrackFlyoutCommand.Execute(null);
         }
     }
 }
