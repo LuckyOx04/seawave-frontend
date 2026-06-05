@@ -55,6 +55,21 @@ public class LocalDatabaseService
                 FOREIGN KEY(PlaylistId) REFERENCES Playlists(Id) ON DELETE CASCADE,
                 FOREIGN KEY(TrackId) REFERENCES Tracks(Id) ON DELETE CASCADE
             );
+
+            CREATE TRIGGER IF NOT EXISTS cleanup_orphan_tracks_on_remove
+            AFTER DELETE ON PlaylistsTracks
+            BEGIN
+                DELETE FROM Tracks
+                WHERE Id = OLD.TrackId
+                    AND NOT EXISTS (SELECT 1 FROM PlaylistsTracks WHERE TrackId = OLD.TrackId); 
+            END;
+
+            CREATE TRIGGER IF NOT EXISTS cleanup_orphan_tracks_on_playlist_delete
+            AFTER DELETE ON Playlists
+            BEGIN 
+                DELETE FROM Tracks
+                WHERE Id NOT IN (SELECT TrackId FROM PlaylistsTracks);
+            END;
             """;
 
         command.ExecuteNonQuery();
