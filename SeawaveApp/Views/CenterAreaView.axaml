@@ -178,9 +178,7 @@
                                                      FallbackValue={x:False}}"
                                                      ItemsSource="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).FlyoutDisplayPlaylists,
                                                      FallbackValue={x:Null}}"
-                                                     SelectedItem="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).SelectedPlaylistToAddTo,
-                                                     Mode=TwoWay,
-                                                     FallbackValue={x:Null}}"
+                                                     Classes="CleanButtons"
                                                      Background="Transparent"
                                                      BorderThickness="0"
                                                      Padding="0">
@@ -191,10 +189,10 @@
                                                                 HorizontalContentAlignment="Left"
                                                                 Background="Transparent"
                                                                 Padding="12, 8"
-                                                                Margin="0"
                                                                 Command="{Binding $parent[UserControl].((vm:CenterAreaViewModel)DataContext).AddTrackToPlaylistCommand,
                                                                 FallbackValue={x:Null}}"
                                                                 CommandParameter="{Binding $parent[FlyoutPresenter]}">
+                                                            
                                                             <TextBlock Text="{Binding Name}"
                                                                        Foreground="{StaticResource BrushTextWhite}"
                                                                        TextTrimming="CharacterEllipsis" />

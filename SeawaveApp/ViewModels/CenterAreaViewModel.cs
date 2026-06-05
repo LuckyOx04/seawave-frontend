@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
+using Avalonia.VisualTree;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -29,7 +30,6 @@ public partial class CenterAreaViewModel : ViewModelBase
     [ObservableProperty] public partial bool IsPlaylist { get; set; }
     [ObservableProperty] public partial bool IsPlaylistFlyoutVisible { get; set; }
     [ObservableProperty] public partial bool IsPlaylistSelectionFlyoutVisible { get; set; }
-    [ObservableProperty] public partial Playlist? SelectedPlaylistToAddTo { get; set; }
     
     public ObservableCollection<Playlist> FlyoutDisplayPlaylists { get; } = [];
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
@@ -188,21 +188,27 @@ public partial class CenterAreaViewModel : ViewModelBase
     [RelayCommand]
     private async Task AddTrackToPlaylistAsync(object? parameter)
     {
-        if (_selectedTrackToAddToPlaylist == null || SelectedPlaylistToAddTo == null)
+        if (parameter is FlyoutPresenter presenter)
         {
+            var innerListBox = presenter.FindDescendantOfType<ListBox>();
+
+            if (innerListBox != null && innerListBox.SelectedItem is Playlist targetPlaylist)
+            {
+                if (_selectedTrackToAddToPlaylist != null)
+                {
+                    await _libraryManager.AddTrackToPlaylistAsync(_selectedTrackToAddToPlaylist, targetPlaylist);
+                }
+
+                innerListBox.SelectedItem = null;
+            }
+            
             ResetTrackFlyout();
-            return;
-        }
 
-        await _libraryManager.AddTrackToPlaylistAsync(_selectedTrackToAddToPlaylist, SelectedPlaylistToAddTo);
-        Console.WriteLine("Inside Add Track to Playlist.");
-
-        if (parameter is FlyoutPresenter { Parent: Popup popup })
-        {
-            popup.IsOpen = false;
+            if (presenter.Parent is Popup popup)
+            {
+                popup.IsOpen = false;
+            }
         }
-        
-        ResetTrackFlyout();
     }
     
     [RelayCommand]
@@ -230,7 +236,6 @@ public partial class CenterAreaViewModel : ViewModelBase
     private void ResetTrackFlyout()
     {
         _selectedTrackToAddToPlaylist = null;
-        SelectedPlaylistToAddTo = null;
         IsPlaylistSelectionFlyoutVisible = false;
     }
     
