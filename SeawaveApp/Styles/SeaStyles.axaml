@@ -71,4 +71,22 @@
     <Style Selector="ToggleButton.RightToggle:checked">
         <Setter Property="Content" Value="&lt;" />
     </Style>
+    
+    <Style Selector="ListBox.CleanButtons">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+    </Style>
+    
+    <Style Selector="ListBox.CleanButtons ListBoxItem">
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    
+    <Style Selector="ListBox.CleanButtons ListBoxItem:pointerover /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="ListBox.CleanButtons ListBoxItem:selected /template/ ContentPresenter">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
 </Styles>
