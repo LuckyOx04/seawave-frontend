@@ -190,7 +190,8 @@ public class LocalDatabaseService
             """
             SELECT t.* FROM Tracks t
             JOIN PlaylistsTracks pt ON t.Id = pt.TrackId
-            WHERE pt.PlaylistId = $playlistId;
+            WHERE pt.PlaylistId = $playlistId
+            ORDER BY pt.ROWID;
             """;
         command.Parameters.AddWithValue("$playlistId", playlistId);
 
