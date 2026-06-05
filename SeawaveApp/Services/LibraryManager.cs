@@ -78,7 +78,7 @@ public class LibraryManager(
         }
     }
 
-    public async Task CreatePlaylistAsync(string playlistName, bool isOnlinePlaylist)
+    public async Task CreatePlaylistAsync(string playlistName, bool isOnlinePlaylist, bool isTempPlaylist = false)
     {
         if (isOnlinePlaylist)
         {
@@ -87,7 +87,7 @@ public class LibraryManager(
         else
         {
             var uniquePlaylistSeed = $"{playlistName}_{Guid.NewGuid()}";
-            var playlistId = IdGenerator.GenerateSha256Id(uniquePlaylistSeed);
+            var playlistId = isTempPlaylist ? "0" : IdGenerator.GenerateSha256Id(uniquePlaylistSeed);
             await db.CretePlaylistAsync(playlistId, playlistName);
         }
     }
