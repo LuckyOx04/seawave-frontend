@@ -86,7 +86,7 @@ public partial class TopBarViewModel(
         {
             await libraryManager.AddLocalFileToTempAsync(paths);
             await libraryManager.RefreshPlaylistsAsync(mainShell.IsOnline);
-            mainShell.NavigateToPlaylist(libraryManager.TemporaryPlaylist);
+            await mainShell.NavigateToPlaylistAsync(libraryManager.TemporaryPlaylist);
         }
     }
 }

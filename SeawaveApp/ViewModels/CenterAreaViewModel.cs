@@ -263,7 +263,7 @@ public partial class CenterAreaViewModel : ViewModelBase
         {
             await _libraryManager.DeletePlaylistAsync(_mainShell.ActiveCenterPlaylist);
             await _mainShell.RefreshDisplayedPlaylists();
-            _mainShell.NavigateToPlaylist(null);
+            await _mainShell.NavigateToPlaylistAsync(null);
 
             if (presenter.Parent is Popup popup)
             {
@@ -273,8 +273,8 @@ public partial class CenterAreaViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void ClearPlaylist()
+    private async Task ClearPlaylistAsync()
     {
-        _mainShell.NavigateToPlaylist(null);
+        await _mainShell.NavigateToPlaylistAsync(null);
     }
 }

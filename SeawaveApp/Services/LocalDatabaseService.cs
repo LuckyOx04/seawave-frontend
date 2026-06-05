@@ -185,7 +185,7 @@ public class LocalDatabaseService
         await command.ExecuteNonQueryAsync();
     }
 
-    private async Task ClearTracksFromPlaylist()
+    public async Task ClearTracksFromPlaylistAsync()
     {
         await using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();

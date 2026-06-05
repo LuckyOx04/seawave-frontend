@@ -15,7 +15,7 @@ public class LibraryManager(
     private readonly Random _rng = new();
     public ObservableCollection<Playlist> AllPlaylists { get; } = [];
 
-    public Playlist TemporaryPlaylist { get; } = new() {Id = "0", Name = "Now Playing (Local)", IsOnline = false };
+    public Playlist TemporaryPlaylist { get; } = new() {Id = "0", Name = "Default Local Tracks", IsOnline = false };
 
     public async Task RefreshPlaylistsAsync(bool includeOnline)
     {
@@ -201,8 +201,9 @@ public class LibraryManager(
         }
     }
 
-    public void ClearTemporaryPlaylistAsync()
+    public async Task ClearTemporaryPlaylistAsync()
     {
+        await db.ClearTracksFromPlaylistAsync();
         TemporaryPlaylist.Tracks.Clear();
     }
 }

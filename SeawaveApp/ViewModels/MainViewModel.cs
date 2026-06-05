@@ -112,14 +112,14 @@ public partial class MainViewModel : ViewModelBase
         await _libraryManager.RefreshPlaylistsAsync(IsOnline && IsLoggedIn);
     }
 
-    public void NavigateToPlaylist(Playlist? playlist)
+    public async Task NavigateToPlaylistAsync(Playlist? playlist)
     {
         ActiveCenterPlaylist = playlist;
         
         if (playlist == null)
         {
             CurrentCenterMode = CenterContentMode.None;
-            _libraryManager.ClearTemporaryPlaylistAsync();
+            await _libraryManager.ClearTemporaryPlaylistAsync();
         }
         else if (playlist == _libraryManager.TemporaryPlaylist)
         {
@@ -127,7 +127,7 @@ public partial class MainViewModel : ViewModelBase
         }
         else
         {
-            _libraryManager.ClearTemporaryPlaylistAsync();
+            await _libraryManager.ClearTemporaryPlaylistAsync();
             CurrentCenterMode = CenterContentMode.PlaylistTracks;
         }
         
