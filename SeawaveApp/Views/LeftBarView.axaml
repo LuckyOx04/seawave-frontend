@@ -44,7 +44,6 @@
                        VerticalAlignment="Center" />
 
             <Button Grid.Column="1"
-                    Command="{Binding OpenFlyoutCommand}"
                     Background="Transparent"
                     VerticalAlignment="Center"
                     Padding="0"
@@ -56,8 +55,7 @@
 
                 <Button.Flyout>
                     <Flyout Placement="BottomEdgeAlignedRight"
-                            Closed="Flyout_OnClosed"
-                            IsOpen="{Binding IsFlyoutVisible}">
+                            Closed="Flyout_OnClosed">
 
                         <Panel Width="240">
                             <StackPanel Spacing="4"
@@ -114,6 +112,7 @@
                                     <Button Grid.Column="1"
                                             Content="Create"
                                             Command="{Binding ConfirmWizardCommand}"
+                                            CommandParameter="{Binding $parent[FlyoutPresenter]}"
                                             HorizontalAlignment="Stretch"
                                             Margin="4,0,0,0"
                                             HorizontalContentAlignment="Center"

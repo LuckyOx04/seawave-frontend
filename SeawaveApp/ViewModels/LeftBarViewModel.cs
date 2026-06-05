@@ -3,6 +3,8 @@ using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SeawaveApp.Models;
@@ -25,7 +27,6 @@ public partial class LeftBarViewModel : ViewModelBase
     [ObservableProperty] public partial string WizardTitle { get; set; } = string.Empty;
     [ObservableProperty] public partial string NewPlaylistName { get; set; } = string.Empty;
     [ObservableProperty] public partial string? WizardMessage { get; set; }
-    [ObservableProperty] public partial bool IsFlyoutVisible { get; set; }
 
     public ObservableCollection<Playlist> DisplayedPlaylists { get; } = [];
 
@@ -117,12 +118,6 @@ public partial class LeftBarViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void OpenFlyout()
-    {
-        IsFlyoutVisible = true;
-    }
-
-    [RelayCommand]
     private void SelectPlaylistType(bool isOnlineSelected)
     {
         _isOnlineTarget = isOnlineSelected;
@@ -137,25 +132,31 @@ public partial class LeftBarViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task ConfirmWizard()
+    private async Task ConfirmWizard(object? parameter)
     {
-        if (string.IsNullOrWhiteSpace(NewPlaylistName))
+        if (parameter is FlyoutPresenter presenter)
         {
-            WizardMessage = "Playlist name cannot be empty.";
-            return;
+            if (string.IsNullOrWhiteSpace(NewPlaylistName))
+            {
+                WizardMessage = "Playlist name cannot be empty.";
+                return;
+            }
+
+            WizardMessage = null;
+
+            await _libraryManager.CreatePlaylistAsync(NewPlaylistName, _isOnlineTarget);
+
+            RefreshDisplayedPlaylists();
+
+            ResetWizard();
+
+            await _mainShell.RefreshDisplayedPlaylists();
+
+            if (presenter.Parent is Popup popup)
+            {
+                popup.IsOpen = false;
+            }
         }
-
-        WizardMessage = null;
-
-        await _libraryManager.CreatePlaylistAsync(NewPlaylistName, _isOnlineTarget);
-
-        RefreshDisplayedPlaylists();
-
-        ResetWizard();
-        
-        IsFlyoutVisible = false;
-
-        await _mainShell.RefreshDisplayedPlaylists();
     }
 
     [RelayCommand]
@@ -164,5 +165,6 @@ public partial class LeftBarViewModel : ViewModelBase
         IsPlaylistWizardActive = false;
         NewPlaylistName = string.Empty;
         WizardTitle = string.Empty;
+        WizardMessage = null;
     }
 }
