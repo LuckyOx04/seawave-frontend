@@ -127,7 +127,7 @@ public class LocalDatabaseService
         await using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
         var command = connection.CreateCommand();
-        command.CommandText = "INSERT INTO Playlists (Id, Name) VALUES ($id, $name);";
+        command.CommandText = "INSERT OR IGNORE INTO Playlists (Id, Name) VALUES ($id, $name);";
         command.Parameters.AddWithValue("$id", id);
         command.Parameters.AddWithValue("$name", name);
 

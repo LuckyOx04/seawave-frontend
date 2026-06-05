@@ -78,7 +78,7 @@ public class LibraryManager(
         }
     }
 
-    public async Task CreatePlaylistAsync(string playlistName, bool isOnlinePlaylist, bool isTempPlaylist = false)
+    public async Task CreatePlaylistAsync(string playlistName, bool isOnlinePlaylist)
     {
         if (isOnlinePlaylist)
         {
@@ -87,7 +87,7 @@ public class LibraryManager(
         else
         {
             var uniquePlaylistSeed = $"{playlistName}_{Guid.NewGuid()}";
-            var playlistId = isTempPlaylist ? "0" : IdGenerator.GenerateSha256Id(uniquePlaylistSeed);
+            var playlistId = IdGenerator.GenerateSha256Id(uniquePlaylistSeed);
             await db.CretePlaylistAsync(playlistId, playlistName);
         }
     }
@@ -188,12 +188,15 @@ public class LibraryManager(
 
     public async Task AddLocalFileToTempAsync(string[] paths)
     {
+        await db.CretePlaylistAsync("0", "Default Local Tracks");
+        
         foreach (var path in paths)
         {
             var tracks = await discovery.DiscoverAsync(path);
             foreach (var track in tracks)
             {
                 TemporaryPlaylist.Tracks.Add(track);
+                await db.AddTrackToPlaylistAsync("0", track);
             }
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using SeawaveApp.Helpers;
 using SeawaveApp.Models;
 
 namespace SeawaveApp.Services;
@@ -133,7 +134,7 @@ public class LocalDiscoveryService
                     
                     currentTrack = new UnifiedTrack
                     {
-                        Id = $"{cuePath}_{value}",
+                        Id = IdGenerator.GenerateSha256Id($"{cuePath}_{value}"),
                         Artist = albumArtist ?? "Unknown Artist",
                         Album = albumTitle,
                         LocalPath = currentAudioFile,

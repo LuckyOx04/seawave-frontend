@@ -72,7 +72,7 @@ public partial class TopBarViewModel(
                     Album = null,
                     Duration = TimeSpan.FromSeconds(trackData.DurationSeconds),
                     IsRemote = true,
-                    RemoteUrl = $"https://localhost:7212/api/Music/stream/{trackData.FileName}"
+                    RemoteUrl = api.GetStreamUrl(trackData.FileName)
                 });
             }
         }
