@@ -17,7 +17,7 @@ public class LocalDiscoveryService
 
         if (File.Exists(path))
         {
-            var result = await ProcessFile(path);
+            var result = await ProcessFileAsync(path);
             if (result != null)
             {
                 tracks.AddRange(result);
@@ -27,7 +27,7 @@ public class LocalDiscoveryService
         {
             foreach (var file in Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories))
             {
-                var result = await ProcessFile(file);
+                var result = await ProcessFileAsync(file);
                 if (result != null)
                 {
                     tracks.AddRange(result);
@@ -38,7 +38,7 @@ public class LocalDiscoveryService
         return tracks;
     }
 
-    private async Task<List<UnifiedTrack>?> ProcessFile(string filePath)
+    private async Task<List<UnifiedTrack>?> ProcessFileAsync(string filePath)
     {
         var ext = Path.GetExtension(filePath).ToLower();
 
@@ -52,19 +52,19 @@ public class LocalDiscoveryService
             return null;
         }
         
-        var track = await ExtractMetadata(filePath);
+        var track = await ExtractMetadataAsync(filePath);
         
         return [track];
     }
 
-    private static async Task<UnifiedTrack> ExtractMetadata(string path)
+    private static async Task<UnifiedTrack> ExtractMetadataAsync(string path)
     {
         return await Task.Run(() =>
         {
             using var tfile = TagLib.File.Create(path);
             return new UnifiedTrack
             {
-                Id = path,
+                Id = IdGenerator.GenerateSha256Id(path),
                 Title = tfile.Tag.Title ?? Path.GetFileNameWithoutExtension(path),
                 Artist = tfile.Tag.FirstPerformer ?? "Unknown Artist",
                 Album = tfile.Tag.Album,
