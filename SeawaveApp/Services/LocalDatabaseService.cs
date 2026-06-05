@@ -98,43 +98,28 @@ public class LocalDatabaseService
         return playlists;
     }
 
-    public async Task UpsertTracksAsync(IEnumerable<UnifiedTrack> tracks)
+    private async Task UpsertTrackAsync(UnifiedTrack track)
     {
         await using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
-
-        await using var transaction = await connection.BeginTransactionAsync();
         
-        try
-        {
-            foreach (var track in tracks)
-            {
-                var command = connection.CreateCommand();
-                command.CommandText =
-                    """
-                    REPLACE INTO Tracks
-                    (Id, Title, Artist, Album, DurationSeconds, IsRemote, RemoteUrl, LocalPath, StartOffset)
-                    VALUES ($id, $title, $artist, $album, $duration, $isRemote, $remoteUrl, $localPath, $startOffset);
-                    """;
-                command.Parameters.AddWithValue("$id", track.Id);
-                command.Parameters.AddWithValue("$title", track.Title);
-                command.Parameters.AddWithValue("$artist", track.Artist);
-                command.Parameters.AddWithValue("$album", (object?)track.Album ?? DBNull.Value);
-                command.Parameters.AddWithValue("$duration", track.Duration.TotalSeconds);
-                command.Parameters.AddWithValue("$isRemote", track.IsRemote ? 1 : 0);
-                command.Parameters.AddWithValue("$remoteUrl", (object?)track.RemoteUrl ?? DBNull.Value);
-                command.Parameters.AddWithValue("$localPath", (object?)track.LocalPath ?? DBNull.Value);
-                command.Parameters.AddWithValue("$startOffset", track.StartOffset.TotalSeconds);
-                await command.ExecuteNonQueryAsync();
-            }
-
-            await transaction.CommitAsync();
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
+        var command = connection.CreateCommand();
+        command.CommandText =
+            """
+            REPLACE INTO Tracks
+            (Id, Title, Artist, Album, DurationSeconds, IsRemote, RemoteUrl, LocalPath, StartOffset)
+            VALUES ($id, $title, $artist, $album, $duration, $isRemote, $remoteUrl, $localPath, $startOffset);
+            """;
+        command.Parameters.AddWithValue("$id", track.Id);
+        command.Parameters.AddWithValue("$title", track.Title);
+        command.Parameters.AddWithValue("$artist", track.Artist);
+        command.Parameters.AddWithValue("$album", (object?)track.Album ?? DBNull.Value);
+        command.Parameters.AddWithValue("$duration", track.Duration.TotalSeconds);
+        command.Parameters.AddWithValue("$isRemote", track.IsRemote ? 1 : 0);
+        command.Parameters.AddWithValue("$remoteUrl", (object?)track.RemoteUrl ?? DBNull.Value);
+        command.Parameters.AddWithValue("$localPath", (object?)track.LocalPath ?? DBNull.Value);
+        command.Parameters.AddWithValue("$startOffset", track.StartOffset.TotalSeconds);
+        await command.ExecuteNonQueryAsync();
     }
 
     public async Task CretePlaylistAsync(string id, string name)
@@ -162,7 +147,7 @@ public class LocalDatabaseService
 
     public async Task AddTrackToPlaylistAsync(string playlistId, UnifiedTrack track)
     {
-        await UpsertTracksAsync([track]);
+        await UpsertTrackAsync(track);
 
         await using var connection = new SqliteConnection(_connectionString);
         await connection.OpenAsync();
