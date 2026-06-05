@@ -28,7 +28,6 @@ public partial class CenterAreaViewModel : ViewModelBase
 
     [ObservableProperty] public partial bool IsClearable { get; set; }
     [ObservableProperty] public partial bool IsPlaylist { get; set; }
-    [ObservableProperty] public partial bool IsPlaylistFlyoutVisible { get; set; }
     [ObservableProperty] public partial bool IsPlaylistSelectionFlyoutVisible { get; set; }
     
     public ObservableCollection<Playlist> FlyoutDisplayPlaylists { get; } = [];
@@ -156,12 +155,6 @@ public partial class CenterAreaViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void OpenPlaylistFlyout()
-    {
-        IsPlaylistFlyoutVisible = true;
-    }
-
-    [RelayCommand]
     private void AddTrackToQueue(object? parameter)
     {
         if (parameter is not FlyoutPresenter { DataContext: UnifiedTrack track } presenter)
@@ -240,29 +233,43 @@ public partial class CenterAreaViewModel : ViewModelBase
     }
     
     [RelayCommand]
-    private async Task AddPlaylistToQueueAsync()
+    private async Task AddPlaylistToQueueAsync(object? parameter)
     {
         if (_mainShell.ActiveCenterPlaylist == null)
         {
             return;
         }
-        
-        await _libraryManager.AddPlaylistToQueueAsync(_mainShell.ActiveCenterPlaylist);
-        IsPlaylistFlyoutVisible = false;
+
+        if (parameter is FlyoutPresenter presenter)
+        {
+            await _libraryManager.AddPlaylistToQueueAsync(_mainShell.ActiveCenterPlaylist);
+
+            if (presenter.Parent is Popup popup)
+            {
+                popup.IsOpen = false;
+            }
+        }
     }
     
     [RelayCommand]
-    private async Task DeletePlaylistAsync()
+    private async Task DeletePlaylistAsync(object? parameter)
     {
         if (_mainShell.ActiveCenterPlaylist == null)
         {
             return;
         }
-        
-        await _libraryManager.DeletePlaylistAsync(_mainShell.ActiveCenterPlaylist);
-        await _mainShell.RefreshDisplayedPlaylists();
-        _mainShell.NavigateToPlaylist(null);
-        IsPlaylistFlyoutVisible = false;
+
+        if (parameter is FlyoutPresenter presenter)
+        {
+            await _libraryManager.DeletePlaylistAsync(_mainShell.ActiveCenterPlaylist);
+            await _mainShell.RefreshDisplayedPlaylists();
+            _mainShell.NavigateToPlaylist(null);
+
+            if (presenter.Parent is Popup popup)
+            {
+                popup.IsOpen = false;
+            }
+        }
     }
 
     [RelayCommand]

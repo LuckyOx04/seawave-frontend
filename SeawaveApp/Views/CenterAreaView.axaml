@@ -46,7 +46,6 @@
         
         <Button Grid.Row="1"
                 Grid.Column="1"
-                Command="{Binding OpenPlaylistFlyoutCommand}"
                 Margin="0"
                 Padding="0"
                 Background="Transparent"
@@ -55,19 +54,20 @@
                       Width="22"
                       Height="22" />
             <Button.Flyout>
-                <Flyout Placement="BottomEdgeAlignedRight"
-                        IsOpen="{Binding IsPlaylistFlyoutVisible}">
+                <Flyout Placement="BottomEdgeAlignedRight">
                     
                     <Panel Width="240">
                         <StackPanel Spacing="4">
                             <Button Content="Add playlist to queue"
                                     Command="{Binding AddPlaylistToQueueCommand}"
+                                    CommandParameter="{Binding $parent[FlyoutPresenter]}"
                                     HorizontalAlignment="Stretch"
                                     Background="Transparent"
                                     HorizontalContentAlignment="Left"
                                     Padding="12, 8"/>
                             <Button Content="Delete playlist"
                                     Command="{Binding DeletePlaylistCommand}"
+                                    CommandParameter="{Binding $parent[FlyoutPresenter]}"
                                     HorizontalAlignment="Stretch"
                                     Background="Transparent"
                                     HorizontalContentAlignment="Left"
