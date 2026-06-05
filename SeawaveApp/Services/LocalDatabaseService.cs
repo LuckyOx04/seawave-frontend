@@ -185,6 +185,15 @@ public class LocalDatabaseService
         await command.ExecuteNonQueryAsync();
     }
 
+    private async Task ClearTracksFromPlaylist()
+    {
+        await using var connection = new SqliteConnection(_connectionString);
+        await connection.OpenAsync();
+        var command = connection.CreateCommand();
+        command.CommandText = "DELETE FROM PlaylistsTracks WHERE PlaylistId = '0';";
+        await command.ExecuteNonQueryAsync();
+    }
+
     public async Task<List<UnifiedTrack>> GetPlaylistTracksAsync(string playlistId)
     {
         var tracks = new List<UnifiedTrack>();
