@@ -92,6 +92,9 @@ public partial class CenterAreaViewModel : ViewModelBase
     {
         DisplayTracks.Clear();
 
+        IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
+        IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
+
         switch (_mainShell.CurrentCenterMode)
         {
             case CenterContentMode.SearchResults:
@@ -101,11 +104,8 @@ public partial class CenterAreaViewModel : ViewModelBase
                     DisplayTracks.Add(track);
                 }
 
-                IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
-                IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
                 break;
             case CenterContentMode.PlaylistTracks:
-            case CenterContentMode.TemporaryTracks:
                 if (_mainShell.ActiveCenterPlaylist != null)
                 {
                     HeaderTitle = _mainShell.ActiveCenterPlaylist.Name;
@@ -113,17 +113,12 @@ public partial class CenterAreaViewModel : ViewModelBase
                     {
                         DisplayTracks.Add(track);
                     }
-
-                    IsClearable = _mainShell.ActiveCenterPlaylist.Id == "0";
-                    IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
                 }
 
                 break;
             case CenterContentMode.None:
             default:
                 HeaderTitle = "Select a Playlist, Search for Music or Add Local Files";
-                IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
-                IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
                 break;
         }
     }
@@ -263,7 +258,7 @@ public partial class CenterAreaViewModel : ViewModelBase
         {
             await _libraryManager.DeletePlaylistAsync(_mainShell.ActiveCenterPlaylist);
             await _mainShell.RefreshDisplayedPlaylists();
-            await _mainShell.NavigateToPlaylistAsync(null);
+            _mainShell.NavigateToPlaylist(null);
 
             if (presenter.Parent is Popup popup)
             {
@@ -273,8 +268,8 @@ public partial class CenterAreaViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private async Task ClearPlaylistAsync()
+    private void ClearPlaylist()
     {
-        await _mainShell.NavigateToPlaylistAsync(null);
+        _mainShell.NavigateToPlaylist(null);
     }
 }

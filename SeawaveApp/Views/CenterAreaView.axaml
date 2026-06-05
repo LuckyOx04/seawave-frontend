@@ -48,6 +48,7 @@
                 Grid.Column="1"
                 Margin="0"
                 Padding="0"
+                HorizontalAlignment="Right"
                 Background="Transparent"
                 IsVisible="{Binding IsPlaylist}">
             <PathIcon Data="{StaticResource IconOptions}"
@@ -68,6 +69,7 @@
                             <Button Content="Delete playlist"
                                     Command="{Binding DeletePlaylistCommand}"
                                     CommandParameter="{Binding $parent[FlyoutPresenter]}"
+                                    IsVisible="{Binding !IsClearable}"
                                     HorizontalAlignment="Stretch"
                                     Background="Transparent"
                                     HorizontalContentAlignment="Left"

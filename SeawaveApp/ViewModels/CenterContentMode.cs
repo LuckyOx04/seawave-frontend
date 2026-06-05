@@ -4,6 +4,5 @@ public enum CenterContentMode
 {
     None,
     SearchResults,
-    PlaylistTracks,
-    TemporaryTracks
+    PlaylistTracks
 }
