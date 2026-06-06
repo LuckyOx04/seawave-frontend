@@ -21,7 +21,7 @@ public partial class RightBarViewModel : ViewModelBase
         UpdateDisplayTracks();
 
         _playbackManager.ShuffleChanged += (_, _) => UpdateDisplayTracks();
-        _playbackManager.TrackChanged += (_, _) => UpdateDisplayTracks();
+        _playbackManager.QueueChanged += (_, _) => UpdateDisplayTracks();
     }
 
     private void UpdateDisplayTracks()
@@ -54,13 +54,11 @@ public partial class RightBarViewModel : ViewModelBase
         }
         
         _playbackManager.RemoveTrack(track);
-        UpdateDisplayTracks();
     }
 
     [RelayCommand]
     private void ClearAllQueue()
     {
         _playbackManager.ClearQueue();
-        UpdateDisplayTracks();
     }
 }

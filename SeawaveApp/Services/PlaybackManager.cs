@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Avalonia.Threading;
 using LibVLCSharp.Shared;
 using SeawaveApp.Models;
@@ -37,6 +36,7 @@ public class PlaybackManager : IDisposable
     public event EventHandler<TimeSpan>? DurationChanged;
     public event EventHandler<bool>? ShuffleChanged;
     public event EventHandler<RepeatMode>? RepeatChanged;
+    public event EventHandler? QueueChanged;
 
     public PlaybackManager()
     {
@@ -86,6 +86,7 @@ public class PlaybackManager : IDisposable
     {
         TracksQueue.Add(track);
         UpdateOrderForNewTrack();
+        QueueChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void RemoveTrack(UnifiedTrack track)
@@ -119,6 +120,8 @@ public class PlaybackManager : IDisposable
                 PlaybackOrder[i]--;
             }
         }
+        
+        QueueChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void RebuildOrder(int startIndex)
@@ -166,6 +169,7 @@ public class PlaybackManager : IDisposable
 
         _mediaPlayer.Play(media);
         TrackChanged?.Invoke(this, CurrentTrack);
+        QueueChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private Media GetMediaForTrack(UnifiedTrack track)
@@ -220,6 +224,7 @@ public class PlaybackManager : IDisposable
             ClearQueue();
             _mediaPlayer.Stop();
             TrackChanged?.Invoke(this, CurrentTrack);
+            QueueChanged?.Invoke(this, EventArgs.Empty);
         }
     }
 
@@ -265,6 +270,7 @@ public class PlaybackManager : IDisposable
         TracksQueue.Clear();
         PlaybackOrder.Clear();
         OrderIndex = -1;
+        QueueChanged?.Invoke(this, EventArgs.Empty);
     }
 
     public void Dispose()
