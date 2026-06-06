@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using LibVLCSharp.Shared;
 using SeawaveApp.Models;
 
@@ -183,16 +184,7 @@ public class PlaybackManager : IDisposable
 
     private void HandleTrackEnd()
     {
-        Task.Run(() =>
-        {
-            if (CurrentRepeatMode == RepeatMode.Track)
-            {
-                PlayCurrent();
-                return;
-            }
-
-            Next();
-        });
+        Dispatcher.UIThread.Post(Next);
     }
 
     public void TogglePause()
@@ -209,7 +201,11 @@ public class PlaybackManager : IDisposable
 
     public void Next()
     {
-        if (OrderIndex < PlaybackOrder.Count - 1)
+        if (CurrentRepeatMode == RepeatMode.Track)
+        {
+            PlayCurrent();
+        }
+        else if (OrderIndex < PlaybackOrder.Count - 1)
         {
             OrderIndex++;
             PlayCurrent();
