@@ -163,7 +163,6 @@ public partial class CenterAreaViewModel : ViewModelBase
         }
         
         _libraryManager.AddTrackToQueue(track);
-        Console.WriteLine("Inside Add Track to Queue.");
 
         if (presenter.Parent is Popup popup)
         {

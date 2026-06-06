@@ -85,7 +85,17 @@ public class PlaybackManager : IDisposable
     public void AddToQueue(UnifiedTrack track)
     {
         TracksQueue.Add(track);
-        UpdateOrderForNewTrack();
+        
+        if (PlaybackOrder.Count == 0)
+        {
+            RebuildOrder(0);
+            TrackChanged?.Invoke(this, CurrentTrack);
+        }
+        else
+        {
+            UpdateOrderForNewTrack();
+        }
+        
         QueueChanged?.Invoke(this, EventArgs.Empty);
     }
 
