@@ -82,6 +82,11 @@ public partial class CenterAreaViewModel : ViewModelBase
         var filteredPlaylists =
             _libraryManager.AllPlaylists.Where(playlist => playlist != _mainShell.ActiveCenterPlaylist);
 
+        if (_mainShell.ActiveCenterPlaylist is { IsOnline: false })
+        {
+            filteredPlaylists = filteredPlaylists.Where(playlist => !playlist.IsOnline);
+        }
+
         foreach (var playlist in filteredPlaylists)
         {
             FlyoutDisplayPlaylists.Add(playlist);
@@ -180,16 +185,16 @@ public partial class CenterAreaViewModel : ViewModelBase
         {
             var innerListBox = presenter.FindDescendantOfType<ListBox>();
 
-            if (innerListBox != null && innerListBox.SelectedItem is Playlist targetPlaylist)
+            var listBoxButton = innerListBox?.FindDescendantOfType<Button>();
+            
+            if (listBoxButton?.DataContext is Playlist targetPlaylist)
             {
                 if (_selectedTrackToAddToPlaylist != null)
                 {
                     await _libraryManager.AddTrackToPlaylistAsync(_selectedTrackToAddToPlaylist, targetPlaylist);
                 }
-
-                innerListBox.SelectedItem = null;
             }
-            
+
             ResetTrackFlyout();
 
             if (presenter.Parent is Popup popup)
