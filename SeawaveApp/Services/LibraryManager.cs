@@ -191,6 +191,11 @@ public class LibraryManager(
     public async Task AddLocalFileToTempAsync(string[] paths)
     {
         await db.CretePlaylistAsync("0", "Default Local Tracks");
+
+        if (TemporaryPlaylist.Tracks.Count == 0)
+        {
+            await LoadPlaylistTracksAsync(TemporaryPlaylist);
+        }
         
         foreach (var path in paths)
         {
