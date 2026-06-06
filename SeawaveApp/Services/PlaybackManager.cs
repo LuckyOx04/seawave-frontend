@@ -11,27 +11,25 @@ public class PlaybackManager : IDisposable
 {
     private readonly LibVLC _libVlc;
     private readonly MediaPlayer _mediaPlayer;
-
-
+    
     private readonly Random _rng = new();
-
+    
     public List<UnifiedTrack> TracksQueue { get; } = [];
     public List<int> PlaybackOrder { get; private set; } = [];
     public int OrderIndex { get; private set; } = -1;
-
+    public MediaPlayerState PlaybackState { get; private set; } = MediaPlayerState.Stopped;
     public RepeatMode CurrentRepeatMode { get; private set; } = RepeatMode.None;
     public bool IsShuffle { get; private set; }
 
     public UnifiedTrack? CurrentTrack => (OrderIndex >= 0 && OrderIndex < PlaybackOrder.Count)
         ? TracksQueue[PlaybackOrder[OrderIndex]]
         : null;
-
-    public bool IsPlaying => _mediaPlayer.IsPlaying;
+    
     public TimeSpan Position => TimeSpan.FromMilliseconds(_mediaPlayer.Time);
     public TimeSpan Duration => TimeSpan.FromMilliseconds(_mediaPlayer.Length);
 
     public event EventHandler<UnifiedTrack?>? TrackChanged;
-    public event EventHandler<bool>? PlaybackStateChanged;
+    public event EventHandler? PlaybackStateChanged;
     public event EventHandler<TimeSpan>? PositionChanged;
     public event EventHandler<TimeSpan>? DurationChanged;
     public event EventHandler<bool>? ShuffleChanged;
@@ -50,8 +48,21 @@ public class PlaybackManager : IDisposable
             .Invoke(this, TimeSpan.FromMilliseconds(e.Time));
         _mediaPlayer.LengthChanged += (_, e) => DurationChanged?
             .Invoke(this, TimeSpan.FromMilliseconds(e.Length));
-        _mediaPlayer.Playing += (_, _) => PlaybackStateChanged?.Invoke(this, true);
-        _mediaPlayer.Paused += (_, _) => PlaybackStateChanged?.Invoke(this, false);
+        _mediaPlayer.Playing += (_, _) =>
+        {
+            PlaybackState = MediaPlayerState.Playing;
+            PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+        };
+        _mediaPlayer.Paused += (_, _) =>
+        {
+            PlaybackState = MediaPlayerState.Paused;
+            PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+        };
+        _mediaPlayer.Stopped += (_, _) => 
+        {
+            PlaybackState = MediaPlayerState.Stopped;
+            PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+        };
     }
 
     public void PlayFromPlaylist(IEnumerable<UnifiedTrack> tracks, int startIndex)
@@ -203,6 +214,10 @@ public class PlaybackManager : IDisposable
 
     public void TogglePause()
     {
+        if (PlaybackState == MediaPlayerState.Stopped)
+        {
+            PlayCurrent();
+        }
         if (_mediaPlayer.IsPlaying)
         {
             _mediaPlayer.Pause();

@@ -13,9 +13,11 @@ public partial class BottomBarViewModel : ViewModelBase
     [ObservableProperty] public partial UnifiedTrack? CurrentTrack { get; set; }
     [ObservableProperty] public partial bool IsPlaying { get; set; }
     [ObservableProperty] public partial TimeSpan CurrentPosition { get; set; }
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(TrackDurationSeconds))]
     public partial TimeSpan TrackDuration { get; set; }
+
     [ObservableProperty] public partial bool IsShuffleOn { get; set; }
     [ObservableProperty] public partial string RepeatModeLabel { get; set; } = "Repeat: Off";
 
@@ -37,7 +39,8 @@ public partial class BottomBarViewModel : ViewModelBase
         }
     }
 
-    public double TrackDurationSeconds => CurrentTrack != null ? TrackDuration.TotalSeconds
+    public double TrackDurationSeconds => CurrentTrack != null
+        ? TrackDuration.TotalSeconds
         : 0.1;
 
     public BottomBarViewModel(PlaybackManager playbackManager)
@@ -45,14 +48,15 @@ public partial class BottomBarViewModel : ViewModelBase
         _playbackManager = playbackManager;
 
         CurrentTrack = _playbackManager.CurrentTrack;
-        IsPlaying = _playbackManager.IsPlaying;
+        IsPlaying = _playbackManager.PlaybackState == MediaPlayerState.Playing;
         CurrentPosition = CalculateCurrentPosition(_playbackManager.Position) ?? TimeSpan.Zero;
         TrackDuration = CurrentTrack?.Duration ?? _playbackManager.Duration;
         IsShuffleOn = _playbackManager.IsShuffle;
         UpdateRepeatLabel(_playbackManager.CurrentRepeatMode);
 
         _playbackManager.TrackChanged += (_, track) => CurrentTrack = track;
-        _playbackManager.PlaybackStateChanged += (_, playing) => IsPlaying = playing;
+        _playbackManager.PlaybackStateChanged += (_, _) => 
+            IsPlaying = _playbackManager.PlaybackState == MediaPlayerState.Playing;
         _playbackManager.ShuffleChanged += (_, shuffle) => IsShuffleOn = shuffle;
         _playbackManager.RepeatChanged += (_, mode) => UpdateRepeatLabel(mode);
 
