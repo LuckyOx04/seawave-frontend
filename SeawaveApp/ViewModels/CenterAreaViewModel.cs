@@ -210,7 +210,8 @@ public partial class CenterAreaViewModel : ViewModelBase
         if (parameter is FlyoutPresenter { DataContext: UnifiedTrack track } presenter)
         {
             await _libraryManager.RemoveTrackFromPlaylistAsync(track, _mainShell.ActiveCenterPlaylist);
-            Console.WriteLine("Inside Remove track from Playlist.");
+            SyncDisplayTracks();
+            
             if (presenter.Parent is Popup popup)
             {
                 popup.IsOpen = false;

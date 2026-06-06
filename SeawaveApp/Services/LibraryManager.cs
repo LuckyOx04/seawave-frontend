@@ -179,10 +179,12 @@ public class LibraryManager(
         {
             var response = await api.RemoveTrackFromPlaylistAsync(int.Parse(playlist.Id), 
                 int.Parse(track.Id));
+            playlist.Tracks.Remove(track);
             return new ApiResult(response.IsSuccess, response.Message);
         }
         
         await db.RemoveTrackFromPlaylistAsync(playlist.Id, track);
+        playlist.Tracks.Remove(track);
         return new ApiResult(true, "Removed track from local playlist.");
     }
 
