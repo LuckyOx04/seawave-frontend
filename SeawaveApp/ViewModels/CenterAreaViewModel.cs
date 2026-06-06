@@ -268,8 +268,10 @@ public partial class CenterAreaViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void ClearPlaylist()
+    private async Task ClearPlaylistAsync()
     {
-        _mainShell.NavigateToPlaylist(null);
+        await _libraryManager.ClearTemporaryPlaylistAsync();
+        _mainShell.ActiveCenterPlaylist?.Tracks.Clear();
+        SyncDisplayTracks();
     }
 }
