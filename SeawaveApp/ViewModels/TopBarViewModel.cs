@@ -18,30 +18,40 @@ public partial class TopBarViewModel(
 {
     private CancellationTokenSource? _searchCts;
 
-    [ObservableProperty]
-    public partial string SearchQuery { get; set; } = string.Empty;
+    [ObservableProperty] public partial string SearchQuery { get; set; } = string.Empty;
 
     partial void OnSearchQueryChanged(string value)
     {
         _searchCts?.Cancel();
+        _searchCts?.Dispose();
         _searchCts = new CancellationTokenSource();
-        var token = _searchCts.Token;
 
-        _ = Task.Run(async () =>
+        _ = ProcessSearchAsync(value, _searchCts.Token);
+    }
+
+    private async Task ProcessSearchAsync(string value, CancellationToken token)
+    {
+        try
         {
-            try
+            await Task.Delay(500, token);
+
+            if (!string.IsNullOrWhiteSpace(value))
             {
-                await Task.Delay(500, token);
-                if (!token.IsCancellationRequested && !string.IsNullOrWhiteSpace(value))
-                {
-                    await PerformSearchAsync(value);
-                }
+                await PerformSearchAsync(value);
             }
-            catch (TaskCanceledException)
+            else
             {
-                
+                mainShell.TracksSearchResults.Clear();
+                mainShell.PlaylistsSearchResults.Clear();
             }
-        }, token);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception ex)
+        {
+            await Console.Error.WriteLineAsync(ex.Message);
+        }
     }
 
     [RelayCommand]
@@ -62,7 +72,7 @@ public partial class TopBarViewModel(
 
         var trackSearchResponse = await api.SearchTracksAsync(query);
         var playlistSearchResponse = await api.SearchPlaylistsAsync(query);
-        
+
         if (trackSearchResponse is { IsSuccess: true, Data: not null })
         {
             foreach (var trackData in trackSearchResponse.Data)
