@@ -111,7 +111,7 @@
                                     Classes="Modern"
                                     Padding="8,4"
                                     Margin="0,0,12,0"
-                                    ToolTip.Tip="Play now.">
+                                    ToolTip.Tip="Play this track">
                                 <PathIcon Data="{StaticResource IconPlay}"
                                           Width="14"
                                           Height="14" />

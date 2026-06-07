@@ -68,7 +68,7 @@
                                   VerticalAlignment="Stretch"
                                   Classes="SidebarToggle LeftToggle"
                                   Margin="2,0"
-                                  ToolTip.Tip="Toggle navigation sidebar display panel" />
+                                  ToolTip.Tip="Show/Hide playlists side panel" />
                 </StackPanel>
 
                 <Border Grid.Column="1"
@@ -85,7 +85,7 @@
                                   VerticalAlignment="Stretch"
                                   Classes="SidebarToggle RightToggle"
                                   Margin="2,0"
-                                  ToolTip.Tip="Toggle play queue tracking panel" />
+                                  ToolTip.Tip="Show/Hide queue side panel" />
 
                     <Border x:Name="RightSidebarContentPanel"
                             Width="260"

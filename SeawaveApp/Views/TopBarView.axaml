@@ -16,7 +16,7 @@
                 Command="{Binding AddFileCommand}"
                 Classes="Modern"
                 Height="36"
-                ToolTip.Tip="Add local audio tracks or folders.">
+                ToolTip.Tip="Add local audio tracks or folders">
             <StackPanel Orientation="Horizontal"
                         Spacing="8">
                 <PathIcon Data="{StaticResource IconPlus}"
@@ -35,14 +35,14 @@
                      Height="36"
                      IsEnabled="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnline,
                      FallbackValue={x:False}}"
-                     PlaceholderText="Search tracks..."
+                     PlaceholderText="Search tracks or playlists..."
                      Text="{Binding SearchQuery, Mode=TwoWay}"
                      CornerRadius="18" BorderThickness="1"
                      BorderBrush="{StaticResource BrushSurfaceHover}"
                      Background="{StaticResource BrushAbyssalDark}"
                      Foreground="{StaticResource BrushTextWhite}"
                      VerticalContentAlignment="Center"
-                     ToolTip.Tip="Type to search." />
+                     ToolTip.Tip="Type to search tracks or playlists" />
 
             <Button Content="Search"
                     IsEnabled="{Binding $parent[Window].((vm:MainViewModel)DataContext).IsOnline,
@@ -51,7 +51,7 @@
                     Classes="Modern"
                     Height="36"
                     VerticalContentAlignment="Center"
-                    ToolTip.Tip="Search for results." />
+                    ToolTip.Tip="Search for results" />
         </StackPanel>
 
         <Button Grid.Column="2"

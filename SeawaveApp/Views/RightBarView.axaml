@@ -27,7 +27,7 @@
                     Background="Transparent"
                     Foreground="{StaticResource BrushTextMuted}"
                     FontSize="12"
-                    ToolTip.Tip="Flush entire current audio execution queue pipeline" />
+                    ToolTip.Tip="Clear the queue" />
         </Grid>
 
         <StackPanel Grid.Row="1"
@@ -110,7 +110,7 @@
                                     Background="Transparent"
                                     Foreground="{StaticResource BrushTextMuted}"
                                     VerticalAlignment="Center"
-                                    ToolTip.Tip="Remove item from queue loop" />
+                                    ToolTip.Tip="Remove this track from queue" />
                         </Grid>
                     </Border>
                 </DataTemplate>
