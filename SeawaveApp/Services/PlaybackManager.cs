@@ -15,7 +15,7 @@ public class PlaybackManager : IDisposable
 
     private readonly Random _rng = new();
 
-    private long _lastnotifiedTime = -1000;
+    private long _lastNotifiedTime = -1000;
     private long _lastNotifiedLength = -1;
 
     public List<UnifiedTrack> TracksQueue { get; } = [];
@@ -50,7 +50,7 @@ public class PlaybackManager : IDisposable
         _mediaPlayer.EndReached += (_, _) => HandleTrackEnd();
         _mediaPlayer.TimeChanged += (_, e) =>
         {
-            if (Math.Abs(e.Time - _lastnotifiedTime) < 250)
+            if (Math.Abs(e.Time - _lastNotifiedTime) < 250)
             {
                 return;
             }
@@ -144,14 +144,6 @@ public class PlaybackManager : IDisposable
         if (orderPosition >= 0)
         {
             PlaybackOrder.RemoveAt(orderPosition);
-            if (OrderIndex >= orderPosition)
-            {
-                OrderIndex--;
-            }
-            else if (OrderIndex == orderPosition && OrderIndex >= PlaybackOrder.Count)
-            {
-                OrderIndex = PlaybackOrder.Count - 1;
-            }
         }
 
         for (var i = 0; i < PlaybackOrder.Count; i++)
@@ -207,6 +199,11 @@ public class PlaybackManager : IDisposable
         var trackIndex = PlaybackOrder[OrderIndex];
         var track = TracksQueue[trackIndex];
         var media = GetMediaForTrack(track);
+
+        _lastNotifiedTime = -1000;
+        _lastNotifiedLength = -1;
+
+        media.Parse(MediaParseOptions.ParseNetwork | MediaParseOptions.ParseLocal);
 
         _mediaPlayer.Play(media);
         TrackChanged?.Invoke(this, CurrentTrack);
