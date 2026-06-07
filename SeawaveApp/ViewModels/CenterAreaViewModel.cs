@@ -44,14 +44,10 @@ public partial class CenterAreaViewModel : ViewModelBase
 
         _mainShell.TracksSearchResults.CollectionChanged += OnTracksSearchResultsChanged;
 
-        _libraryManager.AllPlaylists.CollectionChanged += (_, _) => RefreshFlyoutPlaylists();
-
         IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
         IsSearch = _mainShell.CurrentCenterMode == CenterContentMode.SearchResults;
         IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0" && IsPlaylist;
         IsPlaylistSelectionFlyoutVisible = false;
-
-        RefreshFlyoutPlaylists();
 
         WeakReferenceMessenger.Default.Register<PlaylistChangedMessage>(this, (_, _) => { SyncDisplayTracks(); });
     }
@@ -62,7 +58,6 @@ public partial class CenterAreaViewModel : ViewModelBase
             or nameof(MainViewModel.ActiveCenterPlaylist.Tracks))
         {
             SyncDisplayTracks();
-            RefreshFlyoutPlaylists();
         }
     }
 
@@ -74,14 +69,14 @@ public partial class CenterAreaViewModel : ViewModelBase
         }
     }
 
-    private void RefreshFlyoutPlaylists()
+    private void RefreshFlyoutPlaylists(UnifiedTrack track)
     {
         FlyoutDisplayPlaylists.Clear();
 
         var filteredPlaylists =
             _libraryManager.AllPlaylists.Where(playlist => playlist != _mainShell.ActiveCenterPlaylist);
 
-        if (_mainShell.ActiveCenterPlaylist is { IsOnline: false })
+        if (!track.IsRemote)
         {
             filteredPlaylists = filteredPlaylists.Where(playlist => !playlist.IsOnline);
         }
@@ -173,6 +168,7 @@ public partial class CenterAreaViewModel : ViewModelBase
     [RelayCommand]
     private void PickTrackToAddToPlaylist(UnifiedTrack track)
     {
+        RefreshFlyoutPlaylists(track);
         _selectedTrackToAddToPlaylist = track;
         IsPlaylistSelectionFlyoutVisible = true;
     }
@@ -180,13 +176,13 @@ public partial class CenterAreaViewModel : ViewModelBase
     [RelayCommand]
     private async Task AddTrackToPlaylistAsync(object? parameter)
     {
-        if (parameter is FlyoutPresenter presenter)
+        if (parameter is Button pressedButton)
         {
-            var innerListBox = presenter.FindDescendantOfType<ListBox>();
+            var presenter = pressedButton.FindAncestorOfType<FlyoutPresenter>();
 
-            var listBoxButton = innerListBox?.FindDescendantOfType<Button>();
+            var playlist = pressedButton.DataContext;
 
-            if (listBoxButton?.DataContext is Playlist targetPlaylist)
+            if (playlist is Playlist targetPlaylist)
             {
                 if (_selectedTrackToAddToPlaylist != null)
                 {
@@ -196,7 +192,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 
             ResetTrackFlyout();
 
-            if (presenter.Parent is Popup popup)
+            if (presenter?.Parent is Popup popup)
             {
                 popup.IsOpen = false;
             }
