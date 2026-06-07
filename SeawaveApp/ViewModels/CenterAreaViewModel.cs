@@ -27,7 +27,9 @@ public partial class CenterAreaViewModel : ViewModelBase
 
     [ObservableProperty] public partial bool IsClearable { get; set; }
     [ObservableProperty] public partial bool IsPlaylist { get; set; }
+    [ObservableProperty] public partial bool IsSearch { get; set; }
     [ObservableProperty] public partial bool IsPlaylistSelectionFlyoutVisible { get; set; }
+    [ObservableProperty] public partial bool IsPlaylistSearchToggled { get; set; }
     
     public ObservableCollection<Playlist> FlyoutDisplayPlaylists { get; } = [];
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
@@ -46,6 +48,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 
         IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
         IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
+        IsSearch = _mainShell.CurrentCenterMode == CenterContentMode.SearchResults;
         IsPlaylistSelectionFlyoutVisible = false;
 
         RefreshFlyoutPlaylists();
@@ -98,6 +101,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 
         IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
         IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
+        IsSearch = _mainShell.CurrentCenterMode == CenterContentMode.SearchResults;
 
         switch (_mainShell.CurrentCenterMode)
         {
