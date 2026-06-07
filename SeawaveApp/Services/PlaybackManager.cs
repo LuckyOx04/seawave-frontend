@@ -15,6 +15,9 @@ public class PlaybackManager : IDisposable
 
     private readonly Random _rng = new();
 
+    private long _lastnotifiedTime = -1000;
+    private long _lastNotifiedLength = -1;
+
     public List<UnifiedTrack> TracksQueue { get; } = [];
     public List<int> PlaybackOrder { get; private set; } = [];
     public int OrderIndex { get; private set; } = -1;
@@ -45,10 +48,26 @@ public class PlaybackManager : IDisposable
         _mediaPlayer = new MediaPlayer(_libVlc);
 
         _mediaPlayer.EndReached += (_, _) => HandleTrackEnd();
-        _mediaPlayer.TimeChanged += (_, e) => PositionChanged?
-            .Invoke(this, TimeSpan.FromMilliseconds(e.Time));
-        _mediaPlayer.LengthChanged += (_, e) => DurationChanged?
-            .Invoke(this, TimeSpan.FromMilliseconds(e.Length));
+        _mediaPlayer.TimeChanged += (_, e) =>
+        {
+            if (Math.Abs(e.Time - _lastnotifiedTime) < 250)
+            {
+                return;
+            }
+
+            _lastNotifiedLength = e.Time;
+            PositionChanged?.Invoke(this, TimeSpan.FromMilliseconds(e.Time));
+        };
+        _mediaPlayer.LengthChanged += (_, e) =>
+        {
+            if (e.Length == _lastNotifiedLength)
+            {
+                return;
+            }
+
+            _lastNotifiedLength = e.Length;
+            DurationChanged?.Invoke(this, TimeSpan.FromMilliseconds(e.Length));
+        };
         _mediaPlayer.Playing += (_, _) =>
         {
             PlaybackState = MediaPlayerState.Playing;
