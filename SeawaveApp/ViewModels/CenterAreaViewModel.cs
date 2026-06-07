@@ -19,7 +19,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 {
     private readonly MainViewModel _mainShell;
     private readonly LibraryManager _libraryManager;
-    
+
     private UnifiedTrack? _selectedTrackToAddToPlaylist;
 
     [ObservableProperty]
@@ -30,7 +30,7 @@ public partial class CenterAreaViewModel : ViewModelBase
     [ObservableProperty] public partial bool IsSearch { get; set; }
     [ObservableProperty] public partial bool IsPlaylistSelectionFlyoutVisible { get; set; }
     [ObservableProperty] public partial bool IsPlaylistSearchToggled { get; set; }
-    
+
     public ObservableCollection<Playlist> FlyoutDisplayPlaylists { get; } = [];
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
 
@@ -46,17 +46,14 @@ public partial class CenterAreaViewModel : ViewModelBase
 
         _libraryManager.AllPlaylists.CollectionChanged += (_, _) => RefreshFlyoutPlaylists();
 
-        IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
         IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
         IsSearch = _mainShell.CurrentCenterMode == CenterContentMode.SearchResults;
+        IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0" && IsPlaylist;
         IsPlaylistSelectionFlyoutVisible = false;
 
         RefreshFlyoutPlaylists();
 
-        WeakReferenceMessenger.Default.Register<PlaylistChangedMessage>(this, (_, _) =>
-        {
-            SyncDisplayTracks();
-        });
+        WeakReferenceMessenger.Default.Register<PlaylistChangedMessage>(this, (_, _) => { SyncDisplayTracks(); });
     }
 
     private void OnShellPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -99,9 +96,9 @@ public partial class CenterAreaViewModel : ViewModelBase
     {
         DisplayTracks.Clear();
 
-        IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0";
         IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
         IsSearch = _mainShell.CurrentCenterMode == CenterContentMode.SearchResults;
+        IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0" && IsPlaylist;
 
         switch (_mainShell.CurrentCenterMode)
         {
@@ -164,7 +161,7 @@ public partial class CenterAreaViewModel : ViewModelBase
         {
             return;
         }
-        
+
         _libraryManager.AddTrackToQueue(track);
 
         if (presenter.Parent is Popup popup)
@@ -188,7 +185,7 @@ public partial class CenterAreaViewModel : ViewModelBase
             var innerListBox = presenter.FindDescendantOfType<ListBox>();
 
             var listBoxButton = innerListBox?.FindDescendantOfType<Button>();
-            
+
             if (listBoxButton?.DataContext is Playlist targetPlaylist)
             {
                 if (_selectedTrackToAddToPlaylist != null)
@@ -205,7 +202,7 @@ public partial class CenterAreaViewModel : ViewModelBase
             }
         }
     }
-    
+
     [RelayCommand]
     private async Task RemoveTrackFromPlaylist(object? parameter)
     {
@@ -218,7 +215,7 @@ public partial class CenterAreaViewModel : ViewModelBase
         {
             await _libraryManager.RemoveTrackFromPlaylistAsync(track, _mainShell.ActiveCenterPlaylist);
             SyncDisplayTracks();
-            
+
             if (presenter.Parent is Popup popup)
             {
                 popup.IsOpen = false;
@@ -227,14 +224,14 @@ public partial class CenterAreaViewModel : ViewModelBase
 
         ResetTrackFlyout();
     }
-    
+
     [RelayCommand]
     private void ResetTrackFlyout()
     {
         _selectedTrackToAddToPlaylist = null;
         IsPlaylistSelectionFlyoutVisible = false;
     }
-    
+
     [RelayCommand]
     private async Task AddPlaylistToQueueAsync(object? parameter)
     {
@@ -253,7 +250,7 @@ public partial class CenterAreaViewModel : ViewModelBase
             }
         }
     }
-    
+
     [RelayCommand]
     private async Task DeletePlaylistAsync(object? parameter)
     {
