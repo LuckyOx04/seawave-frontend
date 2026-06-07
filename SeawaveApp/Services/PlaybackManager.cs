@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Avalonia.Threading;
 using LibVLCSharp.Shared;
+using SeawaveApp.Helpers;
 using SeawaveApp.Models;
 
 namespace SeawaveApp.Services;
@@ -11,9 +12,9 @@ public class PlaybackManager : IDisposable
 {
     private readonly LibVLC _libVlc;
     private readonly MediaPlayer _mediaPlayer;
-    
+
     private readonly Random _rng = new();
-    
+
     public List<UnifiedTrack> TracksQueue { get; } = [];
     public List<int> PlaybackOrder { get; private set; } = [];
     public int OrderIndex { get; private set; } = -1;
@@ -24,7 +25,7 @@ public class PlaybackManager : IDisposable
     public UnifiedTrack? CurrentTrack => (OrderIndex >= 0 && OrderIndex < PlaybackOrder.Count)
         ? TracksQueue[PlaybackOrder[OrderIndex]]
         : null;
-    
+
     public TimeSpan Position => TimeSpan.FromMilliseconds(_mediaPlayer.Time);
     public TimeSpan Duration => TimeSpan.FromMilliseconds(_mediaPlayer.Length);
 
@@ -58,7 +59,7 @@ public class PlaybackManager : IDisposable
             PlaybackState = MediaPlayerState.Paused;
             PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
         };
-        _mediaPlayer.Stopped += (_, _) => 
+        _mediaPlayer.Stopped += (_, _) =>
         {
             PlaybackState = MediaPlayerState.Stopped;
             PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
@@ -96,7 +97,7 @@ public class PlaybackManager : IDisposable
     public void AddToQueue(UnifiedTrack track)
     {
         TracksQueue.Add(track);
-        
+
         if (PlaybackOrder.Count == 0)
         {
             RebuildOrder(0);
@@ -106,7 +107,7 @@ public class PlaybackManager : IDisposable
         {
             UpdateOrderForNewTrack();
         }
-        
+
         QueueChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -141,7 +142,7 @@ public class PlaybackManager : IDisposable
                 PlaybackOrder[i]--;
             }
         }
-        
+
         QueueChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -218,6 +219,7 @@ public class PlaybackManager : IDisposable
         {
             PlayCurrent();
         }
+
         if (_mediaPlayer.IsPlaying)
         {
             _mediaPlayer.Pause();
@@ -290,7 +292,14 @@ public class PlaybackManager : IDisposable
         RepeatChanged?.Invoke(this, CurrentRepeatMode);
     }
 
-    public void ClearQueue()
+    public void ClearQueueNextUpTracks()
+    {
+        PlaybackOrder.KeepOnlyIndex(OrderIndex);
+        OrderIndex = 0;
+        QueueChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void ClearQueue()
     {
         TracksQueue.Clear();
         PlaybackOrder.Clear();

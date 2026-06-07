@@ -1,5 +1,6 @@
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 using SeawaveApp.Helpers;
 using SeawaveApp.Models;
@@ -15,7 +16,7 @@ public class LibraryManager(
     private readonly Random _rng = new();
     public ObservableCollection<Playlist> AllPlaylists { get; } = [];
 
-    public Playlist TemporaryPlaylist { get; } = new() {Id = "0", Name = "Default Local Tracks", IsOnline = false };
+    public Playlist TemporaryPlaylist { get; } = new() { Id = "0", Name = "Default Local Tracks", IsOnline = false };
 
     public async Task RefreshPlaylistsAsync(bool includeOnline)
     {
@@ -26,7 +27,7 @@ public class LibraryManager(
         {
             AllPlaylists.Add(localPlaylist);
         }
-        
+
         if (includeOnline)
         {
             var onlineResponse = await api.GetUserPlaylistsAsync();
@@ -34,10 +35,11 @@ public class LibraryManager(
             {
                 foreach (var playlist in onlineResponse.Data)
                 {
-                    AllPlaylists.Add(new Playlist { 
-                        Id = playlist.Id.ToString(), 
-                        Name = playlist.Name, 
-                        IsOnline = true 
+                    AllPlaylists.Add(new Playlist
+                    {
+                        Id = playlist.Id.ToString(),
+                        Name = playlist.Name,
+                        IsOnline = true
                     });
                 }
             }
@@ -97,7 +99,6 @@ public class LibraryManager(
         if (playlist.IsOnline)
         {
             await api.DeletePlaylistAsync(int.Parse(playlist.Id));
-            
         }
         else
         {
@@ -110,7 +111,7 @@ public class LibraryManager(
         var index = playlist.Tracks.IndexOf(track);
         if (index >= 0)
         {
-            playback.PlayFromPlaylist(playlist.Tracks, index);
+            playback.PlayFromPlaylist(playlist.Tracks.Skip(index), 0);
         }
         else
         {
@@ -136,7 +137,7 @@ public class LibraryManager(
                 break;
         }
     }
-    
+
     public void AddTrackToQueue(UnifiedTrack track)
     {
         playback.AddToQueue(track);
@@ -154,7 +155,7 @@ public class LibraryManager(
             playback.AddToQueue(track);
         }
     }
-    
+
     public async Task<ApiResult> AddTrackToPlaylistAsync(UnifiedTrack track, Playlist playlist)
     {
         if (!playlist.CanAddTrack(track))
@@ -177,12 +178,12 @@ public class LibraryManager(
     {
         if (playlist.IsOnline)
         {
-            var response = await api.RemoveTrackFromPlaylistAsync(int.Parse(playlist.Id), 
+            var response = await api.RemoveTrackFromPlaylistAsync(int.Parse(playlist.Id),
                 int.Parse(track.Id));
             playlist.Tracks.Remove(track);
             return new ApiResult(response.IsSuccess, response.Message);
         }
-        
+
         await db.RemoveTrackFromPlaylistAsync(playlist.Id, track);
         playlist.Tracks.Remove(track);
         return new ApiResult(true, "Removed track from local playlist.");
@@ -196,7 +197,7 @@ public class LibraryManager(
         {
             await LoadPlaylistTracksAsync(TemporaryPlaylist);
         }
-        
+
         foreach (var path in paths)
         {
             var tracks = await discovery.DiscoverAsync(path);

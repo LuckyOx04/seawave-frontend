@@ -17,7 +17,7 @@ public partial class RightBarViewModel : ViewModelBase
     public RightBarViewModel(PlaybackManager playbackManager)
     {
         _playbackManager = playbackManager;
-        
+
         UpdateDisplayTracks();
 
         _playbackManager.ShuffleChanged += (_, _) => UpdateDisplayTracks();
@@ -32,13 +32,13 @@ public partial class RightBarViewModel : ViewModelBase
             DisplayQueue = new List<UnifiedTrack>();
             return;
         }
-        
+
         var fullPermutationList = new PermutationList(_playbackManager.TracksQueue, _playbackManager.PlaybackOrder);
         CurrentDisplayTrack = _playbackManager.CurrentTrack;
 
         DisplayQueue = fullPermutationList.Skip(_playbackManager.OrderIndex + 1).ToList();
     }
-    
+
     [RelayCommand]
     private void PlayTrack(UnifiedTrack selectedTrack)
     {
@@ -52,13 +52,13 @@ public partial class RightBarViewModel : ViewModelBase
         {
             return;
         }
-        
+
         _playbackManager.RemoveTrack(track);
     }
 
     [RelayCommand]
     private void ClearAllQueue()
     {
-        _playbackManager.ClearQueue();
+        _playbackManager.ClearQueueNextUpTracks();
     }
 }
