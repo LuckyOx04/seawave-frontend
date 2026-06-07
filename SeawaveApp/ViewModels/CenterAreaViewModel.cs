@@ -40,7 +40,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 
         _mainShell.PropertyChanged += OnShellPropertyChanged;
 
-        _mainShell.SearchResults.CollectionChanged += OnSearchResultsChanged;
+        _mainShell.TracksSearchResults.CollectionChanged += OnTracksSearchResultsChanged;
 
         _libraryManager.AllPlaylists.CollectionChanged += (_, _) => RefreshFlyoutPlaylists();
 
@@ -66,7 +66,7 @@ public partial class CenterAreaViewModel : ViewModelBase
         }
     }
 
-    private void OnSearchResultsChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    private void OnTracksSearchResultsChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
         if (_mainShell.CurrentCenterMode == CenterContentMode.SearchResults)
         {
@@ -103,7 +103,7 @@ public partial class CenterAreaViewModel : ViewModelBase
         {
             case CenterContentMode.SearchResults:
                 HeaderTitle = "Search Results";
-                foreach (var track in _mainShell.SearchResults)
+                foreach (var track in _mainShell.TracksSearchResults)
                 {
                     DisplayTracks.Add(track);
                 }

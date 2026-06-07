@@ -39,7 +39,8 @@ public partial class MainViewModel : ViewModelBase
     public string ConnectivityMessage => IsOnline ? "Back online" : "Offline mode";
     public IBrush ConnectivityBrush => IsOnline ? OnlineBrush : OfflineBrush;
 
-    public ObservableCollection<UnifiedTrack> SearchResults { get; } = [];
+    public ObservableCollection<UnifiedTrack> TracksSearchResults { get; } = [];
+    public ObservableCollection<Playlist> PlaylistsSearchResults { get; } = [];
     public LeftBarViewModel LeftBar { get; }
     public RightBarViewModel RightBar { get; }
     public CenterAreaViewModel CenterArea { get; }

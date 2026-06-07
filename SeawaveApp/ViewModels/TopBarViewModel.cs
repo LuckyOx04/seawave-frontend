@@ -57,14 +57,17 @@ public partial class TopBarViewModel(
     private async Task PerformSearchAsync(string query)
     {
         mainShell.CurrentCenterMode = CenterContentMode.SearchResults;
-        mainShell.SearchResults.Clear();
+        mainShell.TracksSearchResults.Clear();
+        mainShell.PlaylistsSearchResults.Clear();
 
-        var response = await api.SearchTracksAsync(query);
-        if (response is { IsSuccess: true, Data: not null })
+        var trackSearchResponse = await api.SearchTracksAsync(query);
+        var playlistSearchResponse = await api.SearchPlaylistsAsync(query);
+        
+        if (trackSearchResponse is { IsSuccess: true, Data: not null })
         {
-            foreach (var trackData in response.Data)
+            foreach (var trackData in trackSearchResponse.Data)
             {
-                mainShell.SearchResults.Add(new UnifiedTrack
+                mainShell.TracksSearchResults.Add(new UnifiedTrack
                 {
                     Id = trackData.Id.ToString(),
                     Title = trackData.Title,
@@ -73,6 +76,19 @@ public partial class TopBarViewModel(
                     Duration = TimeSpan.FromSeconds(trackData.DurationSeconds),
                     IsRemote = true,
                     RemoteUrl = api.GetStreamUrl(trackData.FileName)
+                });
+            }
+        }
+
+        if (playlistSearchResponse is { IsSuccess: true, Data: not null })
+        {
+            foreach (var playlistData in playlistSearchResponse.Data)
+            {
+                mainShell.PlaylistsSearchResults.Add(new Playlist
+                {
+                    Id = playlistData.Id.ToString(),
+                    Name = playlistData.Name,
+                    IsOnline = true,
                 });
             }
         }
