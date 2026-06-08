@@ -44,6 +44,8 @@ public partial class CenterAreaViewModel : ViewModelBase
 
         _mainShell.TracksSearchResults.CollectionChanged += OnTracksSearchResultsChanged;
 
+        _mainShell.CenterContentChanged += OnCenterContentChanged;
+
         IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
         IsSearch = _mainShell.CurrentCenterMode == CenterContentMode.SearchResults;
         IsClearable = _mainShell.ActiveCenterPlaylist?.Id == "0" && IsPlaylist;
@@ -66,6 +68,14 @@ public partial class CenterAreaViewModel : ViewModelBase
         if (_mainShell.CurrentCenterMode == CenterContentMode.SearchResults)
         {
             SyncDisplayTracks();
+        }
+    }
+
+    private void OnCenterContentChanged(object? sender, CenterContentMode mode)
+    {
+        if (mode != CenterContentMode.SearchResults)
+        {
+            IsPlaylistSearchToggled = false;
         }
     }
 
@@ -106,6 +116,7 @@ public partial class CenterAreaViewModel : ViewModelBase
         {
             case CenterContentMode.SearchResults:
                 HeaderTitle = "Search Results";
+                CreatorName = null;
 
                 if (!IsPlaylistSearchToggled)
                 {
@@ -139,6 +150,7 @@ public partial class CenterAreaViewModel : ViewModelBase
             case CenterContentMode.None:
             default:
                 HeaderTitle = "Select a Playlist, Search for Music or Add Local Files";
+                CreatorName = null;
                 break;
         }
     }
