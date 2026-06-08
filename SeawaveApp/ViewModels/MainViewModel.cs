@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Avalonia.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -46,6 +47,8 @@ public partial class MainViewModel : ViewModelBase
     public CenterAreaViewModel CenterArea { get; }
     public TopBarViewModel TopBar { get; }
     public BottomBarViewModel BottomBar { get; }
+
+    public event EventHandler<CenterContentMode>? CenterContentChanged;
 
     public MainViewModel(ConnectivityChecker connectivityChecker, AuthStateManager authStateManager,
         LibraryManager libraryManager, PlaybackManager playbackManager, ApiService api, 
@@ -106,6 +109,11 @@ public partial class MainViewModel : ViewModelBase
     private void ShowOfflineStatusMessage()
     {
         ShowConnectivityMessage = true;
+    }
+
+    partial void OnCurrentCenterModeChanged(CenterContentMode value)
+    {
+        CenterContentChanged?.Invoke(this, value);
     }
 
     public async Task RefreshDisplayedPlaylists()
