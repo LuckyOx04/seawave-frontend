@@ -87,6 +87,7 @@ public partial class MainViewModel : ViewModelBase
         else
         {
             ShowOfflineStatusMessage();
+            ActiveOverlay = null;
         }
         
         _ = _libraryManager.RefreshPlaylistsAsync(IsOnline && IsLoggedIn);
