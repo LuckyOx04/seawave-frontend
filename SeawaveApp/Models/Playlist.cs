@@ -6,6 +6,7 @@ public class Playlist
 {
     public string Id { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
+    public string? CreatorName { get; set; }
     public bool IsOnline { get; set; }
 
     public ObservableCollection<UnifiedTrack> Tracks { get; set; } = [];

@@ -24,7 +24,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 
     [ObservableProperty]
     public partial string HeaderTitle { get; set; } = "Select a Playlist, Search for Music or Add Local Files";
-
+    [ObservableProperty] public partial string? CreatorName { get; set; } = string.Empty;
     [ObservableProperty] public partial bool IsClearable { get; set; }
     [ObservableProperty] public partial bool IsPlaylist { get; set; }
     [ObservableProperty] public partial bool IsSearch { get; set; }
@@ -33,7 +33,7 @@ public partial class CenterAreaViewModel : ViewModelBase
 
     public ObservableCollection<Playlist> FlyoutDisplayPlaylists { get; } = [];
     public ObservableCollection<UnifiedTrack> DisplayTracks { get; } = [];
-
+    public ObservableCollection<Playlist> DisplayPlaylists { get; } = [];
 
     public CenterAreaViewModel(MainViewModel mainShell, LibraryManager libraryManager)
     {
@@ -69,6 +69,12 @@ public partial class CenterAreaViewModel : ViewModelBase
         }
     }
 
+    partial void OnIsPlaylistSearchToggledChanged(bool value)
+    {
+        _ = value;
+        SyncDisplayTracks();
+    }
+
     private void RefreshFlyoutPlaylists(UnifiedTrack track)
     {
         FlyoutDisplayPlaylists.Clear();
@@ -90,6 +96,7 @@ public partial class CenterAreaViewModel : ViewModelBase
     private void SyncDisplayTracks()
     {
         DisplayTracks.Clear();
+        DisplayPlaylists.Clear();
 
         IsPlaylist = _mainShell.CurrentCenterMode == CenterContentMode.PlaylistTracks;
         IsSearch = _mainShell.CurrentCenterMode == CenterContentMode.SearchResults;
@@ -99,9 +106,20 @@ public partial class CenterAreaViewModel : ViewModelBase
         {
             case CenterContentMode.SearchResults:
                 HeaderTitle = "Search Results";
-                foreach (var track in _mainShell.TracksSearchResults)
+
+                if (!IsPlaylistSearchToggled)
                 {
-                    DisplayTracks.Add(track);
+                    foreach (var track in _mainShell.TracksSearchResults)
+                    {
+                        DisplayTracks.Add(track);
+                    }
+                }
+                else
+                {
+                    foreach (var playlist in _mainShell.PlaylistsSearchResults)
+                    {
+                        DisplayPlaylists.Add(playlist);
+                    }
                 }
 
                 break;
@@ -109,6 +127,8 @@ public partial class CenterAreaViewModel : ViewModelBase
                 if (_mainShell.ActiveCenterPlaylist != null)
                 {
                     HeaderTitle = _mainShell.ActiveCenterPlaylist.Name;
+                    CreatorName = _mainShell.ActiveCenterPlaylist.CreatorName;
+                    
                     foreach (var track in _mainShell.ActiveCenterPlaylist.Tracks)
                     {
                         DisplayTracks.Add(track);
@@ -121,6 +141,22 @@ public partial class CenterAreaViewModel : ViewModelBase
                 HeaderTitle = "Select a Playlist, Search for Music or Add Local Files";
                 break;
         }
+    }
+    
+    [RelayCommand]
+    private async Task SelectPlaylistAsync(Playlist? playlist)
+    {
+        if (playlist == null)
+        {
+            return;
+        }
+
+        if (playlist.Tracks.Count == 0)
+        {
+            await _libraryManager.LoadPlaylistTracksAsync(playlist);
+        }
+
+        _mainShell.NavigateToPlaylist(playlist);
     }
 
     [RelayCommand]

@@ -98,6 +98,7 @@ public partial class TopBarViewModel(
                 {
                     Id = playlistData.Id.ToString(),
                     Name = playlistData.Name,
+                    CreatorName = playlistData.CreatorName,
                     IsOnline = true,
                 });
             }

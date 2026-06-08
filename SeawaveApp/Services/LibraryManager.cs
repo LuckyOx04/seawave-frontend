@@ -39,6 +39,7 @@ public class LibraryManager(
                     {
                         Id = playlist.Id.ToString(),
                         Name = playlist.Name,
+                        CreatorName = playlist.CreatorName,
                         IsOnline = true
                     });
                 }
