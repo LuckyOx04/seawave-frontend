@@ -36,8 +36,17 @@ public partial class LeftBarViewModel : ViewModelBase
         _mainShell = mainShell;
 
         _libraryManager.AllPlaylists.CollectionChanged += OnSourcePlaylistsChanged;
+        _mainShell.CenterContentChanged += OnShellCenterContentChanged;
 
         RefreshDisplayedPlaylists();
+    }
+
+    private void OnShellCenterContentChanged(object? sender, CenterContentMode value)
+    {
+        if (value != CenterContentMode.PlaylistTracks)
+        {
+            SelectedPlaylist = null;
+        }
     }
 
     partial void OnPlaylistSearchQueryChanged(string value)

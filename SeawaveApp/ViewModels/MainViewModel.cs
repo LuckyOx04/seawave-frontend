@@ -113,6 +113,10 @@ public partial class MainViewModel : ViewModelBase
 
     partial void OnCurrentCenterModeChanged(CenterContentMode value)
     {
+        if (value != CenterContentMode.PlaylistTracks)
+        {
+            ActiveCenterPlaylist = null;
+        }
         CenterContentChanged?.Invoke(this, value);
     }
 
