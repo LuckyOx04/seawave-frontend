@@ -16,8 +16,8 @@ public partial class ProfileViewModel : ViewModelBase
     [ObservableProperty] public partial string EmailText { get; set; } = "Loading...";
     [ObservableProperty] public partial string CreatedAt { get; set; } = "Loading...";
     [ObservableProperty] public partial int CreatedPlaylistsCount { get; set; }
-    [ObservableProperty] public partial int PendingTracksCount { get; set; }
-    [ObservableProperty] public partial int ApprovedTracksCount { get; set; }
+    [ObservableProperty] public partial long PendingTracksCount { get; set; }
+    [ObservableProperty] public partial long ApprovedTracksCount { get; set; }
 
     public ProfileViewModel(MainViewModel mainShell, AuthStateManager authStateManager, ApiService api)
     {
