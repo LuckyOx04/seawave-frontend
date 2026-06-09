@@ -59,3 +59,5 @@ cd seawave-desktop-linux-x64
 3. Go in the **seawave-desktop-win-x64** folder
 
 4. Run the program by clicking **SeawaveApp.Desktop.exe**
+
+### NOTE: The app was made in Linux and the Windows program was not tested in a Windows environment. There may be problems with it.
