@@ -45,7 +45,7 @@ public class ConnectivityChecker
         try
         {
             var response = await Client.SendAsync(new HttpRequestMessage(HttpMethod.Head,
-                "https://localhost:7212/api/Music/search/tracks?q=test"), 
+                "https://localhost:8081/api/Music/search/tracks?q=test"), 
                 HttpCompletionOption.ResponseHeadersRead);
             IsServiceReachable = response.IsSuccessStatusCode || (int)response.StatusCode == 401;
         }
