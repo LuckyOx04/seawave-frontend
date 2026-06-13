@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using Avalonia;
+using LibVLCSharp.Shared;
 
 namespace SeawaveApp.Desktop;
 
@@ -12,7 +14,17 @@ sealed class Program
     public static void Main(string[] args)
     {
         SQLitePCL.Batteries_V2.Init();
-        
+
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            var currentFolder = AppDomain.CurrentDomain.BaseDirectory;
+            Core.Initialize(currentFolder);
+        }
+        else
+        {
+            Core.Initialize();
+        }
+
         BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
     }

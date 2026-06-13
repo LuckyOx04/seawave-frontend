@@ -42,8 +42,6 @@ public class PlaybackManager : IDisposable
 
     public PlaybackManager()
     {
-        Core.Initialize();
-
         _libVlc = new LibVLC();
         _mediaPlayer = new MediaPlayer(_libVlc);
 
