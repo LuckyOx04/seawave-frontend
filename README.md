@@ -6,16 +6,36 @@ It also plays local files, including .cue files, and can make local playlists.
 ## Tech Stack
 - .NET Core 10
 - AvaloniaUI Cross Platform (Only Desktop is used)
+- LibVLC
 - LibVLCsharp
 - SQLite
 - TagLibSharp
 - CommunityToolkit.MVVM
+
+## If you are on Linux, you will need to manually install *LibVLC* trough your package manager before proceeding to the next steps:
+- For Debian based distros:
+```bash
+sudo apt install libvlc5 vlc-plugin-base
+```
+- For Fedora based distros (Requires RPM Fusion):
+```bash
+sudo dnf install libvlc-development
+```
+- For Arch based distros:
+```bash
+sudo pacman -Syu libvlc
+```
+- For OpenSUSE based distros:
+```bash
+sudo zypper install libvlc5 vlc-codecs
+```
 
 ## How to Run Locally (For Developers)
 
 ### Prerequisites
 - .NET 10 SDK or Later
 - AvaloniaUI (mainly for editor syntax highlighting and completion)
+- LibVLC (For Linux Users)
 
 ### Installation & Run
 1. Clone the repository:
@@ -26,7 +46,7 @@ git clone https://github.com/LuckyOn04/seawave-frontend.git
 ```bash
 dotnet restore
 ```
-4. Run the desktop application
+3. Run the desktop application
 ```bash
 dotnet run --project SeawaveApp.Desktop
 ```
