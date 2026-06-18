@@ -8,23 +8,26 @@ using SeawaveApp.Services;
 
 namespace SeawaveApp.ViewModels;
 
-public partial class UploadTrackViewModel(MainViewModel mainShell, AuthStateManager authStateManager,
+public partial class UploadTrackViewModel(
+    MainViewModel mainShell,
+    AuthStateManager authStateManager,
     ApiService api) : ViewModelBase
 {
     private readonly AvaloniaFileDialog _fileDialog = new();
-    
+
     private static readonly IBrush SuccessBrush = new SolidColorBrush(Color.Parse("#007bff"));
     private static readonly IBrush FailureBrush = new SolidColorBrush(Color.Parse("#ff6666"));
-    
-    [ObservableProperty] private string _title = string.Empty;
-    [ObservableProperty] private string _artist = string.Empty;
-    [ObservableProperty] private string _filePath = string.Empty;
-    [ObservableProperty] private string _statusMessage = string.Empty;
-    [ObservableProperty] private bool _isBusy;
-    
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(StatusColor))]
-    private bool _isSuccessState;
-    
+
+    [ObservableProperty] public partial string Title { get; set; } = string.Empty;
+    [ObservableProperty] public partial string Artist { get; set; } = string.Empty;
+    [ObservableProperty] public partial string FilePath { get; set; } = string.Empty;
+    [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
+    [ObservableProperty] public partial bool IsBusy { get; set; }
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StatusColor))]
+    public partial bool IsSuccessState { get; set; }
+
     public IBrush StatusColor => IsSuccessState ? SuccessBrush : FailureBrush;
 
     [RelayCommand]
@@ -33,7 +36,7 @@ public partial class UploadTrackViewModel(MainViewModel mainShell, AuthStateMana
         var paths = await _fileDialog.SelectPathsAsync(true);
         if (paths is { Length: > 0 })
         {
-            FilePath = paths[0];            
+            FilePath = paths[0];
         }
     }
 
@@ -47,7 +50,7 @@ public partial class UploadTrackViewModel(MainViewModel mainShell, AuthStateMana
             IsSuccessState = false;
             return;
         }
-        
+
         IsBusy = true;
         IsSuccessState = true;
         StatusMessage = "Initiating file upload...";

@@ -54,7 +54,9 @@ public class PlaybackManager : IDisposable
             }
 
             _lastNotifiedLength = e.Time;
-            PositionChanged?.Invoke(this, TimeSpan.FromMilliseconds(e.Time));
+            Dispatcher.UIThread.Post(() => {
+                PositionChanged?.Invoke(this, TimeSpan.FromMilliseconds(_lastNotifiedLength));
+            });
         };
         _mediaPlayer.LengthChanged += (_, e) =>
         {
@@ -64,22 +66,35 @@ public class PlaybackManager : IDisposable
             }
 
             _lastNotifiedLength = e.Length;
-            DurationChanged?.Invoke(this, TimeSpan.FromMilliseconds(e.Length));
+
+            Dispatcher.UIThread.Post(() =>
+            {
+                DurationChanged?.Invoke(this, TimeSpan.FromMilliseconds(_lastNotifiedLength));
+            });
         };
         _mediaPlayer.Playing += (_, _) =>
         {
-            PlaybackState = MediaPlayerState.Playing;
-            PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+            Dispatcher.UIThread.Post(() =>
+            {
+                PlaybackState = MediaPlayerState.Playing;
+                PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+            });
         };
         _mediaPlayer.Paused += (_, _) =>
         {
-            PlaybackState = MediaPlayerState.Paused;
-            PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+            Dispatcher.UIThread.Post(() =>
+            {
+                PlaybackState = MediaPlayerState.Paused;
+                PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+            });
         };
         _mediaPlayer.Stopped += (_, _) =>
         {
-            PlaybackState = MediaPlayerState.Stopped;
-            PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+            Dispatcher.UIThread.Post(() =>
+            {
+                PlaybackState = MediaPlayerState.Stopped;
+                PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
+            });
         };
     }
 

@@ -77,7 +77,7 @@
                         Command="{Binding ExecuteLoginCommand}"
                         IsEnabled="{Binding !IsBusy}"
                         Background="{StaticResource BrushElectricBlue}"
-                        Foreground="{StaticResource BrushLightRed}"
+                        Foreground="{StaticResource BrushTextWhite}"
                         Height="42"
                         HorizontalAlignment="Stretch"
                         HorizontalContentAlignment="Center"

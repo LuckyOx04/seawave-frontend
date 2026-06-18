@@ -174,13 +174,19 @@ public partial class CenterAreaViewModel : ViewModelBase
     [RelayCommand]
     private void PlayTrack(UnifiedTrack? selectedTrack)
     {
-        if (selectedTrack == null || _mainShell.ActiveCenterPlaylist == null)
+        if (selectedTrack == null)
         {
             return;
         }
 
+        if (_mainShell.CurrentCenterMode == CenterContentMode.SearchResults)
+        {
+            _libraryManager.PlayTrackFromSearch(selectedTrack);
+            return;
+        }
+
         var index = DisplayTracks.IndexOf(selectedTrack);
-        if (index >= 0)
+        if (index >= 0 && _mainShell.ActiveCenterPlaylist != null)
         {
             _libraryManager.PlayTrackFromPlaylist(_mainShell.ActiveCenterPlaylist, selectedTrack);
         }

@@ -7,10 +7,17 @@ namespace SeawaveApp.ViewModels;
 
 public partial class LoginViewModel(MainViewModel mainShell, AuthStateManager authStateManager) : ViewModelBase
 {
-    [ObservableProperty] private string _identifier = string.Empty;
-    [ObservableProperty] private string _password = string.Empty;
-    [ObservableProperty] private string _errorMessage = string.Empty;
-    [ObservableProperty] private bool _isBusy;
+    [ObservableProperty]
+    public partial string Identifier { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string Password { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial string ErrorMessage { get; set; } = string.Empty;
+
+    [ObservableProperty]
+    public partial bool IsBusy { get; set; }
 
     [RelayCommand]
     private async Task ExecuteLoginAsync()

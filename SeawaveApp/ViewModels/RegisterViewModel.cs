@@ -11,20 +11,21 @@ namespace SeawaveApp.ViewModels;
 public partial class RegisterViewModel(MainViewModel mainShell, AuthStateManager authStateManager) : ViewModelBase
 {
     private readonly ApiService _api = new();
-    
+
     private static readonly IBrush SuccessBrush = new SolidColorBrush(Color.Parse("#007bff"));
     private static readonly IBrush FailureBrush = new SolidColorBrush(Color.Parse("#ff6666"));
 
-    [ObservableProperty] private string _username = string.Empty;
-    [ObservableProperty] private string _email = string.Empty;
-    [ObservableProperty] private string _password = string.Empty;
-    [ObservableProperty] private string _confirmPassword = string.Empty;
-    [ObservableProperty] private string _statusMessage = string.Empty;
+    [ObservableProperty] public partial string Username { get; set; } = string.Empty;
+    [ObservableProperty] public partial string Email { get; set; } = string.Empty;
+    [ObservableProperty] public partial string Password { get; set; } = string.Empty;
+    [ObservableProperty] public partial string ConfirmPassword { get; set; } = string.Empty;
+    [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
 
-    [ObservableProperty] [NotifyPropertyChangedFor(nameof(StatusColor))]
-    private bool _isSuccessState;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(StatusColor))]
+    public partial bool IsSuccessState { get; set; }
 
-    [ObservableProperty] private bool _isBusy;
+    [ObservableProperty] public partial bool IsBusy { get; set; }
 
     public IBrush StatusColor => IsSuccessState ? SuccessBrush : FailureBrush;
 

@@ -6,14 +6,15 @@ using SeawaveApp.Services;
 
 namespace SeawaveApp.ViewModels;
 
-public partial class ForgotPasswordViewModel(MainViewModel mainShell, 
+public partial class ForgotPasswordViewModel(
+    MainViewModel mainShell,
     AuthStateManager authStateManager) : ViewModelBase
 {
     private readonly ApiService _api = new();
-    
-    [ObservableProperty] private string _email = string.Empty;
-    [ObservableProperty] private string _statusMessage = string.Empty;
-    [ObservableProperty] private bool _isBusy;
+
+    [ObservableProperty] public partial string Email { get; set; } = string.Empty;
+    [ObservableProperty] public partial string StatusMessage { get; set; } = string.Empty;
+    [ObservableProperty] public partial bool IsBusy { get; set; }
 
     [RelayCommand]
     private async Task ExecuteResetPasswordAsync()
@@ -29,7 +30,7 @@ public partial class ForgotPasswordViewModel(MainViewModel mainShell,
 
         var request = new ForgottenPasswordRequest(Email);
         var result = await _api.ForgotPasswordAsync(request);
-        
+
         StatusMessage = result.Message!;
         IsBusy = false;
     }
